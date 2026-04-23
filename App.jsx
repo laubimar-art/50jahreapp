@@ -186,18 +186,7 @@ function Splash({ visible, fading }) {
             }}
           />
 
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 800,
-              letterSpacing: 2.2,
-              color: BRAND.black,
-              opacity: 0.58,
-              textTransform: "uppercase",
-            }}
-          >
-            Import Parfumerie Jubiläum
-          </div>
+          
         </div>
       </div>
     </div>
