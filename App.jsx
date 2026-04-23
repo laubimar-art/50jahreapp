@@ -5,7 +5,7 @@ const initialBooths = Array.from({ length: 20 }, (_, i) => ({
   name: `Stand ${i + 1}`,
   qrValue: `STAND-${i + 1}`,
 }));
-
+ 
 export default function App() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
