@@ -110,7 +110,7 @@ function Logo() {
   return (
     <div style={logoWrapStyle}>
       <img
-        src="/import-parfumerie.svg"
+        src="/impo_logo.png"
         alt="Import Parfumerie"
         style={{ width: 72, display: "block" }}
       />
