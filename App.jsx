@@ -47,13 +47,25 @@ const contentStyle = {
 const logoWrapStyle = {
   position: "fixed",
   top: 12,
-  right: 12,
-  zIndex: 50,
-  background: "rgba(255,255,255,0.92)",
+  left: 12,
+  zIndex: 60,
+  background: "rgba(255,255,255,0.94)",
   border: "1px solid rgba(0,0,0,0.06)",
   borderRadius: 12,
   padding: "6px 8px",
   backdropFilter: "blur(6px)",
+  WebkitBackdropFilter: "blur(6px)",
+};
+
+const splashOverlayStyle = {
+  position: "fixed",
+  inset: 0,
+  background: "radial-gradient(circle at center, #ffffff 0%, #fbfbfc 62%, #f3f3f5 100%)",
+  zIndex: 9999,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  transition: "opacity 0.9s ease, transform 0.9s ease",
 };
 
 const heroStyle = {
@@ -102,6 +114,92 @@ function Logo() {
         alt="Import Parfumerie"
         style={{ width: 72, display: "block" }}
       />
+    </div>
+  );
+}
+
+function Splash({ visible, fading }) {
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => setEntered(true), 40);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <div
+      style={{
+        ...splashOverlayStyle,
+        opacity: fading ? 0 : 1,
+        transform: fading ? "scale(1.035)" : "scale(1)",
+        pointerEvents: fading ? "none" : "auto",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          padding: 24,
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            width: "min(78vw, 420px)",
+            height: "min(78vw, 420px)",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(207,45,54,0.11) 0%, rgba(207,45,54,0.05) 38%, rgba(255,255,255,0) 72%)",
+            transform: entered ? "scale(1)" : "scale(0.82)",
+            opacity: fading ? 0 : entered ? 1 : 0,
+            transition: "all 1.1s ease",
+            filter: "blur(6px)",
+          }}
+        />
+
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 16,
+            transform: fading ? "scale(1.06)" : entered ? "scale(1)" : "scale(0.9)",
+            opacity: fading ? 0 : entered ? 1 : 0,
+            transition: "all 1s cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        >
+          <img
+            src="/LogoJubi.png"
+            alt="Jubiläumslogo"
+            style={{
+              width: "min(72vw, 360px)",
+              maxWidth: 360,
+              display: "block",
+              objectFit: "contain",
+              filter: "drop-shadow(0 18px 42px rgba(0,0,0,0.10))",
+            }}
+          />
+
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 800,
+              letterSpacing: 2.2,
+              color: BRAND.black,
+              opacity: 0.58,
+              textTransform: "uppercase",
+            }}
+          >
+            Import Parfumerie Jubiläum
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -194,11 +292,12 @@ function BoothTile({ booth, visited }) {
 }
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+  const [fadeSplash, setFadeSplash] = useState(false);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
-  const [step, setStep] = useState("login"); // login | verify | app
+  const [step, setStep] = useState("login");
   const [generatedCode, setGeneratedCode] = useState("");
-
   const [visited, setVisited] = useState([]);
   const [scanInput, setScanInput] = useState("");
   const [message, setMessage] = useState("");
@@ -215,6 +314,24 @@ export default function App() {
   }, [search]);
 
   const progress = Math.round((visited.length / initialBooths.length) * 100);
+
+  useEffect(() => {
+    const fadeTimer = window.setTimeout(() => {
+      setFadeSplash(true);
+    }, 2100);
+
+    const hideTimer = window.setTimeout(() => {
+      setShowSplash(false);
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(hideTimer);
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(() => {});
+      }
+    };
+  }, []);
 
   const sendCode = () => {
     if (!email || !email.includes("@")) {
@@ -282,7 +399,7 @@ export default function App() {
     setScannerOpen(true);
     setMessage("");
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       const scanner = new Html5QrcodeScanner(
         qrRegionId,
         {
@@ -300,98 +417,44 @@ export default function App() {
             await stopScanner();
           }
         },
-        () => {
-          // scan errors can be ignored for MVP
-        }
+        () => {}
       );
 
       scannerRef.current = scanner;
     }, 50);
   };
 
-  useEffect(() => {
-    return () => {
-      if (scannerRef.current) {
-        scannerRef.current.clear().catch(() => {});
-      }
-    };
-  }, []);
-
   const topSpacing = <div style={{ height: 62 }} />;
 
   if (step === "login") {
     return (
       <div style={pageStyle}>
+        <Splash visible={showSplash} fading={fadeSplash} />
         <Logo />
         <div style={shellStyle}>
           {topSpacing}
           <div style={contentStyle}>
             <div style={heroStyle}>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 800,
-                  letterSpacing: 0.5,
-                  opacity: 0.92,
-                }}
-              >
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 0.5, opacity: 0.92 }}>
                 50 JAHRE IMPORT PARFUMERIE
               </div>
-              <h1
-                style={{
-                  margin: "10px 0 8px 0",
-                  fontSize: 30,
-                  lineHeight: 1.05,
-                }}
-              >
+              <h1 style={{ margin: "10px 0 8px 0", fontSize: 30, lineHeight: 1.05 }}>
                 Brandmesse Pass
               </h1>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 14,
-                  lineHeight: 1.45,
-                  opacity: 0.92,
-                }}
-              >
-                Besuche alle 20 Stände, sammle Punkte und sichere dir die
-                Teilnahme am Jubiläums-Erlebnis.
+              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, opacity: 0.92 }}>
+                Besuche alle 20 Stände, sammle Punkte und sichere dir die Teilnahme am Jubiläums-Erlebnis.
               </p>
             </div>
 
-            <div
-              style={{
-                background: BRAND.white,
-                border: `1px solid ${BRAND.line}`,
-                borderRadius: 22,
-                padding: 18,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 28,
-                  fontWeight: 900,
-                  lineHeight: 1.1,
-                  marginBottom: 8,
-                }}
-              >
+            <div style={{ background: BRAND.white, border: `1px solid ${BRAND.line}`, borderRadius: 22, padding: 18 }}>
+              <div style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.1, marginBottom: 8 }}>
                 Willkommen
               </div>
-              <div
-                style={{
-                  fontSize: 15,
-                  color: BRAND.textMuted,
-                  lineHeight: 1.5,
-                  marginBottom: 18,
-                }}
-              >
-                Melde dich mit deiner E-Mail-Adresse an. Danach bestätigst du
-                den Code und kannst direkt loslegen.
+              <div style={{ fontSize: 15, color: BRAND.textMuted, lineHeight: 1.5, marginBottom: 18 }}>
+                Melde dich mit deiner E-Mail-Adresse an. Danach bestätigst du den Code und kannst direkt loslegen.
               </div>
 
-              <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>
-                E-Mail-Adresse
-              </div>
+              <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>E-Mail-Adresse</div>
               <input
                 type="email"
                 value={email}
@@ -400,31 +463,14 @@ export default function App() {
                 style={{ ...inputStyle, marginBottom: 14 }}
               />
 
-              <button onClick={sendCode} style={buttonStyle}>
-                Jetzt anmelden
-              </button>
+              <button onClick={sendCode} style={buttonStyle}>Jetzt anmelden</button>
 
-              <div
-                style={{
-                  marginTop: 16,
-                  fontSize: 12,
-                  lineHeight: 1.5,
-                  color: BRAND.textMuted,
-                }}
-              >
-                Mit der Anmeldung akzeptierst du die Teilnahmebedingungen und
-                den Versand eines Bestätigungscodes.
+              <div style={{ marginTop: 16, fontSize: 12, lineHeight: 1.5, color: BRAND.textMuted }}>
+                Mit der Anmeldung akzeptierst du die Teilnahmebedingungen und den Versand eines Bestätigungscodes.
               </div>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 10,
-                marginTop: 16,
-              }}
-            >
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 16 }}>
               {[
                 ["20", "Stände entdecken"],
                 ["QR", "Codes scannen"],
@@ -432,32 +478,10 @@ export default function App() {
               ].map(([big, small]) => (
                 <div
                   key={big}
-                  style={{
-                    border: `1px solid ${BRAND.line}`,
-                    borderRadius: 18,
-                    padding: 14,
-                    background: "#FCFCFD",
-                  }}
+                  style={{ border: `1px solid ${BRAND.line}`, borderRadius: 18, padding: 14, background: "#FCFCFD" }}
                 >
-                  <div
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 900,
-                      color: BRAND.red,
-                    }}
-                  >
-                    {big}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      lineHeight: 1.3,
-                      color: BRAND.textMuted,
-                      marginTop: 4,
-                    }}
-                  >
-                    {small}
-                  </div>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: BRAND.red }}>{big}</div>
+                  <div style={{ fontSize: 12, lineHeight: 1.3, color: BRAND.textMuted, marginTop: 4 }}>{small}</div>
                 </div>
               ))}
             </div>
@@ -470,74 +494,35 @@ export default function App() {
   if (step === "verify") {
     return (
       <div style={pageStyle}>
+        <Splash visible={showSplash} fading={fadeSplash} />
         <Logo />
         <div style={shellStyle}>
           {topSpacing}
           <div style={contentStyle}>
             <div style={heroStyle}>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 800,
-                  letterSpacing: 0.5,
-                  opacity: 0.92,
-                }}
-              >
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 0.5, opacity: 0.92 }}>
                 DOUBLE OPT-IN
               </div>
-              <h1
-                style={{
-                  margin: "10px 0 8px 0",
-                  fontSize: 28,
-                  lineHeight: 1.08,
-                }}
-              >
+              <h1 style={{ margin: "10px 0 8px 0", fontSize: 28, lineHeight: 1.08 }}>
                 E-Mail bestätigen
               </h1>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 14,
-                  lineHeight: 1.45,
-                  opacity: 0.92,
-                }}
-              >
-                Gib den Bestätigungscode ein, um deinen Brandmesse Pass zu
-                aktivieren.
+              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, opacity: 0.92 }}>
+                Gib den Bestätigungscode ein, um deinen Brandmesse Pass zu aktivieren.
               </p>
             </div>
 
-            <div
-              style={{
-                background: BRAND.white,
-                border: `1px solid ${BRAND.line}`,
-                borderRadius: 22,
-                padding: 18,
-              }}
-            >
-              <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>
-                Bestätigungscode
-              </div>
+            <div style={{ background: BRAND.white, border: `1px solid ${BRAND.line}`, borderRadius: 22, padding: 18 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8 }}>Bestätigungscode</div>
               <input
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="4-stelliger Code"
-                style={{
-                  ...inputStyle,
-                  marginBottom: 14,
-                  letterSpacing: 2,
-                  fontWeight: 800,
-                }}
+                style={{ ...inputStyle, marginBottom: 14, letterSpacing: 2, fontWeight: 800 }}
               />
 
-              <button onClick={verifyCode} style={buttonStyle}>
-                Anmeldung bestätigen
-              </button>
-              <button
-                onClick={() => setStep("login")}
-                style={{ ...secondaryButtonStyle, marginTop: 10 }}
-              >
+              <button onClick={verifyCode} style={buttonStyle}>Anmeldung bestätigen</button>
+              <button onClick={() => setStep("login")} style={{ ...secondaryButtonStyle, marginTop: 10 }}>
                 Zurück
               </button>
             </div>
@@ -549,47 +534,21 @@ export default function App() {
 
   return (
     <div style={pageStyle}>
+      <Splash visible={showSplash} fading={fadeSplash} />
       <Logo />
       <div style={shellStyle}>
         {topSpacing}
         <div style={contentStyle}>
           <div style={heroStyle}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 10,
-                alignItems: "flex-start",
-              }}
-            >
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}>
               <div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 800,
-                    letterSpacing: 0.5,
-                    opacity: 0.92,
-                  }}
-                >
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 0.5, opacity: 0.92 }}>
                   JUBILÄUMS-EVENT
                 </div>
-                <h1
-                  style={{
-                    margin: "8px 0 6px 0",
-                    fontSize: 28,
-                    lineHeight: 1.08,
-                  }}
-                >
+                <h1 style={{ margin: "8px 0 6px 0", fontSize: 28, lineHeight: 1.08 }}>
                   Brandmesse Pass
                 </h1>
-                <p
-                  style={{
-                    margin: 0,
-                    fontSize: 14,
-                    lineHeight: 1.45,
-                    opacity: 0.92,
-                  }}
-                >
+                <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, opacity: 0.92 }}>
                   Scanne am Stand den QR Code und fülle deinen digitalen Pass.
                 </p>
               </div>
@@ -598,89 +557,26 @@ export default function App() {
                 <div style={{ fontSize: 24, fontWeight: 900 }}>{progress}%</div>
               </div>
             </div>
-            <div
-              style={{
-                height: 8,
-                borderRadius: 999,
-                background: "rgba(255,255,255,0.28)",
-                marginTop: 14,
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  width: `${progress}%`,
-                  height: "100%",
-                  background: BRAND.white,
-                  borderRadius: 999,
-                }}
-              />
+            <div style={{ height: 8, borderRadius: 999, background: "rgba(255,255,255,0.28)", marginTop: 14, overflow: "hidden" }}>
+              <div style={{ width: `${progress}%`, height: "100%", background: BRAND.white, borderRadius: 999 }} />
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 10,
-              marginBottom: 14,
-            }}
-          >
-            <div
-              style={{
-                border: `1px solid ${BRAND.line}`,
-                borderRadius: 18,
-                padding: 14,
-                background: BRAND.white,
-              }}
-            >
-              <div style={{ fontSize: 12, color: BRAND.textMuted }}>
-                Besucht
-              </div>
-              <div style={{ fontSize: 26, fontWeight: 900 }}>
-                {visited.length}/20
-              </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10, marginBottom: 14 }}>
+            <div style={{ border: `1px solid ${BRAND.line}`, borderRadius: 18, padding: 14, background: BRAND.white }}>
+              <div style={{ fontSize: 12, color: BRAND.textMuted }}>Besucht</div>
+              <div style={{ fontSize: 26, fontWeight: 900 }}>{visited.length}/20</div>
             </div>
-            <div
-              style={{
-                border: `1px solid ${BRAND.line}`,
-                borderRadius: 18,
-                padding: 14,
-                background: BRAND.white,
-              }}
-            >
-              <div style={{ fontSize: 12, color: BRAND.textMuted }}>
-                Punkte
-              </div>
-              <div style={{ fontSize: 26, fontWeight: 900 }}>
-                {visited.length * 10}
-              </div>
+            <div style={{ border: `1px solid ${BRAND.line}`, borderRadius: 18, padding: 14, background: BRAND.white }}>
+              <div style={{ fontSize: 12, color: BRAND.textMuted }}>Punkte</div>
+              <div style={{ fontSize: 26, fontWeight: 900 }}>{visited.length * 10}</div>
             </div>
           </div>
 
-          <div
-            style={{
-              border: `1px solid ${BRAND.line}`,
-              borderRadius: 22,
-              padding: 16,
-              background: BRAND.white,
-              marginBottom: 14,
-            }}
-          >
-            <div style={{ fontSize: 17, fontWeight: 900, marginBottom: 6 }}>
-              QR Code scannen
-            </div>
-            <div
-              style={{
-                fontSize: 13,
-                color: BRAND.textMuted,
-                lineHeight: 1.45,
-                marginBottom: 12,
-              }}
-            >
-              Öffne die Kamera deines Smartphones und scanne den QR Code am
-              Stand. Für Tests kannst du unten weiterhin einen Wert wie{" "}
-              <strong>STAND-1</strong> eingeben.
+          <div style={{ border: `1px solid ${BRAND.line}`, borderRadius: 22, padding: 16, background: BRAND.white, marginBottom: 14 }}>
+            <div style={{ fontSize: 17, fontWeight: 900, marginBottom: 6 }}>QR Code scannen</div>
+            <div style={{ fontSize: 13, color: BRAND.textMuted, lineHeight: 1.45, marginBottom: 12 }}>
+              Öffne die Kamera deines Smartphones und scanne den QR Code am Stand. Für Tests kannst du unten weiterhin einen Wert wie <strong>STAND-1</strong> eingeben.
             </div>
 
             {!scannerOpen ? (
@@ -712,9 +608,7 @@ export default function App() {
               placeholder="QR-Code manuell eingeben"
               style={{ ...inputStyle, marginBottom: 12 }}
             />
-            <button onClick={handleManualSubmit} style={buttonStyle}>
-              Stand bestätigen
-            </button>
+            <button onClick={handleManualSubmit} style={buttonStyle}>Stand bestätigen</button>
 
             {message ? (
               <div
@@ -732,32 +626,13 @@ export default function App() {
             ) : null}
           </div>
 
-          <div
-            style={{
-              border: `1px solid ${BRAND.line}`,
-              borderRadius: 22,
-              padding: 16,
-              background: BRAND.white,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 10,
-                alignItems: "center",
-                marginBottom: 12,
-              }}
-            >
+          <div style={{ border: `1px solid ${BRAND.line}`, borderRadius: 22, padding: 16, background: BRAND.white }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", marginBottom: 12 }}>
               <div>
                 <div style={{ fontSize: 17, fontWeight: 900 }}>Stände</div>
-                <div style={{ fontSize: 13, color: BRAND.textMuted }}>
-                  Kleine grafische Übersicht aller 20 Stände
-                </div>
+                <div style={{ fontSize: 13, color: BRAND.textMuted }}>Kleine grafische Übersicht aller 20 Stände</div>
               </div>
-              <div style={{ fontSize: 12, fontWeight: 800, color: BRAND.red }}>
-                {visited.length} besucht
-              </div>
+              <div style={{ fontSize: 12, fontWeight: 800, color: BRAND.red }}>{visited.length} besucht</div>
             </div>
 
             <input
@@ -768,13 +643,7 @@ export default function App() {
               style={{ ...inputStyle, marginBottom: 12 }}
             />
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: 10,
-              }}
-            >
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
               {filteredBooths.map((booth) => (
                 <BoothTile
                   key={booth.id}
