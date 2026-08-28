@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5Qrcode } from "html5-qrcode";
 
 const RED = "#CF2D36";
 const BLACK = "#111111";
@@ -8,9 +8,6 @@ const BORDER = "#E7E7E7";
 const GREEN = "#2E9B4B";
 const GREEN_BG = "rgba(46, 155, 75, 0.20)";
 
-// Neue Storage-Version.
-// Dadurch erscheint die Registrierung wieder,
-// auch wenn die alte App bereits Daten gespeichert hatte.
 const USER_STORAGE_KEY = "impoJubiUserV2";
 const VISITED_STORAGE_KEY = "impoJubiVisitedV2";
 
@@ -149,19 +146,32 @@ const booths = [
 
   {
     id: 12,
-    name: "Eurocos Cosmetic / Give Back Beauty",
-    qrValue: "EUROCOS",
+    name: "Deurocos Cosmetic",
+    qrValue: "DEUROCOS-COSMETIC",
     area: {
-      left: 19.5,
+      left: 19.8,
       top: 67.0,
-      width: 17.0,
-      height: 16.0,
+      width: 16.2,
+      height: 10.0,
     },
     rotate: -45,
   },
 
   {
     id: 13,
+    name: "Give Back Beauty",
+    qrValue: "GIVE-BACK-BEAUTY",
+    area: {
+      left: 24.0,
+      top: 76.0,
+      width: 12.5,
+      height: 5.5,
+    },
+    rotate: -45,
+  },
+
+  {
+    id: 14,
     name: "Coty",
     qrValue: "COTY",
     area: {
@@ -173,7 +183,7 @@ const booths = [
   },
 
   {
-    id: 14,
+    id: 15,
     name: "Puig",
     qrValue: "PUIG",
     area: {
@@ -185,7 +195,7 @@ const booths = [
   },
 
   {
-    id: 15,
+    id: 16,
     name: "Estée Lauder",
     qrValue: "ESTEE-LAUDER",
     area: {
@@ -211,6 +221,8 @@ export default function App() {
 
   const [scannerOpen, setScannerOpen] = useState(false);
 
+  const [scannerStatus, setScannerStatus] = useState("");
+
   const [message, setMessage] = useState("");
 
   const [mapError, setMapError] = useState(false);
@@ -220,7 +232,7 @@ export default function App() {
   const qrRegionId = "qr-reader-region";
 
   // --------------------------------------------------
-  // SPLASH SCREEN
+  // SPLASH
   // --------------------------------------------------
 
   useEffect(() => {
@@ -234,7 +246,7 @@ export default function App() {
   }, []);
 
   // --------------------------------------------------
-  // LOAD USER
+  // LOAD SAVED DATA
   // --------------------------------------------------
 
   useEffect(() => {
@@ -336,6 +348,42 @@ export default function App() {
   );
 
   // --------------------------------------------------
+  // STOP SCANNER
+  // --------------------------------------------------
+
+  const stopScanner = async () => {
+    if (scannerRef.current) {
+      try {
+        if (scannerRef.current.isScanning) {
+          await scannerRef.current.stop();
+        }
+      } catch {
+        // Ignore stop errors
+      }
+
+      try {
+        await scannerRef.current.clear();
+      } catch {
+        // Ignore clear errors
+      }
+
+      scannerRef.current = null;
+    }
+  };
+
+  // --------------------------------------------------
+  // CLOSE SCANNER
+  // --------------------------------------------------
+
+  const closeScanner = async () => {
+    await stopScanner();
+
+    setScannerOpen(false);
+    setSelectedBooth(null);
+    setScannerStatus("");
+  };
+
+  // --------------------------------------------------
   // BOOTH CLICK
   // --------------------------------------------------
 
@@ -348,15 +396,15 @@ export default function App() {
       return;
     }
 
-    setSelectedBooth(booth);
-
     setMessage("");
+
+    setSelectedBooth(booth);
 
     setScannerOpen(true);
   };
 
   // --------------------------------------------------
-  // START SCANNER
+  // QR SCANNER
   // --------------------------------------------------
 
   useEffect(() => {
@@ -364,110 +412,141 @@ export default function App() {
       return;
     }
 
-    const timer = window.setTimeout(() => {
-      if (scannerRef.current) {
+    let cancelled = false;
+
+    const startScanner = async () => {
+      setScannerStatus(
+        "Starting camera..."
+      );
+
+      await new Promise((resolve) =>
+        window.setTimeout(resolve, 300)
+      );
+
+      if (cancelled) {
         return;
       }
 
-      const scanner = new Html5QrcodeScanner(
-        qrRegionId,
-        {
-          fps: 10,
-
-          qrbox: {
-            width: 220,
-            height: 220,
-          },
-
-          rememberLastUsedCamera: true,
-        },
-        false
-      );
-
-      scanner.render(
-        async (decodedText) => {
-          const cleanValue = decodedText
-            .trim()
-            .toUpperCase();
-
-          const correctValue =
-            selectedBooth.qrValue.toUpperCase();
-
-          if (cleanValue !== correctValue) {
-            setMessage(
-              `This QR code does not belong to ${selectedBooth.name}.`
-            );
-
-            return;
-          }
-
-          setVisited((currentVisited) => {
-            if (
-              currentVisited.includes(
-                selectedBooth.id
-              )
-            ) {
-              return currentVisited;
-            }
-
-            return [
-              ...currentVisited,
-              selectedBooth.id,
-            ];
-          });
-
-          setMessage(
-            `${selectedBooth.name} successfully collected.`
-          );
-
-          try {
-            await scanner.clear();
-          } catch {
-            // ignore scanner cleanup errors
-          }
-
-          scannerRef.current = null;
-
-          setScannerOpen(false);
-
-          setSelectedBooth(null);
-        },
-
-        () => {
-          // Ignore scan errors while camera is searching
-        }
+      const scanner = new Html5Qrcode(
+        qrRegionId
       );
 
       scannerRef.current = scanner;
-    }, 150);
+
+      try {
+        await scanner.start(
+          {
+            facingMode: "environment",
+          },
+
+          {
+            fps: 10,
+
+            qrbox: {
+              width: 230,
+              height: 230,
+            },
+
+            aspectRatio: 1,
+          },
+
+          async (decodedText) => {
+            const scannedValue =
+              decodedText
+                .trim()
+                .toUpperCase();
+
+            const expectedValue =
+              selectedBooth.qrValue
+                .trim()
+                .toUpperCase();
+
+            setScannerStatus(
+              `QR detected: ${decodedText}`
+            );
+
+            // ------------------------------------------
+            // WRONG QR
+            // ------------------------------------------
+
+            if (
+              scannedValue !== expectedValue
+            ) {
+              setMessage(
+                `Wrong QR code. Please scan the QR code for ${selectedBooth.name}.`
+              );
+
+              return;
+            }
+
+            // ------------------------------------------
+            // CORRECT QR
+            // ------------------------------------------
+
+            setVisited(
+              (currentVisited) => {
+                if (
+                  currentVisited.includes(
+                    selectedBooth.id
+                  )
+                ) {
+                  return currentVisited;
+                }
+
+                return [
+                  ...currentVisited,
+                  selectedBooth.id,
+                ];
+              }
+            );
+
+            setMessage(
+              `✓ ${selectedBooth.name} successfully collected.`
+            );
+
+            await stopScanner();
+
+            setScannerOpen(false);
+
+            setSelectedBooth(null);
+
+            setScannerStatus("");
+          },
+
+          () => {
+            // QR not yet found.
+            // This is normal while camera is running.
+          }
+        );
+
+        setScannerStatus(
+          "Camera ready – scan the QR code."
+        );
+      } catch (error) {
+        console.error(
+          "QR scanner error:",
+          error
+        );
+
+        setScannerStatus(
+          "Camera could not be started."
+        );
+
+        setMessage(
+          "Please allow camera access in your browser."
+        );
+      }
+    };
+
+    startScanner();
 
     return () => {
-      window.clearTimeout(timer);
+      cancelled = true;
     };
   }, [scannerOpen, selectedBooth]);
 
   // --------------------------------------------------
-  // CLOSE SCANNER
-  // --------------------------------------------------
-
-  const closeScanner = async () => {
-    if (scannerRef.current) {
-      try {
-        await scannerRef.current.clear();
-      } catch {
-        // ignore cleanup errors
-      }
-
-      scannerRef.current = null;
-    }
-
-    setScannerOpen(false);
-
-    setSelectedBooth(null);
-  };
-
-  // --------------------------------------------------
-  // SPLASH
+  // SPLASH SCREEN
   // --------------------------------------------------
 
   if (showSplash) {
@@ -646,7 +725,9 @@ export default function App() {
 
                 {booths.map((booth) => {
                   const isVisited =
-                    visited.includes(booth.id);
+                    visited.includes(
+                      booth.id
+                    );
 
                   return (
                     <button
@@ -657,7 +738,9 @@ export default function App() {
                           booth
                         )
                       }
-                      aria-label={booth.name}
+                      aria-label={
+                        booth.name
+                      }
                       title={booth.name}
                       style={{
                         ...styles.boothOverlay,
@@ -700,9 +783,11 @@ export default function App() {
                     marginTop: 8,
                   }}
                 >
-                  Upload the original image
-                  to the{" "}
-                  <strong>public</strong>{" "}
+                  Upload your original
+                  image to the{" "}
+                  <strong>
+                    public
+                  </strong>{" "}
                   folder and name it:
                 </div>
 
@@ -715,15 +800,21 @@ export default function App() {
 
           <div style={styles.legend}>
             <div style={styles.legendItem}>
-              <span style={styles.greenBox} />
+              <span
+                style={styles.greenBox}
+              />
 
               <span>Visited</span>
             </div>
 
             <div style={styles.legendItem}>
-              <span style={styles.grayBox} />
+              <span
+                style={styles.grayBox}
+              />
 
-              <span>Not visited</span>
+              <span>
+                Not visited
+              </span>
             </div>
           </div>
 
@@ -751,6 +842,14 @@ export default function App() {
                 </div>
 
                 <div
+                  style={
+                    styles.scannerStatus
+                  }
+                >
+                  {scannerStatus}
+                </div>
+
+                <div
                   id={qrRegionId}
                   style={
                     styles.scannerRegion
@@ -762,7 +861,9 @@ export default function App() {
                   style={
                     styles.secondaryButton
                   }
-                  onClick={closeScanner}
+                  onClick={
+                    closeScanner
+                  }
                 >
                   CLOSE
                 </button>
@@ -781,66 +882,46 @@ export default function App() {
 const styles = {
   page: {
     minHeight: "100vh",
-
     background: LIGHT,
-
     fontFamily:
       '"Helvetica Neue", Helvetica, Arial, sans-serif',
-
     color: BLACK,
   },
 
   app: {
     maxWidth: 430,
-
     minHeight: "100vh",
-
     margin: "0 auto",
-
     background: "#FFFFFF",
   },
 
   splash: {
     position: "fixed",
-
     inset: 0,
-
     background: "#FFFFFF",
-
     display: "flex",
-
     alignItems: "center",
-
     justifyContent: "center",
-
     zIndex: 9999,
   },
 
   splashLogo: {
     width: "72%",
-
     maxWidth: 350,
-
     objectFit: "contain",
   },
 
   header: {
     height: 70,
-
     display: "flex",
-
     alignItems: "center",
-
     padding: "0 20px",
-
     borderBottom: `1px solid ${BORDER}`,
-
     background: "#FFFFFF",
   },
 
   logo: {
     width: 82,
-
     display: "block",
   },
 
@@ -850,39 +931,28 @@ const styles = {
 
   jubiLogoWrapper: {
     display: "flex",
-
     justifyContent: "center",
-
     margin: "10px 0 34px",
   },
 
   jubiLogo: {
     width: "70%",
-
     maxWidth: 280,
-
     objectFit: "contain",
   },
 
   registrationTitle: {
     margin: 0,
-
     fontSize: 36,
-
     lineHeight: 1.05,
-
     fontWeight: 800,
-
     letterSpacing: "-1px",
   },
 
   registrationIntro: {
     margin: "12px 0 30px",
-
     fontSize: 16,
-
     lineHeight: 1.5,
-
     color: "#666666",
   },
 
@@ -892,55 +962,34 @@ const styles = {
 
   label: {
     display: "block",
-
     marginBottom: 7,
-
     fontSize: 13,
-
     fontWeight: 700,
   },
 
   input: {
     width: "100%",
-
     boxSizing: "border-box",
-
     padding: "15px",
-
     marginBottom: 18,
-
     borderRadius: 8,
-
     border: `1px solid ${BORDER}`,
-
     fontSize: 16,
-
     outline: "none",
-
     background: "#FFFFFF",
   },
 
   primaryButton: {
     width: "100%",
-
     marginTop: 5,
-
     padding: 16,
-
     border: "none",
-
     borderRadius: 8,
-
     background: RED,
-
     color: "#FFFFFF",
-
     fontSize: 14,
-
     fontWeight: 800,
-
     letterSpacing: "0.7px",
-
     cursor: "pointer",
   },
 
@@ -950,310 +999,221 @@ const styles = {
 
   eyebrow: {
     margin: 0,
-
     fontSize: 11,
-
     fontWeight: 800,
-
     letterSpacing: "1.2px",
-
     color: RED,
   },
 
   passTitle: {
     margin: "6px 0 8px",
-
     fontSize: 34,
-
     lineHeight: 1.05,
-
     fontWeight: 800,
-
     letterSpacing: "-1px",
   },
 
   intro: {
     margin: "12px 0 26px",
-
     fontSize: 16,
-
     lineHeight: 1.5,
-
     color: "#666666",
   },
 
   progressCard: {
     background: RED,
-
     color: "#FFFFFF",
-
     borderRadius: 14,
-
     padding: 20,
-
     margin: "26px 0 28px",
   },
 
   progressTop: {
     display: "flex",
-
     justifyContent: "space-between",
-
     alignItems: "center",
   },
 
   progressNumber: {
     fontSize: 30,
-
     fontWeight: 800,
   },
 
   progressLabel: {
     marginTop: 2,
-
     fontSize: 13,
-
     opacity: 0.9,
   },
 
   percent: {
     fontSize: 22,
-
     fontWeight: 800,
   },
 
   progressBackground: {
     height: 7,
-
     background:
       "rgba(255,255,255,0.30)",
-
     borderRadius: 999,
-
     marginTop: 18,
-
     overflow: "hidden",
   },
 
   progressBar: {
     height: "100%",
-
     background: "#FFFFFF",
-
     borderRadius: 999,
-
     transition: "width 0.4s ease",
   },
 
   sectionTitle: {
     margin: 0,
-
     fontSize: 22,
-
     fontWeight: 800,
   },
 
   mapIntro: {
     margin: "6px 0 14px",
-
     fontSize: 13,
-
     lineHeight: 1.4,
-
     color: "#777777",
   },
 
   mapCard: {
     border: `1px solid ${BORDER}`,
-
     borderRadius: 14,
-
     padding: 6,
-
     overflow: "hidden",
-
     background: "#FFFFFF",
   },
 
   mapWrapper: {
     position: "relative",
-
     width: "100%",
-
     lineHeight: 0,
   },
 
   mapImage: {
     width: "100%",
-
     height: "auto",
-
     display: "block",
   },
 
   boothOverlay: {
     position: "absolute",
-
     padding: 0,
-
     margin: 0,
-
     borderRadius: 2,
-
     cursor: "pointer",
-
     zIndex: 5,
-
     WebkitTapHighlightColor:
       "transparent",
-
     transition:
       "background 0.25s ease, border 0.25s ease",
   },
 
   mapError: {
     padding: 30,
-
     fontSize: 14,
-
     lineHeight: 1.5,
-
     color: "#555555",
-
     textAlign: "center",
-
     background: "#FAFAFA",
   },
 
   code: {
     display: "inline-block",
-
     marginTop: 12,
-
     padding: "6px 10px",
-
     borderRadius: 6,
-
     background: "#EEEEEE",
-
     color: "#222222",
   },
 
   legend: {
     display: "flex",
-
     gap: 22,
-
     marginTop: 13,
-
     fontSize: 12,
-
     color: "#666666",
   },
 
   legendItem: {
     display: "flex",
-
     alignItems: "center",
-
     gap: 7,
   },
 
   greenBox: {
     width: 16,
-
     height: 16,
-
     borderRadius: 3,
-
     background: GREEN_BG,
-
     border: `1px solid ${GREEN}`,
   },
 
   grayBox: {
     width: 16,
-
     height: 16,
-
     borderRadius: 3,
-
     background: "#FFFFFF",
-
     border: "1px solid #BBBBBB",
   },
 
   message: {
     marginTop: 16,
-
     padding: 13,
-
     borderRadius: 10,
-
     background: "#F7F7F7",
-
     border: `1px solid ${BORDER}`,
-
     fontSize: 13,
-
     lineHeight: 1.4,
   },
 
   scannerCard: {
     marginTop: 18,
-
     padding: 16,
-
     border: `1px solid ${BORDER}`,
-
     borderRadius: 14,
-
     background: "#FFFFFF",
   },
 
   scannerTitle: {
     fontSize: 20,
-
     fontWeight: 800,
   },
 
   scannerSubtitle: {
     marginTop: 4,
-
-    marginBottom: 14,
-
     fontSize: 14,
-
     color: "#666666",
+  },
+
+  scannerStatus: {
+    marginTop: 8,
+    marginBottom: 14,
+    fontSize: 12,
+    color: "#888888",
   },
 
   scannerRegion: {
     width: "100%",
-
+    minHeight: 280,
     overflow: "hidden",
-
     borderRadius: 10,
+    background: "#111111",
   },
 
   secondaryButton: {
     width: "100%",
-
     marginTop: 14,
-
     padding: 14,
-
     borderRadius: 8,
-
     border: `1px solid ${BLACK}`,
-
     background: "#FFFFFF",
-
     color: BLACK,
-
     fontSize: 13,
-
     fontWeight: 800,
-
     cursor: "pointer",
   },
 };
