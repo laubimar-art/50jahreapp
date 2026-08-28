@@ -4,12 +4,21 @@ import {
   Html5QrcodeSupportedFormats,
 } from "html5-qrcode";
 
+// ==================================================
+// COLORS
+// ==================================================
+
 const RED = "#CF2D36";
 const BLACK = "#111111";
 const LIGHT = "#F5F5F5";
 const BORDER = "#E7E7E7";
-const GREEN = "#2E9B4B";
-const GREEN_BG = "rgba(46, 155, 75, 0.20)";
+
+const GREEN = "#209447";
+const GREEN_BG = "rgba(32, 148, 71, 0.18)";
+
+// ==================================================
+// LOCAL STORAGE
+// ==================================================
 
 const USER_STORAGE_KEY = "impoJubiUserV2";
 const VISITED_STORAGE_KEY = "impoJubiVisitedV2";
@@ -21,12 +30,14 @@ const VISITED_STORAGE_KEY = "impoJubiVisitedV2";
 // true:
 // - All booth areas are shown green
 // - GISADA QR validates every selected booth
+// - Every booth can be clicked repeatedly
 //
 // false:
-// - Only visited booths are green
-// - Every booth requires its own QR
+// - Only successfully visited booths are green
+// - Every booth requires its own QR code
 //
 const TEST_MODE = true;
+
 const TEST_QR_VALUE = "GISADA";
 
 // ==================================================
@@ -38,11 +49,12 @@ const booths = [
     id: 1,
     name: "Gisada",
     qrValue: "GISADA",
+
     area: {
-      left: 21.0,
-      top: 2.2,
-      width: 19.0,
-      height: 7.0,
+      left: 12.8,
+      top: 1.7,
+      width: 26.8,
+      height: 7.2,
     },
   },
 
@@ -50,11 +62,12 @@ const booths = [
     id: 2,
     name: "P&I Parfums",
     qrValue: "PI-PARFUMS",
+
     area: {
-      left: 49.0,
-      top: 2.2,
-      width: 14.0,
-      height: 7.0,
+      left: 48.6,
+      top: 1.5,
+      width: 15.4,
+      height: 7.5,
     },
   },
 
@@ -62,11 +75,12 @@ const booths = [
     id: 3,
     name: "Karikaturist",
     qrValue: "KARIKATURIST",
+
     area: {
-      left: 66.5,
-      top: 2.0,
-      width: 12.0,
-      height: 6.0,
+      left: 66.8,
+      top: 1.0,
+      width: 12.5,
+      height: 7.0,
     },
   },
 
@@ -74,11 +88,12 @@ const booths = [
     id: 4,
     name: "Jean-Pierre Rossellet",
     qrValue: "JEAN-PIERRE-ROSSELLET",
+
     area: {
-      left: 43.5,
-      top: 14.0,
-      width: 5.0,
-      height: 7.0,
+      left: 42.9,
+      top: 12.0,
+      width: 5.6,
+      height: 8.0,
     },
   },
 
@@ -86,11 +101,12 @@ const booths = [
     id: 5,
     name: "Nobilis Group",
     qrValue: "NOBILIS-GROUP",
+
     area: {
-      left: 49.3,
-      top: 14.0,
-      width: 13.7,
-      height: 7.0,
+      left: 48.6,
+      top: 12.0,
+      width: 15.4,
+      height: 8.0,
     },
   },
 
@@ -98,10 +114,11 @@ const booths = [
     id: 6,
     name: "Flariel",
     qrValue: "FLARIEL",
+
     area: {
-      left: 43.6,
-      top: 21.5,
-      width: 5.0,
+      left: 42.9,
+      top: 20.0,
+      width: 5.6,
       height: 8.5,
     },
   },
@@ -110,11 +127,12 @@ const booths = [
     id: 7,
     name: "Bode Studios",
     qrValue: "BODE-STUDIOS",
+
     area: {
-      left: 49.3,
-      top: 21.5,
-      width: 13.7,
-      height: 8.0,
+      left: 48.6,
+      top: 20.0,
+      width: 15.4,
+      height: 8.5,
     },
   },
 
@@ -122,11 +140,14 @@ const booths = [
     id: 8,
     name: "L'Oréal Luxe",
     qrValue: "LOREAL-LUXE",
+
+    shape: "circle",
+
     area: {
       left: 40.0,
-      top: 38.0,
-      width: 26.0,
-      height: 24.0,
+      top: 36.2,
+      width: 26.4,
+      height: 24.8,
     },
   },
 
@@ -134,11 +155,12 @@ const booths = [
     id: 9,
     name: "Clarins",
     qrValue: "CLARINS",
+
     area: {
-      left: 48.5,
-      top: 69.2,
-      width: 14.5,
-      height: 7.0,
+      left: 48.0,
+      top: 68.2,
+      width: 15.3,
+      height: 7.8,
     },
   },
 
@@ -146,11 +168,12 @@ const booths = [
     id: 10,
     name: "Bvlgari",
     qrValue: "BVLGARI",
+
     area: {
-      left: 48.5,
-      top: 77.0,
-      width: 14.5,
-      height: 7.0,
+      left: 48.0,
+      top: 76.3,
+      width: 15.3,
+      height: 7.5,
     },
   },
 
@@ -158,11 +181,12 @@ const booths = [
     id: 11,
     name: "Shiseido",
     qrValue: "SHISEIDO",
+
     area: {
-      left: 48.5,
-      top: 90.0,
-      width: 14.5,
-      height: 7.0,
+      left: 48.0,
+      top: 89.0,
+      width: 15.3,
+      height: 8.0,
     },
   },
 
@@ -170,12 +194,14 @@ const booths = [
     id: 12,
     name: "Deurocos Cosmetic",
     qrValue: "DEUROCOS-COSMETIC",
+
     area: {
-      left: 19.8,
-      top: 67.0,
-      width: 16.2,
-      height: 10.0,
+      left: 20.8,
+      top: 68.0,
+      width: 15.5,
+      height: 8.0,
     },
+
     rotate: -45,
   },
 
@@ -183,12 +209,14 @@ const booths = [
     id: 13,
     name: "Give Back Beauty",
     qrValue: "GIVE-BACK-BEAUTY",
+
     area: {
-      left: 24.0,
-      top: 76.0,
-      width: 12.5,
-      height: 5.5,
+      left: 23.8,
+      top: 76.1,
+      width: 13.0,
+      height: 5.2,
     },
+
     rotate: -45,
   },
 
@@ -196,11 +224,12 @@ const booths = [
     id: 14,
     name: "Coty",
     qrValue: "COTY",
+
     area: {
-      left: 13.0,
-      top: 90.0,
-      width: 26.0,
-      height: 7.0,
+      left: 11.4,
+      top: 89.0,
+      width: 26.9,
+      height: 8.0,
     },
   },
 
@@ -208,11 +237,12 @@ const booths = [
     id: 15,
     name: "Puig",
     qrValue: "PUIG",
+
     area: {
-      left: 27.0,
-      top: 14.0,
-      width: 6.5,
-      height: 23.0,
+      left: 25.9,
+      top: 13.2,
+      width: 7.2,
+      height: 23.2,
     },
   },
 
@@ -220,11 +250,12 @@ const booths = [
     id: 16,
     name: "Estée Lauder",
     qrValue: "ESTEE-LAUDER",
+
     area: {
-      left: 1.5,
-      top: 17.0,
-      width: 8.5,
-      height: 67.0,
+      left: 1.4,
+      top: 16.0,
+      width: 8.8,
+      height: 67.8,
     },
   },
 ];
@@ -254,10 +285,9 @@ export default function App() {
   const [mapError, setMapError] = useState(false);
 
   const scannerRef = useRef(null);
+
   const scanLockedRef = useRef(false);
 
-  // NEW:
-  // Used to automatically scroll the scanner into view.
   const scannerSectionRef = useRef(null);
 
   const qrRegionId = "qr-reader-region";
@@ -394,13 +424,19 @@ export default function App() {
         await scanner.stop();
       }
     } catch (error) {
-      console.log("Scanner stop:", error);
+      console.log(
+        "Scanner stop:",
+        error
+      );
     }
 
     try {
       scanner.clear();
     } catch (error) {
-      console.log("Scanner clear:", error);
+      console.log(
+        "Scanner clear:",
+        error
+      );
     }
 
     scannerRef.current = null;
@@ -427,8 +463,9 @@ export default function App() {
   // ==================================================
 
   const handleBoothClick = async (booth) => {
-    // In test mode we allow clicking every booth,
-    // even if it has already been scanned.
+    // In normal mode a visited booth
+    // does not need to be scanned again.
+
     if (
       !TEST_MODE &&
       visited.includes(booth.id)
@@ -440,7 +477,8 @@ export default function App() {
       return;
     }
 
-    // Make sure an old scanner is closed first.
+    // Stop any previous scanner first.
+
     await stopScanner();
 
     setMessage("");
@@ -451,7 +489,7 @@ export default function App() {
   };
 
   // ==================================================
-  // AUTO SCROLL TO SCANNER
+  // AUTO SCROLL TO QR SCANNER
   // ==================================================
 
   useEffect(() => {
@@ -459,7 +497,6 @@ export default function App() {
       return;
     }
 
-    // Wait until React has rendered the scanner card.
     const timer = window.setTimeout(() => {
       if (scannerSectionRef.current) {
         scannerSectionRef.current.scrollIntoView({
@@ -493,7 +530,8 @@ export default function App() {
       );
 
       // Wait until React has rendered
-      // the scanner element.
+      // the QR reader element.
+
       await new Promise((resolve) => {
         window.setTimeout(resolve, 450);
       });
@@ -520,15 +558,16 @@ export default function App() {
             formatsToSupport: [
               Html5QrcodeSupportedFormats.QR_CODE,
             ],
+
             verbose: false,
           }
         );
 
         scannerRef.current = scanner;
 
-        // ----------------------------------------------
+        // ============================================
         // SUCCESSFUL QR SCAN
-        // ----------------------------------------------
+        // ============================================
 
         const onScanSuccess = async (
           decodedText
@@ -549,14 +588,13 @@ export default function App() {
             `QR detected: ${decodedText}`
           );
 
-          // ============================================
+          // ==========================================
           // TEST MODE
-          // ============================================
+          // ==========================================
 
           if (TEST_MODE) {
             if (
-              scannedValue !==
-              TEST_QR_VALUE
+              scannedValue !== TEST_QR_VALUE
             ) {
               setMessage(
                 "For testing, please scan the GISADA QR code."
@@ -622,9 +660,9 @@ export default function App() {
             return;
           }
 
-          // ============================================
+          // ==========================================
           // NORMAL MODE
-          // ============================================
+          // ==========================================
 
           const expectedValue =
             selectedBooth.qrValue
@@ -693,18 +731,18 @@ export default function App() {
           scanLockedRef.current = false;
         };
 
-        // ----------------------------------------------
+        // ============================================
         // SCAN FAILURE
-        // ----------------------------------------------
+        // ============================================
 
         const onScanFailure = () => {
-          // This is normal while no QR is visible.
-          // Therefore nothing happens here.
+          // Normal while no QR code
+          // is visible.
         };
 
-        // ----------------------------------------------
+        // ============================================
         // START CAMERA
-        // ----------------------------------------------
+        // ============================================
 
         await scanner.start(
           {
@@ -797,6 +835,7 @@ export default function App() {
     return (
       <div style={styles.page}>
         <div style={styles.app}>
+
           <header style={styles.header}>
             <img
               src="/impo_logo.png"
@@ -805,16 +844,9 @@ export default function App() {
             />
           </header>
 
-          <main
-            style={
-              styles.registrationContent
-            }
-          >
-            <div
-              style={
-                styles.jubiLogoWrapper
-              }
-            >
+          <main style={styles.registrationContent}>
+
+            <div style={styles.jubiLogoWrapper}>
               <img
                 src="/LogoJubi.png"
                 alt="50 Years Import Parfumerie"
@@ -822,29 +854,19 @@ export default function App() {
               />
             </div>
 
-            <h1
-              style={
-                styles.registrationTitle
-              }
-            >
+            <h1 style={styles.registrationTitle}>
               Welcome!
             </h1>
 
-            <p
-              style={
-                styles.registrationIntro
-              }
-            >
-              Discover our anniversary
-              event and collect the brands
-              you visit in your personal
-              digital brand pass.
+            <p style={styles.registrationIntro}>
+              Discover our anniversary event and
+              collect the brands you visit in your
+              personal digital brand pass.
             </p>
 
             <div style={styles.form}>
-              <label
-                style={styles.label}
-              >
+
+              <label style={styles.label}>
                 First name
               </label>
 
@@ -861,9 +883,7 @@ export default function App() {
                 autoComplete="given-name"
               />
 
-              <label
-                style={styles.label}
-              >
+              <label style={styles.label}>
                 Last name
               </label>
 
@@ -882,15 +902,16 @@ export default function App() {
 
               <button
                 type="button"
-                style={
-                  styles.primaryButton
-                }
+                style={styles.primaryButton}
                 onClick={register}
               >
                 START
               </button>
+
             </div>
+
           </main>
+
         </div>
       </div>
     );
@@ -903,6 +924,7 @@ export default function App() {
   return (
     <div style={styles.page}>
       <div style={styles.app}>
+
         <header style={styles.header}>
           <img
             src="/impo_logo.png"
@@ -912,6 +934,7 @@ export default function App() {
         </header>
 
         <main style={styles.content}>
+
           <p style={styles.eyebrow}>
             50 YEARS IMPORT PARFUMERIE
           </p>
@@ -921,80 +944,68 @@ export default function App() {
           </h1>
 
           <p style={styles.intro}>
-            Welcome to our anniversary
-            event.
+            Welcome to our anniversary event.
           </p>
 
-          {/* ========================================= */}
+          {/* ======================================= */}
           {/* PROGRESS */}
-          {/* ========================================= */}
+          {/* ======================================= */}
 
-          <div
-            style={styles.progressCard}
-          >
-            <div
-              style={styles.progressTop}
-            >
+          <div style={styles.progressCard}>
+
+            <div style={styles.progressTop}>
+
               <div>
-                <div
-                  style={
-                    styles.progressNumber
-                  }
-                >
-                  {visited.length} /{" "}
-                  {booths.length}
+
+                <div style={styles.progressNumber}>
+                  {visited.length} / {booths.length}
                 </div>
 
-                <div
-                  style={
-                    styles.progressLabel
-                  }
-                >
+                <div style={styles.progressLabel}>
                   Booths visited
                 </div>
+
               </div>
 
-              <div
-                style={styles.percent}
-              >
+              <div style={styles.percent}>
                 {progress}%
               </div>
+
             </div>
 
-            <div
-              style={
-                styles.progressBackground
-              }
-            >
+            <div style={styles.progressBackground}>
+
               <div
                 style={{
                   ...styles.progressBar,
                   width: `${progress}%`,
                 }}
               />
+
             </div>
+
           </div>
 
-          {/* ========================================= */}
+          {/* ======================================= */}
           {/* BRAND MAP */}
-          {/* ========================================= */}
+          {/* ======================================= */}
 
-          <h2
-            style={styles.sectionTitle}
-          >
+          <h2 style={styles.sectionTitle}>
             Your brand pass
           </h2>
 
           <p style={styles.mapIntro}>
-            Tap on a booth to scan its QR
-            code.
+            Tap on a booth to scan its QR code.
           </p>
 
           <div style={styles.mapCard}>
+
             {!mapError ? (
-              <div
-                style={styles.mapWrapper}
-              >
+
+              <div style={styles.mapWrapper}>
+
+                {/* ORIGINAL MAP IMAGE */}
+
                 <img
                   src="/brand-map.png"
                   alt="Brand fair map"
@@ -1004,46 +1015,53 @@ export default function App() {
                   }
                 />
 
+                {/* INTERACTIVE BOOTH AREAS */}
+
                 {booths.map((booth) => {
-                  // ===================================
-                  // TEST MODE:
-                  // ALL BOOTHS ARE GREEN
-                  // ===================================
 
                   const isVisited =
                     TEST_MODE ||
-                    visited.includes(
-                      booth.id
-                    );
+                    visited.includes(booth.id);
+
+                  const isCircle =
+                    booth.shape === "circle";
 
                   return (
                     <button
                       key={booth.id}
                       type="button"
+
                       onClick={() =>
-                        handleBoothClick(
-                          booth
-                        )
+                        handleBoothClick(booth)
                       }
-                      aria-label={
-                        booth.name
-                      }
+
+                      aria-label={booth.name}
                       title={booth.name}
+
                       style={{
                         ...styles.boothOverlay,
 
-                        left: `${booth.area.left}%`,
+                        left:
+                          `${booth.area.left}%`,
 
-                        top: `${booth.area.top}%`,
+                        top:
+                          `${booth.area.top}%`,
 
-                        width: `${booth.area.width}%`,
+                        width:
+                          `${booth.area.width}%`,
 
-                        height: `${booth.area.height}%`,
+                        height:
+                          `${booth.area.height}%`,
 
                         transform:
                           booth.rotate
                             ? `rotate(${booth.rotate}deg)`
                             : "none",
+
+                        borderRadius:
+                          isCircle
+                            ? "50%"
+                            : "2px",
 
                         background:
                           isVisited
@@ -1058,134 +1076,127 @@ export default function App() {
                     />
                   );
                 })}
+
               </div>
+
             ) : (
-              <div
-                style={styles.mapError}
-              >
+
+              <div style={styles.mapError}>
+
                 <strong>
                   Map image not found.
                 </strong>
 
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Upload the original
-                  image to the{" "}
-                  <strong>
-                    public
-                  </strong>{" "}
-                  folder and name it:
+                <div style={{ marginTop: 8 }}>
+                  Upload the original image to the{" "}
+                  <strong>public</strong> folder and
+                  name it:
                 </div>
 
-                <code
-                  style={styles.code}
-                >
+                <code style={styles.code}>
                   brand-map.png
                 </code>
+
               </div>
+
             )}
+
           </div>
 
-          {/* ========================================= */}
+          {/* ======================================= */}
           {/* LEGEND */}
-          {/* ========================================= */}
+          {/* ======================================= */}
 
           <div style={styles.legend}>
-            <div
-              style={styles.legendItem}
-            >
-              <span
-                style={styles.greenBox}
-              />
 
-              <span>Visited</span>
+            <div style={styles.legendItem}>
+
+              <span style={styles.greenBox} />
+
+              <span>
+                Visited
+              </span>
+
             </div>
 
-            <div
-              style={styles.legendItem}
-            >
-              <span
-                style={styles.grayBox}
-              />
+            <div style={styles.legendItem}>
 
-              <span>Not visited</span>
+              <span style={styles.grayBox} />
+
+              <span>
+                Not visited
+              </span>
+
             </div>
+
           </div>
 
-          {/* ========================================= */}
+          {/* ======================================= */}
           {/* MESSAGE */}
-          {/* ========================================= */}
+          {/* ======================================= */}
 
           {message && (
-            <div
-              style={styles.message}
-            >
+
+            <div style={styles.message}>
               {message}
             </div>
+
           )}
 
-          {/* ========================================= */}
+          {/* ======================================= */}
           {/* QR SCANNER */}
-          {/* ========================================= */}
+          {/* ======================================= */}
 
-          {scannerOpen &&
-            selectedBooth && (
-              <div
-                ref={
-                  scannerSectionRef
-                }
-                style={
-                  styles.scannerCard
-                }
-              >
-                <div
-                  style={
-                    styles.scannerTitle
-                  }
-                >
-                  Scan QR code
+          {scannerOpen && selectedBooth && (
+
+            <div
+              ref={scannerSectionRef}
+              style={styles.scannerCard}
+            >
+
+              <div style={styles.scannerHeader}>
+
+                <div>
+
+                  <div style={styles.scannerTitle}>
+                    Scan QR code
+                  </div>
+
+                  <div style={styles.scannerSubtitle}>
+                    {selectedBooth.name}
+                  </div>
+
                 </div>
 
-                <div
-                  style={
-                    styles.scannerSubtitle
-                  }
-                >
-                  {selectedBooth.name}
+                <div style={styles.scannerBadge}>
+                  QR
                 </div>
 
-                <div
-                  style={
-                    styles.scannerStatus
-                  }
-                >
-                  {scannerStatus}
-                </div>
-
-                <div
-                  id={qrRegionId}
-                  style={
-                    styles.scannerRegion
-                  }
-                />
-
-                <button
-                  type="button"
-                  style={
-                    styles.secondaryButton
-                  }
-                  onClick={
-                    closeScanner
-                  }
-                >
-                  CLOSE
-                </button>
               </div>
-            )}
+
+              <div style={styles.scannerStatus}>
+                {scannerStatus}
+              </div>
+
+              <div
+                id={qrRegionId}
+                style={styles.scannerRegion}
+              />
+
+              <button
+                type="button"
+                style={styles.secondaryButton}
+                onClick={closeScanner}
+              >
+                CLOSE
+              </button>
+
+            </div>
+
+          )}
+
         </main>
+
       </div>
     </div>
   );
@@ -1196,6 +1207,11 @@ export default function App() {
 // ==================================================
 
 const styles = {
+
+  // ==================================================
+  // PAGE
+  // ==================================================
+
   page: {
     minHeight: "100vh",
 
@@ -1217,9 +1233,9 @@ const styles = {
     background: "#FFFFFF",
   },
 
-  // --------------------------------------------------
+  // ==================================================
   // SPLASH
-  // --------------------------------------------------
+  // ==================================================
 
   splash: {
     position: "fixed",
@@ -1245,9 +1261,9 @@ const styles = {
     objectFit: "contain",
   },
 
-  // --------------------------------------------------
+  // ==================================================
   // HEADER
-  // --------------------------------------------------
+  // ==================================================
 
   header: {
     height: 70,
@@ -1258,7 +1274,8 @@ const styles = {
 
     padding: "0 20px",
 
-    borderBottom: `1px solid ${BORDER}`,
+    borderBottom:
+      `1px solid ${BORDER}`,
 
     background: "#FFFFFF",
   },
@@ -1269,12 +1286,13 @@ const styles = {
     display: "block",
   },
 
-  // --------------------------------------------------
+  // ==================================================
   // REGISTRATION
-  // --------------------------------------------------
+  // ==================================================
 
   registrationContent: {
-    padding: "30px 20px 50px",
+    padding:
+      "30px 20px 50px",
   },
 
   jubiLogoWrapper: {
@@ -1282,7 +1300,8 @@ const styles = {
 
     justifyContent: "center",
 
-    margin: "10px 0 34px",
+    margin:
+      "10px 0 34px",
   },
 
   jubiLogo: {
@@ -1306,7 +1325,8 @@ const styles = {
   },
 
   registrationIntro: {
-    margin: "12px 0 30px",
+    margin:
+      "12px 0 30px",
 
     fontSize: 16,
 
@@ -1332,15 +1352,17 @@ const styles = {
   input: {
     width: "100%",
 
-    boxSizing: "border-box",
+    boxSizing:
+      "border-box",
 
-    padding: "15px",
+    padding: 15,
 
     marginBottom: 18,
 
     borderRadius: 8,
 
-    border: `1px solid ${BORDER}`,
+    border:
+      `1px solid ${BORDER}`,
 
     fontSize: 16,
 
@@ -1373,12 +1395,13 @@ const styles = {
     cursor: "pointer",
   },
 
-  // --------------------------------------------------
-  // MAIN CONTENT
-  // --------------------------------------------------
+  // ==================================================
+  // MAIN
+  // ==================================================
 
   content: {
-    padding: "28px 20px 50px",
+    padding:
+      "28px 20px 60px",
   },
 
   eyebrow: {
@@ -1394,7 +1417,8 @@ const styles = {
   },
 
   passTitle: {
-    margin: "6px 0 8px",
+    margin:
+      "6px 0 8px",
 
     fontSize: 34,
 
@@ -1406,7 +1430,8 @@ const styles = {
   },
 
   intro: {
-    margin: "12px 0 26px",
+    margin:
+      "12px 0 26px",
 
     fontSize: 16,
 
@@ -1415,9 +1440,9 @@ const styles = {
     color: "#666666",
   },
 
-  // --------------------------------------------------
+  // ==================================================
   // PROGRESS
-  // --------------------------------------------------
+  // ==================================================
 
   progressCard: {
     background: RED,
@@ -1428,7 +1453,8 @@ const styles = {
 
     padding: 20,
 
-    margin: "26px 0 28px",
+    margin:
+      "26px 0 28px",
   },
 
   progressTop: {
@@ -1437,7 +1463,8 @@ const styles = {
     justifyContent:
       "space-between",
 
-    alignItems: "center",
+    alignItems:
+      "center",
   },
 
   progressNumber: {
@@ -1476,7 +1503,8 @@ const styles = {
   progressBar: {
     height: "100%",
 
-    background: "#FFFFFF",
+    background:
+      "#FFFFFF",
 
     borderRadius: 999,
 
@@ -1484,9 +1512,9 @@ const styles = {
       "width 0.4s ease",
   },
 
-  // --------------------------------------------------
+  // ==================================================
   // MAP
-  // --------------------------------------------------
+  // ==================================================
 
   sectionTitle: {
     margin: 0,
@@ -1497,7 +1525,8 @@ const styles = {
   },
 
   mapIntro: {
-    margin: "6px 0 14px",
+    margin:
+      "6px 0 14px",
 
     fontSize: 13,
 
@@ -1507,7 +1536,8 @@ const styles = {
   },
 
   mapCard: {
-    border: `1px solid ${BORDER}`,
+    border:
+      `1px solid ${BORDER}`,
 
     borderRadius: 14,
 
@@ -1515,7 +1545,8 @@ const styles = {
 
     overflow: "hidden",
 
-    background: "#FFFFFF",
+    background:
+      "#FFFFFF",
   },
 
   mapWrapper: {
@@ -1532,6 +1563,10 @@ const styles = {
     height: "auto",
 
     display: "block",
+
+    userSelect: "none",
+
+    WebkitUserDrag: "none",
   },
 
   boothOverlay: {
@@ -1541,17 +1576,20 @@ const styles = {
 
     margin: 0,
 
-    borderRadius: 2,
+    boxSizing:
+      "border-box",
 
     cursor: "pointer",
 
     zIndex: 5,
 
+    outline: "none",
+
     WebkitTapHighlightColor:
       "transparent",
 
     transition:
-      "background 0.25s ease, border 0.25s ease",
+      "background 0.2s ease, border 0.2s ease",
   },
 
   mapError: {
@@ -1563,28 +1601,34 @@ const styles = {
 
     color: "#555555",
 
-    textAlign: "center",
+    textAlign:
+      "center",
 
-    background: "#FAFAFA",
+    background:
+      "#FAFAFA",
   },
 
   code: {
-    display: "inline-block",
+    display:
+      "inline-block",
 
     marginTop: 12,
 
-    padding: "6px 10px",
+    padding:
+      "6px 10px",
 
     borderRadius: 6,
 
-    background: "#EEEEEE",
+    background:
+      "#EEEEEE",
 
-    color: "#222222",
+    color:
+      "#222222",
   },
 
-  // --------------------------------------------------
+  // ==================================================
   // LEGEND
-  // --------------------------------------------------
+  // ==================================================
 
   legend: {
     display: "flex",
@@ -1601,7 +1645,8 @@ const styles = {
   legendItem: {
     display: "flex",
 
-    alignItems: "center",
+    alignItems:
+      "center",
 
     gap: 7,
   },
@@ -1613,9 +1658,11 @@ const styles = {
 
     borderRadius: 3,
 
-    background: GREEN_BG,
+    background:
+      GREEN_BG,
 
-    border: `1px solid ${GREEN}`,
+    border:
+      `1px solid ${GREEN}`,
   },
 
   grayBox: {
@@ -1625,15 +1672,16 @@ const styles = {
 
     borderRadius: 3,
 
-    background: "#FFFFFF",
+    background:
+      "#FFFFFF",
 
     border:
       "1px solid #BBBBBB",
   },
 
-  // --------------------------------------------------
+  // ==================================================
   // MESSAGE
-  // --------------------------------------------------
+  // ==================================================
 
   message: {
     marginTop: 16,
@@ -1642,33 +1690,50 @@ const styles = {
 
     borderRadius: 10,
 
-    background: "#F7F7F7",
+    background:
+      "#F7F7F7",
 
-    border: `1px solid ${BORDER}`,
+    border:
+      `1px solid ${BORDER}`,
 
     fontSize: 13,
 
     lineHeight: 1.4,
   },
 
-  // --------------------------------------------------
+  // ==================================================
   // QR SCANNER
-  // --------------------------------------------------
+  // ==================================================
 
   scannerCard: {
-    marginTop: 18,
+    marginTop: 20,
 
     padding: 16,
 
-    border: `1px solid ${BORDER}`,
+    border:
+      `1px solid ${BORDER}`,
 
     borderRadius: 14,
 
-    background: "#FFFFFF",
+    background:
+      "#FFFFFF",
 
-    // Gives the scanner some space at the top
-    // after automatic scrolling.
     scrollMarginTop: 16,
+
+    boxShadow:
+      "0 8px 30px rgba(0,0,0,0.08)",
+  },
+
+  scannerHeader: {
+    display: "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "space-between",
+
+    gap: 12,
   },
 
   scannerTitle: {
@@ -1682,17 +1747,50 @@ const styles = {
 
     fontSize: 14,
 
-    color: "#666666",
+    color:
+      "#666666",
+  },
+
+  scannerBadge: {
+    minWidth: 38,
+
+    height: 38,
+
+    padding:
+      "0 8px",
+
+    borderRadius: 8,
+
+    display: "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    background:
+      RED,
+
+    color:
+      "#FFFFFF",
+
+    fontSize: 11,
+
+    fontWeight: 800,
   },
 
   scannerStatus: {
-    marginTop: 8,
+    marginTop: 10,
 
     marginBottom: 14,
 
     fontSize: 12,
 
-    color: "#777777",
+    lineHeight: 1.4,
+
+    color:
+      "#777777",
   },
 
   scannerRegion: {
@@ -1700,11 +1798,13 @@ const styles = {
 
     minHeight: 300,
 
-    overflow: "hidden",
+    overflow:
+      "hidden",
 
     borderRadius: 10,
 
-    background: "#111111",
+    background:
+      "#111111",
   },
 
   secondaryButton: {
@@ -1716,16 +1816,20 @@ const styles = {
 
     borderRadius: 8,
 
-    border: `1px solid ${BLACK}`,
+    border:
+      `1px solid ${BLACK}`,
 
-    background: "#FFFFFF",
+    background:
+      "#FFFFFF",
 
-    color: BLACK,
+    color:
+      BLACK,
 
     fontSize: 13,
 
     fontWeight: 800,
 
-    cursor: "pointer",
+    cursor:
+      "pointer",
   },
 };
