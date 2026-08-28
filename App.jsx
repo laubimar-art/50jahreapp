@@ -19,14 +19,19 @@ const VISITED_STORAGE_KEY = "impoJubiVisitedV2";
 // ==================================================
 //
 // true:
-// The GISADA QR code validates EVERY booth.
-// Useful for checking the green overlay positions.
+// - All booth areas are shown green
+// - GISADA QR validates every selected booth
 //
 // false:
-// Every booth requires its own QR code.
+// - Only visited booths are green
+// - Every booth requires its own QR
 //
 const TEST_MODE = true;
 const TEST_QR_VALUE = "GISADA";
+
+// ==================================================
+// BOOTHS
+// ==================================================
 
 const booths = [
   {
@@ -224,6 +229,10 @@ const booths = [
   },
 ];
 
+// ==================================================
+// APP
+// ==================================================
+
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -247,11 +256,15 @@ export default function App() {
   const scannerRef = useRef(null);
   const scanLockedRef = useRef(false);
 
+  // NEW:
+  // Used to automatically scroll the scanner into view.
+  const scannerSectionRef = useRef(null);
+
   const qrRegionId = "qr-reader-region";
 
-  // --------------------------------------------------
+  // ==================================================
   // SPLASH
-  // --------------------------------------------------
+  // ==================================================
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -263,9 +276,9 @@ export default function App() {
     };
   }, []);
 
-  // --------------------------------------------------
+  // ==================================================
   // LOAD SAVED DATA
-  // --------------------------------------------------
+  // ==================================================
 
   useEffect(() => {
     const savedUser = localStorage.getItem(
@@ -306,9 +319,9 @@ export default function App() {
     }
   }, []);
 
-  // --------------------------------------------------
+  // ==================================================
   // SAVE VISITED
-  // --------------------------------------------------
+  // ==================================================
 
   useEffect(() => {
     if (!registered) {
@@ -321,9 +334,9 @@ export default function App() {
     );
   }, [visited, registered]);
 
-  // --------------------------------------------------
+  // ==================================================
   // REGISTER
-  // --------------------------------------------------
+  // ==================================================
 
   const register = () => {
     const cleanFirstname = firstname.trim();
@@ -357,17 +370,17 @@ export default function App() {
     setRegistered(true);
   };
 
-  // --------------------------------------------------
+  // ==================================================
   // PROGRESS
-  // --------------------------------------------------
+  // ==================================================
 
   const progress = Math.round(
     (visited.length / booths.length) * 100
   );
 
-  // --------------------------------------------------
+  // ==================================================
   // STOP SCANNER
-  // --------------------------------------------------
+  // ==================================================
 
   const stopScanner = async () => {
     const scanner = scannerRef.current;
@@ -393,9 +406,9 @@ export default function App() {
     scannerRef.current = null;
   };
 
-  // --------------------------------------------------
+  // ==================================================
   // CLOSE SCANNER
-  // --------------------------------------------------
+  // ==================================================
 
   const closeScanner = async () => {
     scanLockedRef.current = true;
@@ -409,18 +422,26 @@ export default function App() {
     scanLockedRef.current = false;
   };
 
-  // --------------------------------------------------
+  // ==================================================
   // BOOTH CLICK
-  // --------------------------------------------------
+  // ==================================================
 
-  const handleBoothClick = (booth) => {
-    if (visited.includes(booth.id)) {
+  const handleBoothClick = async (booth) => {
+    // In test mode we allow clicking every booth,
+    // even if it has already been scanned.
+    if (
+      !TEST_MODE &&
+      visited.includes(booth.id)
+    ) {
       setMessage(
         `✓ ${booth.name} already visited.`
       );
 
       return;
     }
+
+    // Make sure an old scanner is closed first.
+    await stopScanner();
 
     setMessage("");
     setScannerStatus("");
@@ -429,9 +450,33 @@ export default function App() {
     setScannerOpen(true);
   };
 
-  // --------------------------------------------------
+  // ==================================================
+  // AUTO SCROLL TO SCANNER
+  // ==================================================
+
+  useEffect(() => {
+    if (!scannerOpen || !selectedBooth) {
+      return;
+    }
+
+    // Wait until React has rendered the scanner card.
+    const timer = window.setTimeout(() => {
+      if (scannerSectionRef.current) {
+        scannerSectionRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 300);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [scannerOpen, selectedBooth]);
+
+  // ==================================================
   // QR SCANNER
-  // --------------------------------------------------
+  // ==================================================
 
   useEffect(() => {
     if (!scannerOpen || !selectedBooth) {
@@ -447,8 +492,10 @@ export default function App() {
         "Starting camera..."
       );
 
+      // Wait until React has rendered
+      // the scanner element.
       await new Promise((resolve) => {
-        window.setTimeout(resolve, 400);
+        window.setTimeout(resolve, 450);
       });
 
       if (disposed) {
@@ -479,6 +526,10 @@ export default function App() {
 
         scannerRef.current = scanner;
 
+        // ----------------------------------------------
+        // SUCCESSFUL QR SCAN
+        // ----------------------------------------------
+
         const onScanSuccess = async (
           decodedText
         ) => {
@@ -498,9 +549,9 @@ export default function App() {
             `QR detected: ${decodedText}`
           );
 
-          // ==================================================
+          // ============================================
           // TEST MODE
-          // ==================================================
+          // ============================================
 
           if (TEST_MODE) {
             if (
@@ -515,9 +566,6 @@ export default function App() {
 
               return;
             }
-
-            // The GISADA QR validates whichever booth
-            // the user selected on the map.
 
             const boothToCollect =
               selectedBooth;
@@ -574,9 +622,9 @@ export default function App() {
             return;
           }
 
-          // ==================================================
+          // ============================================
           // NORMAL MODE
-          // ==================================================
+          // ============================================
 
           const expectedValue =
             selectedBooth.qrValue
@@ -645,9 +693,18 @@ export default function App() {
           scanLockedRef.current = false;
         };
 
+        // ----------------------------------------------
+        // SCAN FAILURE
+        // ----------------------------------------------
+
         const onScanFailure = () => {
-          // Normal while no QR is detected.
+          // This is normal while no QR is visible.
+          // Therefore nothing happens here.
         };
+
+        // ----------------------------------------------
+        // START CAMERA
+        // ----------------------------------------------
 
         await scanner.start(
           {
@@ -716,9 +773,9 @@ export default function App() {
     };
   }, [scannerOpen, selectedBooth]);
 
-  // --------------------------------------------------
-  // SPLASH
-  // --------------------------------------------------
+  // ==================================================
+  // SPLASH SCREEN
+  // ==================================================
 
   if (showSplash) {
     return (
@@ -732,9 +789,9 @@ export default function App() {
     );
   }
 
-  // --------------------------------------------------
+  // ==================================================
   // REGISTRATION
-  // --------------------------------------------------
+  // ==================================================
 
   if (!registered) {
     return (
@@ -839,9 +896,9 @@ export default function App() {
     );
   }
 
-  // --------------------------------------------------
+  // ==================================================
   // BRAND PASS
-  // --------------------------------------------------
+  // ==================================================
 
   return (
     <div style={styles.page}>
@@ -867,6 +924,10 @@ export default function App() {
             Welcome to our anniversary
             event.
           </p>
+
+          {/* ========================================= */}
+          {/* PROGRESS */}
+          {/* ========================================= */}
 
           <div
             style={styles.progressCard}
@@ -914,6 +975,10 @@ export default function App() {
             </div>
           </div>
 
+          {/* ========================================= */}
+          {/* BRAND MAP */}
+          {/* ========================================= */}
+
           <h2
             style={styles.sectionTitle}
           >
@@ -940,7 +1005,13 @@ export default function App() {
                 />
 
                 {booths.map((booth) => {
+                  // ===================================
+                  // TEST MODE:
+                  // ALL BOOTHS ARE GREEN
+                  // ===================================
+
                   const isVisited =
+                    TEST_MODE ||
                     visited.includes(
                       booth.id
                     );
@@ -1018,6 +1089,10 @@ export default function App() {
             )}
           </div>
 
+          {/* ========================================= */}
+          {/* LEGEND */}
+          {/* ========================================= */}
+
           <div style={styles.legend}>
             <div
               style={styles.legendItem}
@@ -1040,6 +1115,10 @@ export default function App() {
             </div>
           </div>
 
+          {/* ========================================= */}
+          {/* MESSAGE */}
+          {/* ========================================= */}
+
           {message && (
             <div
               style={styles.message}
@@ -1048,9 +1127,16 @@ export default function App() {
             </div>
           )}
 
+          {/* ========================================= */}
+          {/* QR SCANNER */}
+          {/* ========================================= */}
+
           {scannerOpen &&
             selectedBooth && (
               <div
+                ref={
+                  scannerSectionRef
+                }
                 style={
                   styles.scannerCard
                 }
@@ -1112,48 +1198,80 @@ export default function App() {
 const styles = {
   page: {
     minHeight: "100vh",
+
     background: LIGHT,
+
     fontFamily:
       '"Helvetica Neue", Helvetica, Arial, sans-serif',
+
     color: BLACK,
   },
 
   app: {
     maxWidth: 430,
+
     minHeight: "100vh",
+
     margin: "0 auto",
+
     background: "#FFFFFF",
   },
 
+  // --------------------------------------------------
+  // SPLASH
+  // --------------------------------------------------
+
   splash: {
     position: "fixed",
+
     inset: 0,
+
     background: "#FFFFFF",
+
     display: "flex",
+
     alignItems: "center",
+
     justifyContent: "center",
+
     zIndex: 9999,
   },
 
   splashLogo: {
     width: "72%",
+
     maxWidth: 350,
+
     objectFit: "contain",
   },
 
+  // --------------------------------------------------
+  // HEADER
+  // --------------------------------------------------
+
   header: {
     height: 70,
+
     display: "flex",
+
     alignItems: "center",
+
     padding: "0 20px",
+
     borderBottom: `1px solid ${BORDER}`,
+
     background: "#FFFFFF",
   },
 
   logo: {
     width: 82,
+
     display: "block",
   },
+
+  // --------------------------------------------------
+  // REGISTRATION
+  // --------------------------------------------------
 
   registrationContent: {
     padding: "30px 20px 50px",
@@ -1161,28 +1279,39 @@ const styles = {
 
   jubiLogoWrapper: {
     display: "flex",
+
     justifyContent: "center",
+
     margin: "10px 0 34px",
   },
 
   jubiLogo: {
     width: "70%",
+
     maxWidth: 280,
+
     objectFit: "contain",
   },
 
   registrationTitle: {
     margin: 0,
+
     fontSize: 36,
+
     lineHeight: 1.05,
+
     fontWeight: 800,
+
     letterSpacing: "-1px",
   },
 
   registrationIntro: {
     margin: "12px 0 30px",
+
     fontSize: 16,
+
     lineHeight: 1.5,
+
     color: "#666666",
   },
 
@@ -1192,261 +1321,411 @@ const styles = {
 
   label: {
     display: "block",
+
     marginBottom: 7,
+
     fontSize: 13,
+
     fontWeight: 700,
   },
 
   input: {
     width: "100%",
+
     boxSizing: "border-box",
+
     padding: "15px",
+
     marginBottom: 18,
+
     borderRadius: 8,
+
     border: `1px solid ${BORDER}`,
+
     fontSize: 16,
+
     outline: "none",
+
     background: "#FFFFFF",
   },
 
   primaryButton: {
     width: "100%",
+
     marginTop: 5,
+
     padding: 16,
+
     border: "none",
+
     borderRadius: 8,
+
     background: RED,
+
     color: "#FFFFFF",
+
     fontSize: 14,
+
     fontWeight: 800,
+
     letterSpacing: "0.7px",
+
     cursor: "pointer",
   },
 
+  // --------------------------------------------------
+  // MAIN CONTENT
+  // --------------------------------------------------
+
   content: {
-    padding: "28px 20px 40px",
+    padding: "28px 20px 50px",
   },
 
   eyebrow: {
     margin: 0,
+
     fontSize: 11,
+
     fontWeight: 800,
+
     letterSpacing: "1.2px",
+
     color: RED,
   },
 
   passTitle: {
     margin: "6px 0 8px",
+
     fontSize: 34,
+
     lineHeight: 1.05,
+
     fontWeight: 800,
+
     letterSpacing: "-1px",
   },
 
   intro: {
     margin: "12px 0 26px",
+
     fontSize: 16,
+
     lineHeight: 1.5,
+
     color: "#666666",
   },
 
+  // --------------------------------------------------
+  // PROGRESS
+  // --------------------------------------------------
+
   progressCard: {
     background: RED,
+
     color: "#FFFFFF",
+
     borderRadius: 14,
+
     padding: 20,
+
     margin: "26px 0 28px",
   },
 
   progressTop: {
     display: "flex",
+
     justifyContent:
       "space-between",
+
     alignItems: "center",
   },
 
   progressNumber: {
     fontSize: 30,
+
     fontWeight: 800,
   },
 
   progressLabel: {
     marginTop: 2,
+
     fontSize: 13,
+
     opacity: 0.9,
   },
 
   percent: {
     fontSize: 22,
+
     fontWeight: 800,
   },
 
   progressBackground: {
     height: 7,
+
     background:
       "rgba(255,255,255,0.30)",
+
     borderRadius: 999,
+
     marginTop: 18,
+
     overflow: "hidden",
   },
 
   progressBar: {
     height: "100%",
+
     background: "#FFFFFF",
+
     borderRadius: 999,
+
     transition:
       "width 0.4s ease",
   },
 
+  // --------------------------------------------------
+  // MAP
+  // --------------------------------------------------
+
   sectionTitle: {
     margin: 0,
+
     fontSize: 22,
+
     fontWeight: 800,
   },
 
   mapIntro: {
     margin: "6px 0 14px",
+
     fontSize: 13,
+
     lineHeight: 1.4,
+
     color: "#777777",
   },
 
   mapCard: {
     border: `1px solid ${BORDER}`,
+
     borderRadius: 14,
+
     padding: 6,
+
     overflow: "hidden",
+
     background: "#FFFFFF",
   },
 
   mapWrapper: {
     position: "relative",
+
     width: "100%",
+
     lineHeight: 0,
   },
 
   mapImage: {
     width: "100%",
+
     height: "auto",
+
     display: "block",
   },
 
   boothOverlay: {
     position: "absolute",
+
     padding: 0,
+
     margin: 0,
+
     borderRadius: 2,
+
     cursor: "pointer",
+
     zIndex: 5,
+
     WebkitTapHighlightColor:
       "transparent",
+
     transition:
       "background 0.25s ease, border 0.25s ease",
   },
 
   mapError: {
     padding: 30,
+
     fontSize: 14,
+
     lineHeight: 1.5,
+
     color: "#555555",
+
     textAlign: "center",
+
     background: "#FAFAFA",
   },
 
   code: {
     display: "inline-block",
+
     marginTop: 12,
+
     padding: "6px 10px",
+
     borderRadius: 6,
+
     background: "#EEEEEE",
+
     color: "#222222",
   },
 
+  // --------------------------------------------------
+  // LEGEND
+  // --------------------------------------------------
+
   legend: {
     display: "flex",
+
     gap: 22,
+
     marginTop: 13,
+
     fontSize: 12,
+
     color: "#666666",
   },
 
   legendItem: {
     display: "flex",
+
     alignItems: "center",
+
     gap: 7,
   },
 
   greenBox: {
     width: 16,
+
     height: 16,
+
     borderRadius: 3,
+
     background: GREEN_BG,
+
     border: `1px solid ${GREEN}`,
   },
 
   grayBox: {
     width: 16,
+
     height: 16,
+
     borderRadius: 3,
+
     background: "#FFFFFF",
+
     border:
       "1px solid #BBBBBB",
   },
 
+  // --------------------------------------------------
+  // MESSAGE
+  // --------------------------------------------------
+
   message: {
     marginTop: 16,
+
     padding: 13,
+
     borderRadius: 10,
+
     background: "#F7F7F7",
+
     border: `1px solid ${BORDER}`,
+
     fontSize: 13,
+
     lineHeight: 1.4,
   },
 
+  // --------------------------------------------------
+  // QR SCANNER
+  // --------------------------------------------------
+
   scannerCard: {
     marginTop: 18,
+
     padding: 16,
+
     border: `1px solid ${BORDER}`,
+
     borderRadius: 14,
+
     background: "#FFFFFF",
+
+    // Gives the scanner some space at the top
+    // after automatic scrolling.
+    scrollMarginTop: 16,
   },
 
   scannerTitle: {
     fontSize: 20,
+
     fontWeight: 800,
   },
 
   scannerSubtitle: {
     marginTop: 4,
+
     fontSize: 14,
+
     color: "#666666",
   },
 
   scannerStatus: {
     marginTop: 8,
+
     marginBottom: 14,
+
     fontSize: 12,
+
     color: "#777777",
   },
 
   scannerRegion: {
     width: "100%",
+
     minHeight: 300,
+
     overflow: "hidden",
+
     borderRadius: 10,
+
     background: "#111111",
   },
 
   secondaryButton: {
     width: "100%",
+
     marginTop: 14,
+
     padding: 14,
+
     borderRadius: 8,
+
     border: `1px solid ${BLACK}`,
+
     background: "#FFFFFF",
+
     color: BLACK,
+
     fontSize: 13,
+
     fontWeight: 800,
+
     cursor: "pointer",
   },
 };
