@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Html5Qrcode } from "html5-qrcode";
+import {
+  Html5Qrcode,
+  Html5QrcodeSupportedFormats,
+} from "html5-qrcode";
 
 const RED = "#CF2D36";
 const BLACK = "#111111";
@@ -228,6 +231,7 @@ export default function App() {
   const [mapError, setMapError] = useState(false);
 
   const scannerRef = useRef(null);
+  const scanLockedRef = useRef(false);
 
   const qrRegionId = "qr-reader-region";
 
@@ -289,7 +293,7 @@ export default function App() {
   }, []);
 
   // --------------------------------------------------
-  // SAVE VISITED BOOTHS
+  // SAVE VISITED
   // --------------------------------------------------
 
   useEffect(() => {
@@ -352,23 +356,27 @@ export default function App() {
   // --------------------------------------------------
 
   const stopScanner = async () => {
-    if (scannerRef.current) {
-      try {
-        if (scannerRef.current.isScanning) {
-          await scannerRef.current.stop();
-        }
-      } catch {
-        // Ignore stop errors
-      }
+    const scanner = scannerRef.current;
 
-      try {
-        await scannerRef.current.clear();
-      } catch {
-        // Ignore clear errors
-      }
-
-      scannerRef.current = null;
+    if (!scanner) {
+      return;
     }
+
+    try {
+      if (scanner.isScanning) {
+        await scanner.stop();
+      }
+    } catch (error) {
+      console.log("Scanner stop:", error);
+    }
+
+    try {
+      scanner.clear();
+    } catch (error) {
+      console.log("Scanner clear:", error);
+    }
+
+    scannerRef.current = null;
   };
 
   // --------------------------------------------------
@@ -376,11 +384,14 @@ export default function App() {
   // --------------------------------------------------
 
   const closeScanner = async () => {
+    scanLockedRef.current = true;
+
     await stopScanner();
 
     setScannerOpen(false);
     setSelectedBooth(null);
     setScannerStatus("");
+    scanLockedRef.current = false;
   };
 
   // --------------------------------------------------
@@ -390,16 +401,16 @@ export default function App() {
   const handleBoothClick = (booth) => {
     if (visited.includes(booth.id)) {
       setMessage(
-        `${booth.name} already visited.`
+        `✓ ${booth.name} already visited.`
       );
 
       return;
     }
 
     setMessage("");
+    setScannerStatus("");
 
     setSelectedBooth(booth);
-
     setScannerOpen(true);
   };
 
@@ -412,128 +423,209 @@ export default function App() {
       return;
     }
 
-    let cancelled = false;
+    let disposed = false;
 
     const startScanner = async () => {
+      scanLockedRef.current = false;
+
       setScannerStatus(
         "Starting camera..."
       );
 
-      await new Promise((resolve) =>
-        window.setTimeout(resolve, 300)
-      );
+      // Wait until React has rendered the scanner DIV.
+      await new Promise((resolve) => {
+        window.setTimeout(resolve, 400);
+      });
 
-      if (cancelled) {
+      if (disposed) {
         return;
       }
 
-      const scanner = new Html5Qrcode(
-        qrRegionId
-      );
+      const readerElement =
+        document.getElementById(qrRegionId);
 
-      scannerRef.current = scanner;
+      if (!readerElement) {
+        setScannerStatus(
+          "Scanner could not be loaded."
+        );
+
+        return;
+      }
 
       try {
+        const scanner = new Html5Qrcode(
+          qrRegionId,
+          {
+            formatsToSupport: [
+              Html5QrcodeSupportedFormats.QR_CODE,
+            ],
+            verbose: false,
+          }
+        );
+
+        scannerRef.current = scanner;
+
+        const onScanSuccess = async (
+          decodedText
+        ) => {
+          if (scanLockedRef.current) {
+            return;
+          }
+
+          scanLockedRef.current = true;
+
+          const scannedValue = String(
+            decodedText
+          )
+            .trim()
+            .toUpperCase();
+
+          // Immediately show what the scanner read.
+          setScannerStatus(
+            `QR detected: ${decodedText}`
+          );
+
+          const scannedBooth = booths.find(
+            (booth) =>
+              booth.qrValue
+                .trim()
+                .toUpperCase() ===
+              scannedValue
+          );
+
+          // QR exists but is not one of our booth codes.
+          if (!scannedBooth) {
+            setMessage(
+              `QR detected, but "${decodedText}" is not a valid booth code.`
+            );
+
+            scanLockedRef.current = false;
+
+            return;
+          }
+
+          // User clicked Gisada but scans another booth.
+          if (
+            scannedBooth.id !==
+            selectedBooth.id
+          ) {
+            setMessage(
+              `This is the QR code for ${scannedBooth.name}. Please scan ${selectedBooth.name}.`
+            );
+
+            scanLockedRef.current = false;
+
+            return;
+          }
+
+          // Correct QR.
+          setVisited((currentVisited) => {
+            if (
+              currentVisited.includes(
+                scannedBooth.id
+              )
+            ) {
+              return currentVisited;
+            }
+
+            return [
+              ...currentVisited,
+              scannedBooth.id,
+            ];
+          });
+
+          setMessage(
+            `✓ ${scannedBooth.name} successfully collected.`
+          );
+
+          try {
+            if (scanner.isScanning) {
+              await scanner.stop();
+            }
+          } catch (error) {
+            console.log(
+              "Scanner stop after scan:",
+              error
+            );
+          }
+
+          try {
+            scanner.clear();
+          } catch (error) {
+            console.log(
+              "Scanner clear after scan:",
+              error
+            );
+          }
+
+          scannerRef.current = null;
+
+          setScannerOpen(false);
+          setSelectedBooth(null);
+          setScannerStatus("");
+
+          scanLockedRef.current = false;
+        };
+
+        const onScanFailure = () => {
+          // This callback fires constantly while
+          // no QR code is visible.
+          // Therefore we intentionally do nothing.
+        };
+
         await scanner.start(
           {
             facingMode: "environment",
           },
 
           {
-            fps: 10,
+            fps: 15,
 
-            qrbox: {
-              width: 230,
-              height: 230,
-            },
-
-            aspectRatio: 1,
-          },
-
-          async (decodedText) => {
-            const scannedValue =
-              decodedText
-                .trim()
-                .toUpperCase();
-
-            const expectedValue =
-              selectedBooth.qrValue
-                .trim()
-                .toUpperCase();
-
-            setScannerStatus(
-              `QR detected: ${decodedText}`
-            );
-
-            // ------------------------------------------
-            // WRONG QR
-            // ------------------------------------------
-
-            if (
-              scannedValue !== expectedValue
-            ) {
-              setMessage(
-                `Wrong QR code. Please scan the QR code for ${selectedBooth.name}.`
+            // Scan almost the entire camera image.
+            // This is more forgiving than a small qrbox.
+            qrbox: (viewfinderWidth, viewfinderHeight) => {
+              const minEdge = Math.min(
+                viewfinderWidth,
+                viewfinderHeight
               );
 
-              return;
-            }
+              const size = Math.floor(
+                minEdge * 0.85
+              );
 
-            // ------------------------------------------
-            // CORRECT QR
-            // ------------------------------------------
+              return {
+                width: size,
+                height: size,
+              };
+            },
 
-            setVisited(
-              (currentVisited) => {
-                if (
-                  currentVisited.includes(
-                    selectedBooth.id
-                  )
-                ) {
-                  return currentVisited;
-                }
-
-                return [
-                  ...currentVisited,
-                  selectedBooth.id,
-                ];
-              }
-            );
-
-            setMessage(
-              `✓ ${selectedBooth.name} successfully collected.`
-            );
-
-            await stopScanner();
-
-            setScannerOpen(false);
-
-            setSelectedBooth(null);
-
-            setScannerStatus("");
+            disableFlip: false,
           },
 
-          () => {
-            // QR not yet found.
-            // This is normal while camera is running.
-          }
+          onScanSuccess,
+
+          onScanFailure
         );
 
-        setScannerStatus(
-          "Camera ready – scan the QR code."
-        );
+        if (!disposed) {
+          setScannerStatus(
+            "Camera ready – point it at the QR code."
+          );
+        }
       } catch (error) {
         console.error(
           "QR scanner error:",
           error
         );
 
+        scannerRef.current = null;
+
         setScannerStatus(
           "Camera could not be started."
         );
 
         setMessage(
-          "Please allow camera access in your browser."
+          "Please allow camera access and try again."
         );
       }
     };
@@ -541,12 +633,12 @@ export default function App() {
     startScanner();
 
     return () => {
-      cancelled = true;
+      disposed = true;
     };
   }, [scannerOpen, selectedBooth]);
 
   // --------------------------------------------------
-  // SPLASH SCREEN
+  // SPLASH
   // --------------------------------------------------
 
   if (showSplash) {
@@ -691,9 +783,7 @@ export default function App() {
               </div>
             </div>
 
-            <div
-              style={styles.progressBackground}
-            >
+            <div style={styles.progressBackground}>
               <div
                 style={{
                   ...styles.progressBar,
@@ -738,19 +828,14 @@ export default function App() {
                           booth
                         )
                       }
-                      aria-label={
-                        booth.name
-                      }
+                      aria-label={booth.name}
                       title={booth.name}
                       style={{
                         ...styles.boothOverlay,
 
                         left: `${booth.area.left}%`,
-
                         top: `${booth.area.top}%`,
-
                         width: `${booth.area.width}%`,
-
                         height: `${booth.area.height}%`,
 
                         transform:
@@ -778,16 +863,9 @@ export default function App() {
                   Map image not found.
                 </strong>
 
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Upload your original
-                  image to the{" "}
-                  <strong>
-                    public
-                  </strong>{" "}
+                <div style={{ marginTop: 8 }}>
+                  Upload the original image to
+                  the <strong>public</strong>{" "}
                   folder and name it:
                 </div>
 
@@ -800,21 +878,13 @@ export default function App() {
 
           <div style={styles.legend}>
             <div style={styles.legendItem}>
-              <span
-                style={styles.greenBox}
-              />
-
+              <span style={styles.greenBox} />
               <span>Visited</span>
             </div>
 
             <div style={styles.legendItem}>
-              <span
-                style={styles.grayBox}
-              />
-
-              <span>
-                Not visited
-              </span>
+              <span style={styles.grayBox} />
+              <span>Not visited</span>
             </div>
           </div>
 
@@ -827,43 +897,27 @@ export default function App() {
           {scannerOpen &&
             selectedBooth && (
               <div style={styles.scannerCard}>
-                <div
-                  style={styles.scannerTitle}
-                >
+                <div style={styles.scannerTitle}>
                   Scan QR code
                 </div>
 
-                <div
-                  style={
-                    styles.scannerSubtitle
-                  }
-                >
+                <div style={styles.scannerSubtitle}>
                   {selectedBooth.name}
                 </div>
 
-                <div
-                  style={
-                    styles.scannerStatus
-                  }
-                >
+                <div style={styles.scannerStatus}>
                   {scannerStatus}
                 </div>
 
                 <div
                   id={qrRegionId}
-                  style={
-                    styles.scannerRegion
-                  }
+                  style={styles.scannerRegion}
                 />
 
                 <button
                   type="button"
-                  style={
-                    styles.secondaryButton
-                  }
-                  onClick={
-                    closeScanner
-                  }
+                  style={styles.secondaryButton}
+                  onClick={closeScanner}
                 >
                   CLOSE
                 </button>
@@ -1193,12 +1247,12 @@ const styles = {
     marginTop: 8,
     marginBottom: 14,
     fontSize: 12,
-    color: "#888888",
+    color: "#777777",
   },
 
   scannerRegion: {
     width: "100%",
-    minHeight: 280,
+    minHeight: 300,
     overflow: "hidden",
     borderRadius: 10,
     background: "#111111",
