@@ -18,7 +18,21 @@ const VISITED_STORAGE_KEY = "impoJubiVisitedV2";
 const GOODIE_STORAGE_KEY = "impoJubiGoodieV1";
 const SESSIONS_STORAGE_KEY = "impoJubiSessionsV1";
 
+// ==================================================
 // TEST MODE
+// ==================================================
+//
+// true:
+// - all booth overlays are green
+// - GISADA QR works for every booth
+// - GISADA QR works for the Goodie Bag
+// - COLLECT GOODIE BAG is always enabled
+//
+// false:
+// - only visited booths are green
+// - every booth requires its own QR
+// - Goodie Bag unlocks at 14 / 16
+//
 const TEST_MODE = true;
 
 const TEST_QR_VALUE = "GISADA";
@@ -238,7 +252,8 @@ function createUserId() {
 }
 
 function createRecoveryCode() {
-  const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const characters =
+    "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
   const randomCharacter = () => {
     const randomArray = new Uint32Array(1);
@@ -339,8 +354,17 @@ export default function App() {
 
   const scannerId = "qr-reader-region";
 
+  // ==================================================
+  // GOODIE STATUS
+  // ==================================================
+
   const goodieEligible =
     visited.length >= GOODIE_UNLOCK_AT;
+
+  // TEST MODE:
+  // The button is always enabled.
+  const goodieCanCollect =
+    TEST_MODE || goodieEligible;
 
   const goodieCollected =
     Boolean(goodieData.collectedAt);
@@ -376,6 +400,7 @@ export default function App() {
     };
 
     saveJSON(USER_STORAGE_KEY, updatedUser);
+
     setUser(updatedUser);
   }, [user]);
 
@@ -404,7 +429,10 @@ export default function App() {
       savedAt: new Date().toISOString(),
     };
 
-    saveJSON(SESSIONS_STORAGE_KEY, sessions);
+    saveJSON(
+      SESSIONS_STORAGE_KEY,
+      sessions
+    );
   }, [user, visited, goodieData]);
 
   // ==================================================
@@ -412,11 +440,17 @@ export default function App() {
   // ==================================================
 
   useEffect(() => {
-    saveJSON(VISITED_STORAGE_KEY, visited);
+    saveJSON(
+      VISITED_STORAGE_KEY,
+      visited
+    );
   }, [visited]);
 
   useEffect(() => {
-    saveJSON(GOODIE_STORAGE_KEY, goodieData);
+    saveJSON(
+      GOODIE_STORAGE_KEY,
+      goodieData
+    );
   }, [goodieData]);
 
   // ==================================================
@@ -446,8 +480,16 @@ export default function App() {
       collectedAt: null,
     };
 
-    saveJSON(USER_STORAGE_KEY, newUser);
-    saveJSON(VISITED_STORAGE_KEY, []);
+    saveJSON(
+      USER_STORAGE_KEY,
+      newUser
+    );
+
+    saveJSON(
+      VISITED_STORAGE_KEY,
+      []
+    );
+
     saveJSON(
       GOODIE_STORAGE_KEY,
       emptyGoodieData
@@ -455,6 +497,7 @@ export default function App() {
 
     setVisited([]);
     setGoodieData(emptyGoodieData);
+
     setUser(newUser);
   };
 
@@ -463,7 +506,9 @@ export default function App() {
   // ==================================================
 
   const restoreSession = () => {
-    const key = getSessionKey(recoveryInput);
+    const key = getSessionKey(
+      recoveryInput
+    );
 
     if (!key) {
       setRecoveryMessage(
@@ -496,11 +541,10 @@ export default function App() {
       return;
     }
 
-    const restoredVisited = Array.isArray(
-      session.visited
-    )
-      ? session.visited
-      : [];
+    const restoredVisited =
+      Array.isArray(session.visited)
+        ? session.visited
+        : [];
 
     const restoredGoodie =
       session.goodieData || {
@@ -524,6 +568,7 @@ export default function App() {
 
     setVisited(restoredVisited);
     setGoodieData(restoredGoodie);
+
     setUser(session.user);
 
     setRecoveryMessage("");
@@ -554,7 +599,7 @@ export default function App() {
   };
 
   // ==================================================
-  // SCANNER
+  // STOP SCANNER
   // ==================================================
 
   const stopScanner = async () => {
@@ -569,17 +614,27 @@ export default function App() {
         await scanner.stop();
       }
     } catch (error) {
-      console.log("Scanner stop:", error);
+      console.log(
+        "Scanner stop:",
+        error
+      );
     }
 
     try {
       scanner.clear();
     } catch (error) {
-      console.log("Scanner clear:", error);
+      console.log(
+        "Scanner clear:",
+        error
+      );
     }
 
     scannerRef.current = null;
   };
+
+  // ==================================================
+  // CLOSE SCANNER
+  // ==================================================
 
   const closeScanner = async () => {
     scanLockedRef.current = true;
@@ -593,6 +648,10 @@ export default function App() {
 
     scrollToMap();
   };
+
+  // ==================================================
+  // OPEN BOOTH SCANNER
+  // ==================================================
 
   const openBoothScanner = async (booth) => {
     if (
@@ -617,8 +676,21 @@ export default function App() {
     });
   };
 
+  // ==================================================
+  // OPEN GOODIE SCANNER
+  // ==================================================
+
   const openGoodieScanner = async () => {
-    if (!goodieEligible || goodieCollected) {
+    // LIVE:
+    // only possible after 14 booths.
+    //
+    // TEST:
+    // always possible.
+
+    if (
+      (!TEST_MODE && !goodieEligible) ||
+      goodieCollected
+    ) {
       return;
     }
 
@@ -632,6 +704,10 @@ export default function App() {
     });
   };
 
+  // ==================================================
+  // AUTO SCROLL TO SCANNER
+  // ==================================================
+
   useEffect(() => {
     if (!scanTarget) {
       return;
@@ -639,6 +715,10 @@ export default function App() {
 
     scrollToScanner();
   }, [scanTarget]);
+
+  // ==================================================
+  // QR SCANNER
+  // ==================================================
 
   useEffect(() => {
     if (!scanTarget) {
@@ -655,7 +735,10 @@ export default function App() {
       );
 
       await new Promise((resolve) =>
-        window.setTimeout(resolve, 400)
+        window.setTimeout(
+          resolve,
+          400
+        )
       );
 
       if (cancelled) {
@@ -663,7 +746,9 @@ export default function App() {
       }
 
       const scannerElement =
-        document.getElementById(scannerId);
+        document.getElementById(
+          scannerId
+        );
 
       if (!scannerElement) {
         setScannerStatus(
@@ -674,107 +759,144 @@ export default function App() {
       }
 
       try {
-        const scanner = new Html5Qrcode(
-          scannerId
-        );
-
-        scannerRef.current = scanner;
-
-        const handleSuccess = async (
-          decodedText
-        ) => {
-          if (scanLockedRef.current) {
-            return;
-          }
-
-          scanLockedRef.current = true;
-
-          const scannedValue =
-            normalizeQR(decodedText);
-
-          let isCorrectQR = false;
-
-          if (TEST_MODE) {
-            isCorrectQR =
-              scannedValue.includes(
-                normalizeQR(TEST_QR_VALUE)
-              );
-          } else if (
-            scanTarget.type === "goodie"
-          ) {
-            isCorrectQR =
-              scannedValue ===
-              normalizeQR(
-                GOODIE_QR_VALUE
-              );
-          } else {
-            isCorrectQR =
-              scannedValue ===
-              normalizeQR(
-                scanTarget.booth.qrValue
-              );
-          }
-
-          setScannerStatus(
-            `QR detected: ${decodedText}`
+        const scanner =
+          new Html5Qrcode(
+            scannerId
           );
 
-          if (!isCorrectQR) {
-            setMessage(
-              TEST_MODE
-                ? `Wrong test QR. Detected: ${decodedText}`
-                : scanTarget.type === "goodie"
-                  ? "Wrong Goodie Bag QR code."
-                  : `Wrong QR code. Please scan the QR code for ${scanTarget.booth.name}.`
+        scannerRef.current =
+          scanner;
+
+        const handleSuccess =
+          async (decodedText) => {
+            if (
+              scanLockedRef.current
+            ) {
+              return;
+            }
+
+            scanLockedRef.current =
+              true;
+
+            const scannedValue =
+              normalizeQR(
+                decodedText
+              );
+
+            let isCorrectQR =
+              false;
+
+            // ======================================
+            // TEST MODE
+            // ======================================
+
+            if (TEST_MODE) {
+              isCorrectQR =
+                scannedValue.includes(
+                  normalizeQR(
+                    TEST_QR_VALUE
+                  )
+                );
+            } else if (
+              scanTarget.type ===
+              "goodie"
+            ) {
+              isCorrectQR =
+                scannedValue ===
+                normalizeQR(
+                  GOODIE_QR_VALUE
+                );
+            } else {
+              isCorrectQR =
+                scannedValue ===
+                normalizeQR(
+                  scanTarget.booth
+                    .qrValue
+                );
+            }
+
+            setScannerStatus(
+              `QR detected: ${decodedText}`
             );
 
-            scanLockedRef.current = false;
+            if (!isCorrectQR) {
+              setMessage(
+                TEST_MODE
+                  ? `Wrong test QR. Detected: ${decodedText}`
+                  : scanTarget.type ===
+                      "goodie"
+                    ? "Wrong Goodie Bag QR code."
+                    : `Wrong QR code. Please scan the QR code for ${scanTarget.booth.name}.`
+              );
 
-            return;
-          }
+              scanLockedRef.current =
+                false;
 
-          // GOODIE BAG QR
-          if (
-            scanTarget.type === "goodie"
-          ) {
+              return;
+            }
+
+            // ======================================
+            // GOODIE BAG
+            // ======================================
+
+            if (
+              scanTarget.type ===
+              "goodie"
+            ) {
+              await stopScanner();
+
+              setScanTarget(null);
+              setScannerStatus("");
+
+              setGoodieApproved(
+                true
+              );
+
+              scanLockedRef.current =
+                false;
+
+              return;
+            }
+
+            // ======================================
+            // BOOTH
+            // ======================================
+
+            const booth =
+              scanTarget.booth;
+
+            setVisited(
+              (current) =>
+                current.includes(
+                  booth.id
+                )
+                  ? current
+                  : [
+                      ...current,
+                      booth.id,
+                    ]
+            );
+
+            setMessage(
+              `✓ ${booth.name} successfully collected.`
+            );
+
             await stopScanner();
 
             setScanTarget(null);
+
             setScannerStatus("");
-            setGoodieApproved(true);
 
-            scanLockedRef.current = false;
+            scanLockedRef.current =
+              false;
 
-            return;
-          }
-
-          // BOOTH QR
-          const booth =
-            scanTarget.booth;
-
-          setVisited((current) =>
-            current.includes(booth.id)
-              ? current
-              : [...current, booth.id]
-          );
-
-          setMessage(
-            `✓ ${booth.name} successfully collected.`
-          );
-
-          await stopScanner();
-
-          setScanTarget(null);
-          setScannerStatus("");
-
-          scanLockedRef.current = false;
-
-          scrollToMap();
-        };
+            scrollToMap();
+          };
 
         await scanner.start(
           {
-            facingMode: "environment",
+            facingMode:
+              "environment",
           },
 
           {
@@ -784,12 +906,13 @@ export default function App() {
               width,
               height
             ) => {
-              const size = Math.floor(
-                Math.min(
-                  width,
-                  height
-                ) * 0.9
-              );
+              const size =
+                Math.floor(
+                  Math.min(
+                    width,
+                    height
+                  ) * 0.9
+                );
 
               return {
                 width: size,
@@ -808,7 +931,8 @@ export default function App() {
         if (!cancelled) {
           if (TEST_MODE) {
             setScannerStatus(
-              scanTarget.type === "goodie"
+              scanTarget.type ===
+                "goodie"
                 ? "TEST MODE – scan the GISADA QR code to approve the Goodie Bag."
                 : "TEST MODE – scan the GISADA QR code."
             );
@@ -824,7 +948,8 @@ export default function App() {
           error
         );
 
-        scannerRef.current = null;
+        scannerRef.current =
+          null;
 
         setScannerStatus(
           "Camera could not be started."
@@ -854,7 +979,9 @@ export default function App() {
     };
 
     setGoodieData(newData);
+
     setGoodieApproved(false);
+
     setShowGoodieSuccess(true);
   };
 
@@ -911,7 +1038,9 @@ export default function App() {
             pass.
           </p>
 
-          <label style={styles.label}>
+          <label
+            style={styles.label}
+          >
             First name
           </label>
 
@@ -923,13 +1052,16 @@ export default function App() {
             onChange={(event) =>
               setForm((current) => ({
                 ...current,
+
                 firstname:
                   event.target.value,
               }))
             }
           />
 
-          <label style={styles.label}>
+          <label
+            style={styles.label}
+          >
             Last name
           </label>
 
@@ -941,6 +1073,7 @@ export default function App() {
             onChange={(event) =>
               setForm((current) => ({
                 ...current,
+
                 lastname:
                   event.target.value,
               }))
@@ -998,6 +1131,10 @@ export default function App() {
           progress={progress}
         />
 
+        {/* ======================================= */}
+        {/* MAP */}
+        {/* ======================================= */}
+
         <section
           ref={mapSectionRef}
           style={styles.mapSection}
@@ -1038,9 +1175,7 @@ export default function App() {
                     <button
                       key={booth.id}
                       type="button"
-                      aria-label={
-                        booth.name
-                      }
+                      aria-label={booth.name}
                       title={booth.name}
                       onClick={() =>
                         openBoothScanner(
@@ -1100,8 +1235,8 @@ export default function App() {
                     marginTop: 8,
                   }}
                 >
-                  Upload the original
-                  image to the{" "}
+                  Upload the original image
+                  to the{" "}
                   <strong>public</strong>{" "}
                   folder as:
                 </div>
@@ -1130,13 +1265,15 @@ export default function App() {
           </div>
 
           {message && (
-            <div
-              style={styles.message}
-            >
+            <div style={styles.message}>
               {message}
             </div>
           )}
         </section>
+
+        {/* ======================================= */}
+        {/* GOODIE BAG */}
+        {/* ======================================= */}
 
         <GoodieBag
           visited={visited.length}
@@ -1146,6 +1283,9 @@ export default function App() {
           eligible={
             goodieEligible
           }
+          canCollect={
+            goodieCanCollect
+          }
           collected={
             goodieCollected
           }
@@ -1153,6 +1293,10 @@ export default function App() {
             openGoodieScanner
           }
         />
+
+        {/* ======================================= */}
+        {/* SCANNER */}
+        {/* ======================================= */}
 
         {scanTarget && (
           <Scanner
@@ -1164,6 +1308,10 @@ export default function App() {
             onClose={closeScanner}
           />
         )}
+
+        {/* ======================================= */}
+        {/* RECOVERY */}
+        {/* ======================================= */}
 
         <section
           style={styles.recoveryInfo}
@@ -1177,9 +1325,7 @@ export default function App() {
           </div>
 
           <div
-            style={
-              styles.recoveryCode
-            }
+            style={styles.recoveryCode}
           >
             {user.recoveryCode}
           </div>
@@ -1195,6 +1341,10 @@ export default function App() {
         </section>
       </main>
 
+      {/* ======================================= */}
+      {/* GOODIE APPROVED */}
+      {/* ======================================= */}
+
       {goodieApproved && (
         <GoodieApprovedScreen
           user={user}
@@ -1205,6 +1355,10 @@ export default function App() {
           }
         />
       )}
+
+      {/* ======================================= */}
+      {/* FINAL THANK YOU */}
+      {/* ======================================= */}
 
       {showGoodieSuccess && (
         <GoodieSuccessScreen
@@ -1307,8 +1461,7 @@ function Legend({
         style={{
           ...styles.legendBox,
           background: color,
-          border:
-            `1px solid ${border}`,
+          border: `1px solid ${border}`,
         }}
       />
 
@@ -1316,6 +1469,10 @@ function Legend({
     </div>
   );
 }
+
+// ==================================================
+// RECOVERY
+// ==================================================
 
 function RecoveryPanel({
   open,
@@ -1372,7 +1529,9 @@ function RecoveryPanel({
 
           {message && (
             <div
-              style={styles.recoveryMessage}
+              style={
+                styles.recoveryMessage
+              }
             >
               {message}
             </div>
@@ -1380,7 +1539,9 @@ function RecoveryPanel({
 
           <button
             type="button"
-            style={styles.recoveryButton}
+            style={
+              styles.recoveryButton
+            }
             onClick={onRestore}
           >
             RESTORE SESSION
@@ -1388,7 +1549,9 @@ function RecoveryPanel({
 
           {TEST_MODE && (
             <div
-              style={styles.testRecoveryNote}
+              style={
+                styles.testRecoveryNote
+              }
             >
               Test version: recovery
               currently works only with
@@ -1401,10 +1564,15 @@ function RecoveryPanel({
   );
 }
 
+// ==================================================
+// GOODIE BAG
+// ==================================================
+
 function GoodieBag({
   visited,
   required,
   eligible,
+  canCollect,
   collected,
   onCollect,
 }) {
@@ -1489,12 +1657,12 @@ function GoodieBag({
       {!collected && (
         <button
           type="button"
-          disabled={!eligible}
+          disabled={!canCollect}
           onClick={onCollect}
           style={{
             ...styles.goodieButton,
 
-            ...(eligible
+            ...(canCollect
               ? styles.goodieButtonActive
               : styles.goodieButtonDisabled),
           }}
@@ -1502,9 +1670,26 @@ function GoodieBag({
           COLLECT GOODIE BAG
         </button>
       )}
+
+      {TEST_MODE &&
+        !eligible &&
+        !collected && (
+          <div
+            style={
+              styles.goodieTestNote
+            }
+          >
+            TEST MODE – button enabled
+            before 14 booth visits.
+          </div>
+        )}
     </section>
   );
 }
+
+// ==================================================
+// SCANNER
+// ==================================================
 
 function Scanner({
   scanTarget,
@@ -1561,6 +1746,10 @@ function Scanner({
     </div>
   );
 }
+
+// ==================================================
+// GOODIE APPROVED
+// ==================================================
 
 function GoodieApprovedScreen({
   user,
@@ -1645,7 +1834,7 @@ function GoodieApprovedScreen({
 }
 
 // ==================================================
-// FINAL GOODIE SCREEN
+// FINAL THANK-YOU SCREEN
 // ==================================================
 
 function GoodieSuccessScreen({
@@ -1653,7 +1842,9 @@ function GoodieSuccessScreen({
 }) {
   return (
     <div
-      style={styles.goodieSuccessScreen}
+      style={
+        styles.goodieSuccessScreen
+      }
     >
       <style>
         {`
@@ -1677,7 +1868,9 @@ function GoodieSuccessScreen({
       </style>
 
       <div
-        style={styles.goodieSuccessContent}
+        style={
+          styles.goodieSuccessContent
+        }
       >
         <img
           src="/impo_logo.png"
@@ -2116,6 +2309,10 @@ const styles = {
     lineHeight: 1.4,
   },
 
+  // ==================================================
+  // GOODIE BAG
+  // ==================================================
+
   goodieCard: {
     marginTop: 30,
     padding: 18,
@@ -2207,6 +2404,18 @@ const styles = {
     cursor: "default",
   },
 
+  goodieTestNote: {
+    marginTop: 9,
+    color: "#AAAAAA",
+    fontSize: 10,
+    lineHeight: 1.4,
+    textAlign: "center",
+  },
+
+  // ==================================================
+  // SCANNER
+  // ==================================================
+
   scannerCard: {
     padding: 16,
     marginTop: 20,
@@ -2280,6 +2489,10 @@ const styles = {
     fontWeight: 800,
     cursor: "pointer",
   },
+
+  // ==================================================
+  // GOODIE APPROVAL
+  // ==================================================
 
   goodieApprovedScreen: {
     position: "fixed",
@@ -2359,7 +2572,7 @@ const styles = {
   },
 
   // ==================================================
-  // FINAL THANK-YOU SCREEN
+  // FINAL THANK-YOU
   // ==================================================
 
   goodieSuccessScreen: {
