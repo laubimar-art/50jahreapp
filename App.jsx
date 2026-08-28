@@ -14,6 +14,20 @@ const GREEN_BG = "rgba(46, 155, 75, 0.20)";
 const USER_STORAGE_KEY = "impoJubiUserV2";
 const VISITED_STORAGE_KEY = "impoJubiVisitedV2";
 
+// ==================================================
+// TEST MODE
+// ==================================================
+//
+// true:
+// The GISADA QR code validates EVERY booth.
+// Useful for checking the green overlay positions.
+//
+// false:
+// Every booth requires its own QR code.
+//
+const TEST_MODE = true;
+const TEST_QR_VALUE = "GISADA";
+
 const booths = [
   {
     id: 1,
@@ -391,6 +405,7 @@ export default function App() {
     setScannerOpen(false);
     setSelectedBooth(null);
     setScannerStatus("");
+
     scanLockedRef.current = false;
   };
 
@@ -432,7 +447,6 @@ export default function App() {
         "Starting camera..."
       );
 
-      // Wait until React has rendered the scanner DIV.
       await new Promise((resolve) => {
         window.setTimeout(resolve, 400);
       });
@@ -480,62 +494,126 @@ export default function App() {
             .trim()
             .toUpperCase();
 
-          // Immediately show what the scanner read.
           setScannerStatus(
             `QR detected: ${decodedText}`
           );
 
-          const scannedBooth = booths.find(
-            (booth) =>
-              booth.qrValue
-                .trim()
-                .toUpperCase() ===
-              scannedValue
-          );
+          // ==================================================
+          // TEST MODE
+          // ==================================================
 
-          // QR exists but is not one of our booth codes.
-          if (!scannedBooth) {
-            setMessage(
-              `QR detected, but "${decodedText}" is not a valid booth code.`
-            );
-
-            scanLockedRef.current = false;
-
-            return;
-          }
-
-          // User clicked Gisada but scans another booth.
-          if (
-            scannedBooth.id !==
-            selectedBooth.id
-          ) {
-            setMessage(
-              `This is the QR code for ${scannedBooth.name}. Please scan ${selectedBooth.name}.`
-            );
-
-            scanLockedRef.current = false;
-
-            return;
-          }
-
-          // Correct QR.
-          setVisited((currentVisited) => {
+          if (TEST_MODE) {
             if (
-              currentVisited.includes(
-                scannedBooth.id
-              )
+              scannedValue !==
+              TEST_QR_VALUE
             ) {
-              return currentVisited;
+              setMessage(
+                "For testing, please scan the GISADA QR code."
+              );
+
+              scanLockedRef.current = false;
+
+              return;
             }
 
-            return [
-              ...currentVisited,
-              scannedBooth.id,
-            ];
-          });
+            // The GISADA QR validates whichever booth
+            // the user selected on the map.
+
+            const boothToCollect =
+              selectedBooth;
+
+            setVisited(
+              (currentVisited) => {
+                if (
+                  currentVisited.includes(
+                    boothToCollect.id
+                  )
+                ) {
+                  return currentVisited;
+                }
+
+                return [
+                  ...currentVisited,
+                  boothToCollect.id,
+                ];
+              }
+            );
+
+            setMessage(
+              `✓ ${boothToCollect.name} successfully collected.`
+            );
+
+            try {
+              if (scanner.isScanning) {
+                await scanner.stop();
+              }
+            } catch (error) {
+              console.log(
+                "Scanner stop:",
+                error
+              );
+            }
+
+            try {
+              scanner.clear();
+            } catch (error) {
+              console.log(
+                "Scanner clear:",
+                error
+              );
+            }
+
+            scannerRef.current = null;
+
+            setScannerOpen(false);
+            setSelectedBooth(null);
+            setScannerStatus("");
+
+            scanLockedRef.current = false;
+
+            return;
+          }
+
+          // ==================================================
+          // NORMAL MODE
+          // ==================================================
+
+          const expectedValue =
+            selectedBooth.qrValue
+              .trim()
+              .toUpperCase();
+
+          if (
+            scannedValue !== expectedValue
+          ) {
+            setMessage(
+              `Wrong QR code. Please scan the QR code for ${selectedBooth.name}.`
+            );
+
+            scanLockedRef.current = false;
+
+            return;
+          }
+
+          setVisited(
+            (currentVisited) => {
+              if (
+                currentVisited.includes(
+                  selectedBooth.id
+                )
+              ) {
+                return currentVisited;
+              }
+
+              return [
+                ...currentVisited,
+                selectedBooth.id,
+              ];
+            }
+          );
 
           setMessage(
-            `✓ ${scannedBooth.name} successfully collected.`
+            `✓ ${selectedBooth.name} successfully collected.`
           );
 
           try {
@@ -544,7 +622,7 @@ export default function App() {
             }
           } catch (error) {
             console.log(
-              "Scanner stop after scan:",
+              "Scanner stop:",
               error
             );
           }
@@ -553,7 +631,7 @@ export default function App() {
             scanner.clear();
           } catch (error) {
             console.log(
-              "Scanner clear after scan:",
+              "Scanner clear:",
               error
             );
           }
@@ -568,9 +646,7 @@ export default function App() {
         };
 
         const onScanFailure = () => {
-          // This callback fires constantly while
-          // no QR code is visible.
-          // Therefore we intentionally do nothing.
+          // Normal while no QR is detected.
         };
 
         await scanner.start(
@@ -581,9 +657,10 @@ export default function App() {
           {
             fps: 15,
 
-            // Scan almost the entire camera image.
-            // This is more forgiving than a small qrbox.
-            qrbox: (viewfinderWidth, viewfinderHeight) => {
+            qrbox: (
+              viewfinderWidth,
+              viewfinderHeight
+            ) => {
               const minEdge = Math.min(
                 viewfinderWidth,
                 viewfinderHeight
@@ -609,7 +686,9 @@ export default function App() {
 
         if (!disposed) {
           setScannerStatus(
-            "Camera ready – point it at the QR code."
+            TEST_MODE
+              ? "TEST MODE – scan the GISADA QR code."
+              : "Camera ready – point it at the QR code."
           );
         }
       } catch (error) {
@@ -669,8 +748,16 @@ export default function App() {
             />
           </header>
 
-          <main style={styles.registrationContent}>
-            <div style={styles.jubiLogoWrapper}>
+          <main
+            style={
+              styles.registrationContent
+            }
+          >
+            <div
+              style={
+                styles.jubiLogoWrapper
+              }
+            >
               <img
                 src="/LogoJubi.png"
                 alt="50 Years Import Parfumerie"
@@ -678,18 +765,29 @@ export default function App() {
               />
             </div>
 
-            <h1 style={styles.registrationTitle}>
+            <h1
+              style={
+                styles.registrationTitle
+              }
+            >
               Welcome!
             </h1>
 
-            <p style={styles.registrationIntro}>
-              Discover our anniversary event and
-              collect the brands you visit in your
-              personal digital brand pass.
+            <p
+              style={
+                styles.registrationIntro
+              }
+            >
+              Discover our anniversary
+              event and collect the brands
+              you visit in your personal
+              digital brand pass.
             </p>
 
             <div style={styles.form}>
-              <label style={styles.label}>
+              <label
+                style={styles.label}
+              >
                 First name
               </label>
 
@@ -706,7 +804,9 @@ export default function App() {
                 autoComplete="given-name"
               />
 
-              <label style={styles.label}>
+              <label
+                style={styles.label}
+              >
                 Last name
               </label>
 
@@ -725,7 +825,9 @@ export default function App() {
 
               <button
                 type="button"
-                style={styles.primaryButton}
+                style={
+                  styles.primaryButton
+                }
                 onClick={register}
               >
                 START
@@ -762,28 +864,47 @@ export default function App() {
           </h1>
 
           <p style={styles.intro}>
-            Welcome to our anniversary event.
+            Welcome to our anniversary
+            event.
           </p>
 
-          <div style={styles.progressCard}>
-            <div style={styles.progressTop}>
+          <div
+            style={styles.progressCard}
+          >
+            <div
+              style={styles.progressTop}
+            >
               <div>
-                <div style={styles.progressNumber}>
+                <div
+                  style={
+                    styles.progressNumber
+                  }
+                >
                   {visited.length} /{" "}
                   {booths.length}
                 </div>
 
-                <div style={styles.progressLabel}>
+                <div
+                  style={
+                    styles.progressLabel
+                  }
+                >
                   Booths visited
                 </div>
               </div>
 
-              <div style={styles.percent}>
+              <div
+                style={styles.percent}
+              >
                 {progress}%
               </div>
             </div>
 
-            <div style={styles.progressBackground}>
+            <div
+              style={
+                styles.progressBackground
+              }
+            >
               <div
                 style={{
                   ...styles.progressBar,
@@ -793,17 +914,22 @@ export default function App() {
             </div>
           </div>
 
-          <h2 style={styles.sectionTitle}>
+          <h2
+            style={styles.sectionTitle}
+          >
             Your brand pass
           </h2>
 
           <p style={styles.mapIntro}>
-            Tap on a booth to scan its QR code.
+            Tap on a booth to scan its QR
+            code.
           </p>
 
           <div style={styles.mapCard}>
             {!mapError ? (
-              <div style={styles.mapWrapper}>
+              <div
+                style={styles.mapWrapper}
+              >
                 <img
                   src="/brand-map.png"
                   alt="Brand fair map"
@@ -828,14 +954,19 @@ export default function App() {
                           booth
                         )
                       }
-                      aria-label={booth.name}
+                      aria-label={
+                        booth.name
+                      }
                       title={booth.name}
                       style={{
                         ...styles.boothOverlay,
 
                         left: `${booth.area.left}%`,
+
                         top: `${booth.area.top}%`,
+
                         width: `${booth.area.width}%`,
+
                         height: `${booth.area.height}%`,
 
                         transform:
@@ -858,18 +989,29 @@ export default function App() {
                 })}
               </div>
             ) : (
-              <div style={styles.mapError}>
+              <div
+                style={styles.mapError}
+              >
                 <strong>
                   Map image not found.
                 </strong>
 
-                <div style={{ marginTop: 8 }}>
-                  Upload the original image to
-                  the <strong>public</strong>{" "}
+                <div
+                  style={{
+                    marginTop: 8,
+                  }}
+                >
+                  Upload the original
+                  image to the{" "}
+                  <strong>
+                    public
+                  </strong>{" "}
                   folder and name it:
                 </div>
 
-                <code style={styles.code}>
+                <code
+                  style={styles.code}
+                >
                   brand-map.png
                 </code>
               </div>
@@ -877,47 +1019,81 @@ export default function App() {
           </div>
 
           <div style={styles.legend}>
-            <div style={styles.legendItem}>
-              <span style={styles.greenBox} />
+            <div
+              style={styles.legendItem}
+            >
+              <span
+                style={styles.greenBox}
+              />
+
               <span>Visited</span>
             </div>
 
-            <div style={styles.legendItem}>
-              <span style={styles.grayBox} />
+            <div
+              style={styles.legendItem}
+            >
+              <span
+                style={styles.grayBox}
+              />
+
               <span>Not visited</span>
             </div>
           </div>
 
           {message && (
-            <div style={styles.message}>
+            <div
+              style={styles.message}
+            >
               {message}
             </div>
           )}
 
           {scannerOpen &&
             selectedBooth && (
-              <div style={styles.scannerCard}>
-                <div style={styles.scannerTitle}>
+              <div
+                style={
+                  styles.scannerCard
+                }
+              >
+                <div
+                  style={
+                    styles.scannerTitle
+                  }
+                >
                   Scan QR code
                 </div>
 
-                <div style={styles.scannerSubtitle}>
+                <div
+                  style={
+                    styles.scannerSubtitle
+                  }
+                >
                   {selectedBooth.name}
                 </div>
 
-                <div style={styles.scannerStatus}>
+                <div
+                  style={
+                    styles.scannerStatus
+                  }
+                >
                   {scannerStatus}
                 </div>
 
                 <div
                   id={qrRegionId}
-                  style={styles.scannerRegion}
+                  style={
+                    styles.scannerRegion
+                  }
                 />
 
                 <button
                   type="button"
-                  style={styles.secondaryButton}
-                  onClick={closeScanner}
+                  style={
+                    styles.secondaryButton
+                  }
+                  onClick={
+                    closeScanner
+                  }
                 >
                   CLOSE
                 </button>
@@ -1084,7 +1260,8 @@ const styles = {
 
   progressTop: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent:
+      "space-between",
     alignItems: "center",
   },
 
@@ -1117,7 +1294,8 @@ const styles = {
     height: "100%",
     background: "#FFFFFF",
     borderRadius: 999,
-    transition: "width 0.4s ease",
+    transition:
+      "width 0.4s ease",
   },
 
   sectionTitle: {
@@ -1211,7 +1389,8 @@ const styles = {
     height: 16,
     borderRadius: 3,
     background: "#FFFFFF",
-    border: "1px solid #BBBBBB",
+    border:
+      "1px solid #BBBBBB",
   },
 
   message: {
