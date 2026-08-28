@@ -1,14 +1,106 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 const RED = "#CF2D36";
 const BLACK = "#111111";
 const LIGHT = "#F5F5F5";
 const BORDER = "#E7E7E7";
+const GREEN = "#2E9B4B";
+const GREEN_BG = "rgba(46, 155, 75, 0.18)";
 
-const booths = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  name: `Booth ${i + 1}`,
-}));
+const booths = [
+  {
+    id: 1,
+    name: "Gisada",
+    qrValue: "GISADA",
+    area: { left: 21.2, top: 2.0, width: 19.0, height: 7.3 },
+  },
+  {
+    id: 2,
+    name: "P&I Parfums",
+    qrValue: "PI-PARFUMS",
+    area: { left: 49.0, top: 2.1, width: 14.2, height: 7.2 },
+  },
+  {
+    id: 3,
+    name: "Karikaturist",
+    qrValue: "KARIKATURIST",
+    area: { left: 66.8, top: 2.0, width: 11.8, height: 6.0 },
+  },
+  {
+    id: 4,
+    name: "Jean-Pierre Rossellet",
+    qrValue: "JEAN-PIERRE-ROSSELLET",
+    area: { left: 43.8, top: 14.1, width: 4.8, height: 7.0 },
+  },
+  {
+    id: 5,
+    name: "Nobilis Group",
+    qrValue: "NOBILIS-GROUP",
+    area: { left: 49.5, top: 14.0, width: 13.5, height: 7.0 },
+  },
+  {
+    id: 6,
+    name: "Flariel",
+    qrValue: "FLARIEL",
+    area: { left: 43.9, top: 21.5, width: 4.6, height: 8.4 },
+  },
+  {
+    id: 7,
+    name: "Bode Studios",
+    qrValue: "BODE-STUDIOS",
+    area: { left: 49.4, top: 21.6, width: 13.5, height: 8.0 },
+  },
+  {
+    id: 8,
+    name: "L'Oréal Luxe",
+    qrValue: "LOREAL-LUXE",
+    area: { left: 40.7, top: 38.3, width: 25.8, height: 24.0 },
+  },
+  {
+    id: 9,
+    name: "Clarins",
+    qrValue: "CLARINS",
+    area: { left: 48.7, top: 69.1, width: 14.5, height: 7.2 },
+  },
+  {
+    id: 10,
+    name: "Bvlgari",
+    qrValue: "BVLGARI",
+    area: { left: 48.6, top: 77.1, width: 14.5, height: 7.1 },
+  },
+  {
+    id: 11,
+    name: "Shiseido",
+    qrValue: "SHISEIDO",
+    area: { left: 48.8, top: 90.0, width: 14.5, height: 7.2 },
+  },
+  {
+    id: 12,
+    name: "Eurocos Cosmetic / Give Back Beauty",
+    qrValue: "EUROCOS",
+    area: { left: 20.5, top: 67.5, width: 16.0, height: 15.0 },
+    rotate: -45,
+  },
+  {
+    id: 13,
+    name: "Coty",
+    qrValue: "COTY",
+    area: { left: 13.5, top: 90.0, width: 25.4, height: 6.8 },
+  },
+  {
+    id: 14,
+    name: "Puig",
+    qrValue: "PUIG",
+    area: { left: 27.0, top: 14.0, width: 6.5, height: 23.0 },
+  },
+  {
+    id: 15,
+    name: "Estée Lauder",
+    qrValue: "ESTEE-LAUDER",
+    area: { left: 1.8, top: 17.0, width: 8.0, height: 66.5 },
+  },
+];
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -16,10 +108,12 @@ export default function App() {
   const [lastname, setLastname] = useState("");
   const [registered, setRegistered] = useState(false);
   const [visited, setVisited] = useState([]);
+  const [selectedBooth, setSelectedBooth] = useState(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
-  // --------------------------------------------------
-  // Splash screen
-  // --------------------------------------------------
+  const scannerRef = useRef(null);
+  const qrRegionId = "qr-reader-region";
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -29,17 +123,13 @@ export default function App() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  // --------------------------------------------------
-  // Load participant from browser
-  // --------------------------------------------------
-
   useEffect(() => {
     const savedUser = localStorage.getItem("impoJubiUser");
+    const savedVisited = localStorage.getItem("impoJubiVisited");
 
     if (savedUser) {
       try {
         const user = JSON.parse(savedUser);
-
         setFirstname(user.firstname || "");
         setLastname(user.lastname || "");
         setRegistered(true);
@@ -47,8 +137,6 @@ export default function App() {
         localStorage.removeItem("impoJubiUser");
       }
     }
-
-    const savedVisited = localStorage.getItem("impoJubiVisited");
 
     if (savedVisited) {
       try {
@@ -59,9 +147,12 @@ export default function App() {
     }
   }, []);
 
-  // --------------------------------------------------
-  // Registration
-  // --------------------------------------------------
+  useEffect(() => {
+    localStorage.setItem(
+      "impoJubiVisited",
+      JSON.stringify(visited)
+    );
+  }, [visited]);
 
   const register = () => {
     if (!firstname.trim() || !lastname.trim()) {
@@ -82,17 +173,91 @@ export default function App() {
     setRegistered(true);
   };
 
-  // --------------------------------------------------
-  // Progress
-  // --------------------------------------------------
-
   const progress = Math.round(
     (visited.length / booths.length) * 100
   );
 
-  // --------------------------------------------------
-  // Splash screen
-  // --------------------------------------------------
+  const handleBoothClick = (booth) => {
+    if (visited.includes(booth.id)) {
+      setMessage(`${booth.name} already visited.`);
+      return;
+    }
+
+    setSelectedBooth(booth);
+    setMessage("");
+    startScanner();
+  };
+
+  const markBoothVisited = (decodedText) => {
+    if (!selectedBooth) {
+      return false;
+    }
+
+    const cleanValue = decodedText.trim().toUpperCase();
+
+    if (cleanValue !== selectedBooth.qrValue.toUpperCase()) {
+      setMessage("Wrong QR code for this booth.");
+      return false;
+    }
+
+    setVisited((prev) => {
+      if (prev.includes(selectedBooth.id)) {
+        return prev;
+      }
+
+      return [...prev, selectedBooth.id];
+    });
+
+    setMessage(`${selectedBooth.name} successfully collected.`);
+    return true;
+  };
+
+  const stopScanner = async () => {
+    if (scannerRef.current) {
+      try {
+        await scannerRef.current.clear();
+      } catch {
+        // ignore cleanup errors
+      }
+
+      scannerRef.current = null;
+    }
+
+    setScannerOpen(false);
+  };
+
+  const startScanner = () => {
+    if (scannerOpen || scannerRef.current) {
+      return;
+    }
+
+    setScannerOpen(true);
+
+    window.setTimeout(() => {
+      const scanner = new Html5QrcodeScanner(
+        qrRegionId,
+        {
+          fps: 10,
+          qrbox: { width: 220, height: 220 },
+          rememberLastUsedCamera: true,
+        },
+        false
+      );
+
+      scanner.render(
+        async (decodedText) => {
+          const success = markBoothVisited(decodedText);
+
+          if (success) {
+            await stopScanner();
+          }
+        },
+        () => {}
+      );
+
+      scannerRef.current = scanner;
+    }, 100);
+  };
 
   if (showSplash) {
     return (
@@ -105,10 +270,6 @@ export default function App() {
       </div>
     );
   }
-
-  // --------------------------------------------------
-  // Registration screen
-  // --------------------------------------------------
 
   if (!registered) {
     return (
@@ -131,58 +292,46 @@ export default function App() {
               />
             </div>
 
-            <h1 style={styles.title}>
-              Welcome!
-            </h1>
+            <h1 style={styles.title}>Welcome!</h1>
 
             <p style={styles.intro}>
               Discover our anniversary event and collect your
               booth visits in your personal digital brand pass.
             </p>
 
-            <div style={styles.formCard}>
-              <label style={styles.label}>
-                First name
-              </label>
+            <label style={styles.label}>First name</label>
 
-              <input
-                style={styles.input}
-                type="text"
-                value={firstname}
-                onChange={(e) => setFirstname(e.target.value)}
-                placeholder="First name"
-                autoComplete="given-name"
-              />
+            <input
+              style={styles.input}
+              type="text"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              placeholder="First name"
+              autoComplete="given-name"
+            />
 
-              <label style={styles.label}>
-                Last name
-              </label>
+            <label style={styles.label}>Last name</label>
 
-              <input
-                style={styles.input}
-                type="text"
-                value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
-                placeholder="Last name"
-                autoComplete="family-name"
-              />
+            <input
+              style={styles.input}
+              type="text"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              placeholder="Last name"
+              autoComplete="family-name"
+            />
 
-              <button
-                style={styles.primaryButton}
-                onClick={register}
-              >
-                START
-              </button>
-            </div>
+            <button
+              style={styles.primaryButton}
+              onClick={register}
+            >
+              START
+            </button>
           </main>
         </div>
       </div>
     );
   }
-
-  // --------------------------------------------------
-  // Brand pass
-  // --------------------------------------------------
 
   return (
     <div style={styles.page}>
@@ -239,47 +388,97 @@ export default function App() {
             Your brand pass
           </h2>
 
-          <div style={styles.boothGrid}>
-            {booths.map((booth) => {
-              const isVisited = visited.includes(booth.id);
+          <p style={styles.mapIntro}>
+            Tap on a booth to scan its QR code.
+          </p>
 
-              return (
-                <div
-                  key={booth.id}
-                  style={{
-                    ...styles.booth,
-                    ...(isVisited
-                      ? styles.boothVisited
-                      : {}),
-                  }}
-                >
-                  <div
+          <div style={styles.mapCard}>
+            <div style={styles.mapWrapper}>
+              <img
+                src="/brand-map.png"
+                alt="Brand fair map"
+                style={styles.mapImage}
+              />
+
+              {booths.map((booth) => {
+                const isVisited = visited.includes(booth.id);
+
+                return (
+                  <button
+                    key={booth.id}
+                    onClick={() =>
+                      handleBoothClick(booth)
+                    }
+                    aria-label={booth.name}
+                    title={booth.name}
                     style={{
-                      ...styles.boothNumber,
-                      ...(isVisited
-                        ? styles.boothNumberVisited
-                        : {}),
+                      ...styles.boothOverlay,
+                      left: `${booth.area.left}%`,
+                      top: `${booth.area.top}%`,
+                      width: `${booth.area.width}%`,
+                      height: `${booth.area.height}%`,
+                      transform: booth.rotate
+                        ? `rotate(${booth.rotate}deg)`
+                        : "none",
+                      background: isVisited
+                        ? GREEN_BG
+                        : "rgba(255,255,255,0.001)",
+                      border: isVisited
+                        ? `2px solid rgba(46,155,75,0.6)`
+                        : "2px solid transparent",
                     }}
-                  >
-                    {isVisited ? "✓" : booth.id}
-                  </div>
-
-                  <div style={styles.boothName}>
-                    {booth.name}
-                  </div>
-                </div>
-              );
-            })}
+                  />
+                );
+              })}
+            </div>
           </div>
+
+          <div style={styles.legend}>
+            <div style={styles.legendItem}>
+              <span style={styles.greenBox} />
+              Visited
+            </div>
+
+            <div style={styles.legendItem}>
+              <span style={styles.grayBox} />
+              Not visited
+            </div>
+          </div>
+
+          {message && (
+            <div style={styles.message}>
+              {message}
+            </div>
+          )}
+
+          {scannerOpen && selectedBooth && (
+            <div style={styles.scannerCard}>
+              <div style={styles.scannerTitle}>
+                Scan QR code
+              </div>
+
+              <div style={styles.scannerSubtitle}>
+                {selectedBooth.name}
+              </div>
+
+              <div
+                id={qrRegionId}
+                style={styles.scannerRegion}
+              />
+
+              <button
+                style={styles.secondaryButton}
+                onClick={stopScanner}
+              >
+                CLOSE
+              </button>
+            </div>
+          )}
         </main>
       </div>
     </div>
   );
 }
-
-// ==================================================
-// DESIGN
-// ==================================================
 
 const styles = {
   page: {
@@ -374,10 +573,6 @@ const styles = {
     color: "#666666",
   },
 
-  formCard: {
-    marginTop: 20,
-  },
-
   label: {
     display: "block",
     marginBottom: 7,
@@ -416,7 +611,7 @@ const styles = {
     color: "#FFFFFF",
     borderRadius: 14,
     padding: 20,
-    margin: "26px 0 32px",
+    margin: "26px 0 28px",
   },
 
   progressTop: {
@@ -459,51 +654,117 @@ const styles = {
   sectionTitle: {
     fontSize: 21,
     fontWeight: 800,
-    margin: "0 0 16px",
+    margin: "0 0 6px",
   },
 
-  boothGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    gap: 10,
+  mapIntro: {
+    fontSize: 13,
+    color: "#777777",
+    margin: "0 0 14px",
   },
 
-  booth: {
-    aspectRatio: "1 / 1",
+  mapCard: {
     border: `1px solid ${BORDER}`,
-    borderRadius: 10,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: 14,
+    padding: 8,
     background: "#FFFFFF",
   },
 
-  boothVisited: {
-    background: "#F1F8F3",
-    border: "1px solid #B8DFC2",
+  mapWrapper: {
+    position: "relative",
+    width: "100%",
   },
 
-  boothNumber: {
-    width: 28,
-    height: 28,
-    borderRadius: "50%",
-    background: "#F1F1F1",
+  mapImage: {
+    width: "100%",
+    display: "block",
+    borderRadius: 8,
+  },
+
+  boothOverlay: {
+    position: "absolute",
+    padding: 0,
+    margin: 0,
+    cursor: "pointer",
+    zIndex: 5,
+    transition:
+      "background 0.25s ease, border 0.25s ease",
+  },
+
+  legend: {
+    display: "flex",
+    gap: 20,
+    marginTop: 12,
+    fontSize: 12,
+    color: "#666666",
+  },
+
+  legendItem: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 800,
+    gap: 7,
+  },
+
+  greenBox: {
+    width: 16,
+    height: 16,
+    borderRadius: 4,
+    background: GREEN_BG,
+    border: `1px solid ${GREEN}`,
+  },
+
+  grayBox: {
+    width: 16,
+    height: 16,
+    borderRadius: 4,
+    border: `1px solid #BBBBBB`,
+    background: "#FFFFFF",
+  },
+
+  message: {
+    marginTop: 16,
+    padding: 12,
+    borderRadius: 10,
+    background: "#F7F7F7",
+    border: `1px solid ${BORDER}`,
     fontSize: 13,
   },
 
-  boothNumberVisited: {
-    background: "#278A47",
-    color: "#FFFFFF",
+  scannerCard: {
+    marginTop: 18,
+    padding: 16,
+    border: `1px solid ${BORDER}`,
+    borderRadius: 14,
+    background: "#FFFFFF",
   },
 
-  boothName: {
-    marginTop: 7,
-    fontSize: 10,
-    fontWeight: 600,
+  scannerTitle: {
+    fontSize: 20,
+    fontWeight: 800,
+  },
+
+  scannerSubtitle: {
+    marginTop: 4,
+    marginBottom: 14,
+    fontSize: 14,
+    color: "#666666",
+  },
+
+  scannerRegion: {
+    width: "100%",
+    overflow: "hidden",
+    borderRadius: 10,
+  },
+
+  secondaryButton: {
+    width: "100%",
+    marginTop: 14,
+    padding: "14px",
+    borderRadius: 8,
+    border: `1px solid ${BLACK}`,
+    background: "#FFFFFF",
+    color: BLACK,
+    fontWeight: 800,
+    cursor: "pointer",
   },
 };
