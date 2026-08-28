@@ -7,7 +7,7 @@ const BORDER = "#E7E7E7";
 
 const booths = Array.from({ length: 20 }, (_, i) => ({
   id: i + 1,
-  name: `Stand ${i + 1}`,
+  name: `Booth ${i + 1}`,
 }));
 
 export default function App() {
@@ -17,16 +17,22 @@ export default function App() {
   const [registered, setRegistered] = useState(false);
   const [visited, setVisited] = useState([]);
 
-  // Splashscreen
+  // --------------------------------------------------
+  // Splash screen
+  // --------------------------------------------------
+
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       setShowSplash(false);
     }, 2200);
 
-    return () => clearTimeout(timer);
+    return () => window.clearTimeout(timer);
   }, []);
 
-  // Bereits registrierten Besucher aus dem Browser laden
+  // --------------------------------------------------
+  // Load participant from browser
+  // --------------------------------------------------
+
   useEffect(() => {
     const savedUser = localStorage.getItem("impoJubiUser");
 
@@ -53,9 +59,13 @@ export default function App() {
     }
   }, []);
 
+  // --------------------------------------------------
+  // Registration
+  // --------------------------------------------------
+
   const register = () => {
     if (!firstname.trim() || !lastname.trim()) {
-      alert("Bitte Vorname und Nachname eingeben.");
+      alert("Please enter your first and last name.");
       return;
     }
 
@@ -67,46 +77,43 @@ export default function App() {
 
     localStorage.setItem("impoJubiUser", JSON.stringify(user));
 
+    setFirstname(user.firstname);
+    setLastname(user.lastname);
     setRegistered(true);
   };
 
-  const resetUser = () => {
-    localStorage.removeItem("impoJubiUser");
-    localStorage.removeItem("impoJubiVisited");
+  // --------------------------------------------------
+  // Progress
+  // --------------------------------------------------
 
-    setFirstname("");
-    setLastname("");
-    setVisited([]);
-    setRegistered(false);
-  };
+  const progress = Math.round(
+    (visited.length / booths.length) * 100
+  );
 
-  const progress = Math.round((visited.length / booths.length) * 100);
-
-  // -------------------------
-  // SPLASHSCREEN
-  // -------------------------
+  // --------------------------------------------------
+  // Splash screen
+  // --------------------------------------------------
 
   if (showSplash) {
     return (
       <div style={styles.splash}>
         <img
           src="/LogoJubi.png"
-          alt="50 Jahre Import Parfumerie"
+          alt="50 Years Import Parfumerie"
           style={styles.splashLogo}
         />
       </div>
     );
   }
 
-  // -------------------------
-  // REGISTRIERUNG
-  // -------------------------
+  // --------------------------------------------------
+  // Registration screen
+  // --------------------------------------------------
 
   if (!registered) {
     return (
       <div style={styles.page}>
         <div style={styles.app}>
-
           <header style={styles.header}>
             <img
               src="/impo_logo.png"
@@ -116,28 +123,26 @@ export default function App() {
           </header>
 
           <main style={styles.content}>
-
             <div style={styles.jubiLogoWrapper}>
               <img
                 src="/LogoJubi.png"
-                alt="50 Jahre Import Parfumerie"
+                alt="50 Years Import Parfumerie"
                 style={styles.jubiLogo}
               />
             </div>
 
             <h1 style={styles.title}>
-              Willkommen!
+              Welcome!
             </h1>
 
             <p style={styles.intro}>
-              Entdecke die Jubiläums-Brandmesse und sammle deine
-              Standbesuche in deinem persönlichen digitalen Pass.
+              Discover our anniversary event and collect your
+              booth visits in your personal digital brand pass.
             </p>
 
             <div style={styles.formCard}>
-
               <label style={styles.label}>
-                Vorname
+                First name
               </label>
 
               <input
@@ -145,12 +150,12 @@ export default function App() {
                 type="text"
                 value={firstname}
                 onChange={(e) => setFirstname(e.target.value)}
-                placeholder="Vorname"
+                placeholder="First name"
                 autoComplete="given-name"
               />
 
               <label style={styles.label}>
-                Nachname
+                Last name
               </label>
 
               <input
@@ -158,7 +163,7 @@ export default function App() {
                 type="text"
                 value={lastname}
                 onChange={(e) => setLastname(e.target.value)}
-                placeholder="Nachname"
+                placeholder="Last name"
                 autoComplete="family-name"
               />
 
@@ -166,26 +171,22 @@ export default function App() {
                 style={styles.primaryButton}
                 onClick={register}
               >
-                LOS GEHT'S
+                START
               </button>
-
             </div>
-
           </main>
-
         </div>
       </div>
     );
   }
 
-  // -------------------------
-  // JUBILÄUMSPASS
-  // -------------------------
+  // --------------------------------------------------
+  // Brand pass
+  // --------------------------------------------------
 
   return (
     <div style={styles.page}>
       <div style={styles.app}>
-
         <header style={styles.header}>
           <img
             src="/impo_logo.png"
@@ -195,37 +196,33 @@ export default function App() {
         </header>
 
         <main style={styles.content}>
-
           <p style={styles.eyebrow}>
-            50 JAHRE IMPORT PARFUMERIE
+            50 YEARS IMPORT PARFUMERIE
           </p>
 
           <h1 style={styles.passTitle}>
-            Hallo {firstname}!
+            Hi {firstname}!
           </h1>
 
           <p style={styles.intro}>
-            Willkommen an unserer Jubiläums-Brandmesse.
+            Welcome to our anniversary event.
           </p>
 
           <div style={styles.progressCard}>
-
             <div style={styles.progressTop}>
-
               <div>
                 <div style={styles.progressNumber}>
                   {visited.length} / {booths.length}
                 </div>
 
                 <div style={styles.progressLabel}>
-                  Stände besucht
+                  Booths visited
                 </div>
               </div>
 
               <div style={styles.percent}>
                 {progress}%
               </div>
-
             </div>
 
             <div style={styles.progressBackground}>
@@ -236,15 +233,13 @@ export default function App() {
                 }}
               />
             </div>
-
           </div>
 
           <h2 style={styles.sectionTitle}>
-            Dein Jubiläumspass
+            Your brand pass
           </h2>
 
           <div style={styles.boothGrid}>
-
             {booths.map((booth) => {
               const isVisited = visited.includes(booth.id);
 
@@ -253,14 +248,17 @@ export default function App() {
                   key={booth.id}
                   style={{
                     ...styles.booth,
-                    ...(isVisited ? styles.boothVisited : {}),
+                    ...(isVisited
+                      ? styles.boothVisited
+                      : {}),
                   }}
                 >
-
                   <div
                     style={{
                       ...styles.boothNumber,
-                      ...(isVisited ? styles.boothNumberVisited : {}),
+                      ...(isVisited
+                        ? styles.boothNumberVisited
+                        : {}),
                     }}
                   >
                     {isVisited ? "✓" : booth.id}
@@ -269,34 +267,21 @@ export default function App() {
                   <div style={styles.boothName}>
                     {booth.name}
                   </div>
-
                 </div>
               );
             })}
-
           </div>
-
-          <button
-            style={styles.resetButton}
-            onClick={resetUser}
-          >
-            Teilnehmer zurücksetzen
-          </button>
-
         </main>
-
       </div>
     </div>
   );
 }
-
 
 // ==================================================
 // DESIGN
 // ==================================================
 
 const styles = {
-
   page: {
     minHeight: "100vh",
     background: LIGHT,
@@ -403,7 +388,7 @@ const styles = {
   input: {
     width: "100%",
     boxSizing: "border-box",
-    padding: "15px 15px",
+    padding: "15px",
     marginBottom: 18,
     borderRadius: 8,
     border: `1px solid ${BORDER}`,
@@ -521,16 +506,4 @@ const styles = {
     fontSize: 10,
     fontWeight: 600,
   },
-
-  resetButton: {
-    width: "100%",
-    marginTop: 36,
-    padding: 12,
-    border: 0,
-    background: "transparent",
-    color: "#999999",
-    fontSize: 12,
-    cursor: "pointer",
-  },
-
 };
