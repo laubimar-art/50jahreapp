@@ -17,16 +17,17 @@ const USER_STORAGE_KEY = "impoJubiUserV2";
 const VISITED_STORAGE_KEY = "impoJubiVisitedV2";
 const GOODIE_STORAGE_KEY = "impoJubiGoodieV1";
 const SESSIONS_STORAGE_KEY = "impoJubiSessionsV1";
+const LANGUAGE_STORAGE_KEY = "impoJubiLanguageV1";
 
 // ==================================================
 // TEST MODE
 // ==================================================
 //
 // TEST MODE:
-// - same GISADA QR works for every booth
-// - after 1 scan: only scanned booth is green
-// - after 2 different booths: all booths become green
-// - after 2 different booths: Goodie Bag unlocks
+// - GISADA QR works for every booth
+// - first scanned booth becomes green
+// - after 2 different booths, all booths become green
+// - after 2 different booths, Goodie Bag unlocks
 //
 // LIVE MODE:
 // - every booth has its own QR
@@ -36,11 +37,569 @@ const SESSIONS_STORAGE_KEY = "impoJubiSessionsV1";
 const TEST_MODE = true;
 
 const TEST_QR_VALUE = "GISADA";
-
 const TEST_UNLOCK_AT = 2;
 
 const GOODIE_UNLOCK_AT = 14;
 const GOODIE_QR_VALUE = "GOODIE-BAG-2026";
+
+const SUPPORTED_LANGUAGES = ["de", "fr", "it", "en"];
+
+// ==================================================
+// TRANSLATIONS
+// ==================================================
+
+const translations = {
+  en: {
+    chooseLanguage: "Language",
+
+    welcome: "Welcome!",
+    intro:
+      "Discover our anniversary event and collect the brands you visit in your personal digital brand pass.",
+
+    firstName: "First name",
+    lastName: "Last name",
+    start: "START",
+
+    anniversaryLabel: "50 YEARS IMPORT PARFUMERIE",
+    hello: (name) => `Hi ${name}!`,
+    welcomeEvent: "Welcome to our anniversary event.",
+
+    boothsVisited: "Booths visited",
+
+    brandPass: "Your brand pass",
+    tapBooth: "Tap on a booth to scan its QR code.",
+
+    visited: "Visited",
+    notVisited: "Not visited",
+
+    mapNotFound: "Map image not found.",
+    mapUploadBefore: "Upload the original image to the",
+    mapUploadAfter: "folder as:",
+
+    alreadyVisited: (name) =>
+      `✓ ${name} already visited.`,
+
+    boothCollected: (name) =>
+      `✓ ${name} successfully collected.`,
+
+    scanQr: "Scan QR code",
+    startingCamera: "Starting camera...",
+    scannerCouldNotLoad: "Scanner could not be loaded.",
+    cameraReady: "Camera ready – point it at the QR code.",
+
+    testScanBooth:
+      "TEST MODE – scan the GISADA QR code.",
+
+    testScanGoodie:
+      "TEST MODE – scan the GISADA QR code to approve the Goodie Bag.",
+
+    wrongTestQr: (value) =>
+      `Wrong test QR. Detected: ${value}`,
+
+    wrongGoodieQr: "Wrong Goodie Bag QR code.",
+
+    wrongBoothQr: (name) =>
+      `Wrong QR code. Please scan the QR code for ${name}.`,
+
+    cameraCouldNotStart: "Camera could not be started.",
+
+    cameraPermission:
+      "Please allow camera access and try again.",
+
+    close: "CLOSE",
+
+    goodieBag: "Goodie Bag",
+    goodieCollected: "✓ Goodie Bag collected",
+    goodieReady: "You're ready!",
+
+    testGoodieReady:
+      "Test completed. Goodie Bag collection is now available.",
+
+    goodieLiveReady: (visited) =>
+      `${visited} / 16 booths visited`,
+
+    testGoodieInstruction:
+      "TEST MODE – scan 2 different booths to unlock the Goodie Bag.",
+
+    liveGoodieInstruction:
+      "Visit at least 14 of 16 booths to unlock your Goodie Bag.",
+
+    remainingOne: "1 more booth to go",
+
+    remainingMany: (count) =>
+      `${count} more booths to go`,
+
+    collectGoodie: "COLLECT GOODIE BAG",
+
+    goodieApprovedEyebrow: "GOODIE BAG",
+    approved: "APPROVED",
+
+    testApproval: "Test approval successful",
+
+    boothsVisitedApproval: (visited, total) =>
+      `${visited} / ${total} booths visited`,
+
+    mayHandOver:
+      "You may hand over the Goodie Bag.",
+
+    goodieReceived: "GOODIE BAG RECEIVED",
+
+    recoveryLost: "Lost your session?",
+    recoveryTitle: "Restore your session",
+
+    recoveryText:
+      "Enter your personal recovery code.",
+
+    recoveryButton: "RESTORE SESSION",
+
+    recoveryRequired:
+      "Please enter your recovery code.",
+
+    recoveryNotFound:
+      "Session not found in this test browser.",
+
+    recoveryInvalid:
+      "The saved session is invalid.",
+
+    recoveryTestNote:
+      "Test version: recovery currently works only with sessions saved in this browser.",
+
+    recoveryCodeLabel: "Your recovery code",
+
+    recoveryCodeText:
+      "Keep this code in case you need to restore your session.",
+
+    thankYou:
+      "Thank you for celebrating our 50th anniversary with us today. Have a safe trip home!",
+
+    done: "DONE",
+
+    mapAlt: "Brand fair map",
+    logoAlt: "Import Parfumerie",
+    anniversaryAlt: "50 Years Import Parfumerie",
+    panoramaAlt:
+      "Import Parfumerie anniversary team illustration",
+  },
+
+  de: {
+    chooseLanguage: "Sprache",
+
+    welcome: "Willkommen!",
+    intro:
+      "Entdecke unser Jubiläumsevent und sammle die besuchten Marken in deinem persönlichen digitalen Brand Pass.",
+
+    firstName: "Vorname",
+    lastName: "Nachname",
+    start: "START",
+
+    anniversaryLabel: "50 JAHRE IMPORT PARFUMERIE",
+    hello: (name) => `Hallo ${name}!`,
+    welcomeEvent: "Willkommen an unserem Jubiläumsevent.",
+
+    boothsVisited: "Besuchte Stände",
+
+    brandPass: "Dein Brand Pass",
+    tapBooth:
+      "Tippe auf einen Stand, um den QR-Code zu scannen.",
+
+    visited: "Besucht",
+    notVisited: "Nicht besucht",
+
+    mapNotFound: "Der Übersichtsplan wurde nicht gefunden.",
+    mapUploadBefore: "Lade das Originalbild in den",
+    mapUploadAfter: "Ordner hoch als:",
+
+    alreadyVisited: (name) =>
+      `✓ ${name} bereits besucht.`,
+
+    boothCollected: (name) =>
+      `✓ ${name} erfolgreich erfasst.`,
+
+    scanQr: "QR-Code scannen",
+    startingCamera: "Kamera wird gestartet...",
+    scannerCouldNotLoad:
+      "Der Scanner konnte nicht geladen werden.",
+
+    cameraReady:
+      "Kamera bereit – richte sie auf den QR-Code.",
+
+    testScanBooth:
+      "TESTMODUS – scanne den GISADA QR-Code.",
+
+    testScanGoodie:
+      "TESTMODUS – scanne den GISADA QR-Code für die Goodie-Bag-Freigabe.",
+
+    wrongTestQr: (value) =>
+      `Falscher Test-QR. Erkannt: ${value}`,
+
+    wrongGoodieQr: "Falscher Goodie-Bag-QR-Code.",
+
+    wrongBoothQr: (name) =>
+      `Falscher QR-Code. Bitte scanne den QR-Code von ${name}.`,
+
+    cameraCouldNotStart:
+      "Die Kamera konnte nicht gestartet werden.",
+
+    cameraPermission:
+      "Bitte erlaube den Kamerazugriff und versuche es erneut.",
+
+    close: "SCHLIESSEN",
+
+    goodieBag: "Goodie Bag",
+    goodieCollected: "✓ Goodie Bag abgeholt",
+    goodieReady: "Du bist bereit!",
+
+    testGoodieReady:
+      "Test abgeschlossen. Das Goodie Bag kann jetzt abgeholt werden.",
+
+    goodieLiveReady: (visited) =>
+      `${visited} / 16 Stände besucht`,
+
+    testGoodieInstruction:
+      "TESTMODUS – scanne 2 verschiedene Stände, um das Goodie Bag freizuschalten.",
+
+    liveGoodieInstruction:
+      "Besuche mindestens 14 von 16 Ständen, um dein Goodie Bag freizuschalten.",
+
+    remainingOne: "Noch 1 Stand",
+
+    remainingMany: (count) =>
+      `Noch ${count} Stände`,
+
+    collectGoodie: "GOODIE BAG ABHOLEN",
+
+    goodieApprovedEyebrow: "GOODIE BAG",
+    approved: "FREIGEGEBEN",
+
+    testApproval: "Testfreigabe erfolgreich",
+
+    boothsVisitedApproval: (visited, total) =>
+      `${visited} / ${total} Stände besucht`,
+
+    mayHandOver:
+      "Das Goodie Bag darf übergeben werden.",
+
+    goodieReceived: "GOODIE BAG ÜBERGEBEN",
+
+    recoveryLost: "Session verloren?",
+    recoveryTitle: "Session wiederherstellen",
+
+    recoveryText:
+      "Gib deinen persönlichen Recovery-Code ein.",
+
+    recoveryButton: "SESSION WIEDERHERSTELLEN",
+
+    recoveryRequired:
+      "Bitte gib deinen Recovery-Code ein.",
+
+    recoveryNotFound:
+      "Die Session wurde in diesem Test-Browser nicht gefunden.",
+
+    recoveryInvalid:
+      "Die gespeicherte Session ist ungültig.",
+
+    recoveryTestNote:
+      "Testversion: Die Wiederherstellung funktioniert aktuell nur mit Sessions, die in diesem Browser gespeichert wurden.",
+
+    recoveryCodeLabel: "Dein Recovery-Code",
+
+    recoveryCodeText:
+      "Bewahre diesen Code auf, falls du deine Session wiederherstellen musst.",
+
+    thankYou:
+      "Vielen Dank, dass du heute mit uns unser 50-jähriges Jubiläum gefeiert hast. Komm gut nach Hause!",
+
+    done: "FERTIG",
+
+    mapAlt: "Übersichtsplan der Brandmesse",
+    logoAlt: "Import Parfumerie",
+    anniversaryAlt: "50 Jahre Import Parfumerie",
+    panoramaAlt:
+      "Illustration des Import-Parfumerie-Teams",
+  },
+
+  fr: {
+    chooseLanguage: "Langue",
+
+    welcome: "Bienvenue !",
+    intro:
+      "Découvrez notre événement anniversaire et collectionnez les marques visitées dans votre Brand Pass numérique personnel.",
+
+    firstName: "Prénom",
+    lastName: "Nom",
+    start: "COMMENCER",
+
+    anniversaryLabel: "50 ANS IMPORT PARFUMERIE",
+    hello: (name) => `Bonjour ${name} !`,
+    welcomeEvent:
+      "Bienvenue à notre événement anniversaire.",
+
+    boothsVisited: "Stands visités",
+
+    brandPass: "Votre Brand Pass",
+    tapBooth:
+      "Touchez un stand pour scanner son code QR.",
+
+    visited: "Visité",
+    notVisited: "Non visité",
+
+    mapNotFound: "Le plan n'a pas été trouvé.",
+    mapUploadBefore:
+      "Téléchargez l'image originale dans le dossier",
+    mapUploadAfter: "sous le nom :",
+
+    alreadyVisited: (name) =>
+      `✓ ${name} déjà visité.`,
+
+    boothCollected: (name) =>
+      `✓ ${name} enregistré avec succès.`,
+
+    scanQr: "Scanner le code QR",
+    startingCamera: "Démarrage de la caméra...",
+
+    scannerCouldNotLoad:
+      "Le scanner n'a pas pu être chargé.",
+
+    cameraReady:
+      "Caméra prête – dirigez-la vers le code QR.",
+
+    testScanBooth:
+      "MODE TEST – scannez le code QR GISADA.",
+
+    testScanGoodie:
+      "MODE TEST – scannez le code QR GISADA pour valider le Goodie Bag.",
+
+    wrongTestQr: (value) =>
+      `Mauvais QR de test. Détecté : ${value}`,
+
+    wrongGoodieQr:
+      "Mauvais code QR du Goodie Bag.",
+
+    wrongBoothQr: (name) =>
+      `Mauvais code QR. Veuillez scanner le code QR de ${name}.`,
+
+    cameraCouldNotStart:
+      "La caméra n'a pas pu démarrer.",
+
+    cameraPermission:
+      "Veuillez autoriser l'accès à la caméra et réessayer.",
+
+    close: "FERMER",
+
+    goodieBag: "Goodie Bag",
+    goodieCollected: "✓ Goodie Bag récupéré",
+    goodieReady: "C'est bon !",
+
+    testGoodieReady:
+      "Test terminé. Le Goodie Bag peut maintenant être récupéré.",
+
+    goodieLiveReady: (visited) =>
+      `${visited} / 16 stands visités`,
+
+    testGoodieInstruction:
+      "MODE TEST – scannez 2 stands différents pour débloquer le Goodie Bag.",
+
+    liveGoodieInstruction:
+      "Visitez au moins 14 des 16 stands pour débloquer votre Goodie Bag.",
+
+    remainingOne: "Encore 1 stand",
+
+    remainingMany: (count) =>
+      `Encore ${count} stands`,
+
+    collectGoodie: "RÉCUPÉRER LE GOODIE BAG",
+
+    goodieApprovedEyebrow: "GOODIE BAG",
+    approved: "VALIDÉ",
+
+    testApproval: "Validation test réussie",
+
+    boothsVisitedApproval: (visited, total) =>
+      `${visited} / ${total} stands visités`,
+
+    mayHandOver:
+      "Le Goodie Bag peut être remis.",
+
+    goodieReceived: "GOODIE BAG REMIS",
+
+    recoveryLost: "Session perdue ?",
+    recoveryTitle: "Restaurer votre session",
+
+    recoveryText:
+      "Saisissez votre code de récupération personnel.",
+
+    recoveryButton: "RESTAURER LA SESSION",
+
+    recoveryRequired:
+      "Veuillez saisir votre code de récupération.",
+
+    recoveryNotFound:
+      "La session n'a pas été trouvée dans ce navigateur de test.",
+
+    recoveryInvalid:
+      "La session enregistrée n'est pas valide.",
+
+    recoveryTestNote:
+      "Version test : la restauration fonctionne actuellement uniquement avec les sessions enregistrées dans ce navigateur.",
+
+    recoveryCodeLabel: "Votre code de récupération",
+
+    recoveryCodeText:
+      "Conservez ce code au cas où vous devriez restaurer votre session.",
+
+    thankYou:
+      "Merci d'avoir célébré avec nous aujourd'hui notre 50e anniversaire. Nous vous souhaitons un bon retour !",
+
+    done: "TERMINER",
+
+    mapAlt: "Plan de l'événement",
+    logoAlt: "Import Parfumerie",
+    anniversaryAlt: "50 ans Import Parfumerie",
+    panoramaAlt:
+      "Illustration de l'équipe Import Parfumerie",
+  },
+
+  it: {
+    chooseLanguage: "Lingua",
+
+    welcome: "Benvenuto!",
+    intro:
+      "Scopri il nostro evento anniversario e raccogli i brand visitati nel tuo Brand Pass digitale personale.",
+
+    firstName: "Nome",
+    lastName: "Cognome",
+    start: "INIZIA",
+
+    anniversaryLabel: "50 ANNI IMPORT PARFUMERIE",
+    hello: (name) => `Ciao ${name}!`,
+    welcomeEvent:
+      "Benvenuto al nostro evento anniversario.",
+
+    boothsVisited: "Stand visitati",
+
+    brandPass: "Il tuo Brand Pass",
+    tapBooth:
+      "Tocca uno stand per scansionare il suo codice QR.",
+
+    visited: "Visitato",
+    notVisited: "Non visitato",
+
+    mapNotFound: "La mappa non è stata trovata.",
+    mapUploadBefore:
+      "Carica l'immagine originale nella cartella",
+    mapUploadAfter: "con il nome:",
+
+    alreadyVisited: (name) =>
+      `✓ ${name} già visitato.`,
+
+    boothCollected: (name) =>
+      `✓ ${name} registrato con successo.`,
+
+    scanQr: "Scansiona il codice QR",
+    startingCamera: "Avvio della fotocamera...",
+
+    scannerCouldNotLoad:
+      "Impossibile caricare lo scanner.",
+
+    cameraReady:
+      "Fotocamera pronta – inquadra il codice QR.",
+
+    testScanBooth:
+      "MODALITÀ TEST – scansiona il codice QR GISADA.",
+
+    testScanGoodie:
+      "MODALITÀ TEST – scansiona il codice QR GISADA per approvare il Goodie Bag.",
+
+    wrongTestQr: (value) =>
+      `QR di test errato. Rilevato: ${value}`,
+
+    wrongGoodieQr:
+      "Codice QR del Goodie Bag errato.",
+
+    wrongBoothQr: (name) =>
+      `Codice QR errato. Scansiona il codice QR di ${name}.`,
+
+    cameraCouldNotStart:
+      "Impossibile avviare la fotocamera.",
+
+    cameraPermission:
+      "Consenti l'accesso alla fotocamera e riprova.",
+
+    close: "CHIUDI",
+
+    goodieBag: "Goodie Bag",
+    goodieCollected: "✓ Goodie Bag ritirato",
+    goodieReady: "Ci siamo!",
+
+    testGoodieReady:
+      "Test completato. Ora puoi ritirare il Goodie Bag.",
+
+    goodieLiveReady: (visited) =>
+      `${visited} / 16 stand visitati`,
+
+    testGoodieInstruction:
+      "MODALITÀ TEST – scansiona 2 stand diversi per sbloccare il Goodie Bag.",
+
+    liveGoodieInstruction:
+      "Visita almeno 14 dei 16 stand per sbloccare il tuo Goodie Bag.",
+
+    remainingOne: "Manca ancora 1 stand",
+
+    remainingMany: (count) =>
+      `Mancano ancora ${count} stand`,
+
+    collectGoodie: "RITIRA IL GOODIE BAG",
+
+    goodieApprovedEyebrow: "GOODIE BAG",
+    approved: "APPROVATO",
+
+    testApproval: "Approvazione test riuscita",
+
+    boothsVisitedApproval: (visited, total) =>
+      `${visited} / ${total} stand visitati`,
+
+    mayHandOver:
+      "Il Goodie Bag può essere consegnato.",
+
+    goodieReceived: "GOODIE BAG CONSEGNATO",
+
+    recoveryLost: "Hai perso la sessione?",
+    recoveryTitle: "Ripristina la sessione",
+
+    recoveryText:
+      "Inserisci il tuo codice di recupero personale.",
+
+    recoveryButton: "RIPRISTINA SESSIONE",
+
+    recoveryRequired:
+      "Inserisci il tuo codice di recupero.",
+
+    recoveryNotFound:
+      "La sessione non è stata trovata in questo browser di test.",
+
+    recoveryInvalid:
+      "La sessione salvata non è valida.",
+
+    recoveryTestNote:
+      "Versione test: il ripristino funziona attualmente solo con sessioni salvate in questo browser.",
+
+    recoveryCodeLabel: "Il tuo codice di recupero",
+
+    recoveryCodeText:
+      "Conserva questo codice nel caso in cui sia necessario ripristinare la sessione.",
+
+    thankYou:
+      "Grazie per aver festeggiato oggi con noi il nostro 50° anniversario. Buon rientro a casa!",
+
+    done: "FINE",
+
+    mapAlt: "Mappa dell'evento",
+    logoAlt: "Import Parfumerie",
+    anniversaryAlt: "50 anni Import Parfumerie",
+    panoramaAlt:
+      "Illustrazione del team Import Parfumerie",
+  },
+};
 
 // ==================================================
 // BOOTHS
@@ -235,22 +794,15 @@ const booths = [
 function loadJSON(key, fallback) {
   try {
     const value = localStorage.getItem(key);
-
-    return value
-      ? JSON.parse(value)
-      : fallback;
+    return value ? JSON.parse(value) : fallback;
   } catch {
     localStorage.removeItem(key);
-
     return fallback;
   }
 }
 
 function saveJSON(key, value) {
-  localStorage.setItem(
-    key,
-    JSON.stringify(value)
-  );
+  localStorage.setItem(key, JSON.stringify(value));
 }
 
 function createUserId() {
@@ -260,35 +812,36 @@ function createUserId() {
   );
 }
 
+function randomCharacter(characters) {
+  if (
+    window.crypto &&
+    window.crypto.getRandomValues
+  ) {
+    const values = new Uint32Array(1);
+    window.crypto.getRandomValues(values);
+
+    return characters[
+      values[0] % characters.length
+    ];
+  }
+
+  return characters[
+    Math.floor(
+      Math.random() * characters.length
+    )
+  ];
+}
+
 function createRecoveryCode() {
   const characters =
     "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-  const randomCharacter = () => {
-    const randomArray =
-      new Uint32Array(1);
+  const createPart = () =>
+    Array.from({ length: 4 }, () =>
+      randomCharacter(characters)
+    ).join("");
 
-    window.crypto.getRandomValues(
-      randomArray
-    );
-
-    return characters[
-      randomArray[0] %
-        characters.length
-    ];
-  };
-
-  const firstPart = Array.from(
-    { length: 4 },
-    randomCharacter
-  ).join("");
-
-  const secondPart = Array.from(
-    { length: 4 },
-    randomCharacter
-  ).join("");
-
-  return `${firstPart}-${secondPart}`;
+  return `${createPart()}-${createPart()}`;
 }
 
 function normalizeRecoveryCode(value) {
@@ -309,6 +862,35 @@ function getSessionKey(code) {
   return normalizeRecoveryCode(code);
 }
 
+function detectInitialLanguage() {
+  try {
+    const saved =
+      localStorage.getItem(
+        LANGUAGE_STORAGE_KEY
+      );
+
+    if (
+      SUPPORTED_LANGUAGES.includes(saved)
+    ) {
+      return saved;
+    }
+  } catch {
+    // Ignore storage error.
+  }
+
+  const browserLanguage = String(
+    navigator.language || "en"
+  )
+    .slice(0, 2)
+    .toLowerCase();
+
+  return SUPPORTED_LANGUAGES.includes(
+    browserLanguage
+  )
+    ? browserLanguage
+    : "en";
+}
+
 // ==================================================
 // APP
 // ==================================================
@@ -316,6 +898,14 @@ function getSessionKey(code) {
 export default function App() {
   const [showSplash, setShowSplash] =
     useState(true);
+
+  const [language, setLanguage] = useState(
+    detectInitialLanguage
+  );
+
+  const t =
+    translations[language] ||
+    translations.en;
 
   const [user, setUser] = useState(() =>
     loadJSON(USER_STORAGE_KEY, null)
@@ -326,13 +916,13 @@ export default function App() {
     lastname: "",
   });
 
-  const [visited, setVisited] =
-    useState(() =>
+  const [visited, setVisited] = useState(
+    () =>
       loadJSON(
         VISITED_STORAGE_KEY,
         []
       )
-    );
+  );
 
   const [goodieData, setGoodieData] =
     useState(() =>
@@ -386,15 +976,14 @@ export default function App() {
   const scannerRef = useRef(null);
   const scanLockedRef = useRef(false);
 
-  const scannerSectionRef = useRef(null);
-  const mapSectionRef = useRef(null);
+  const scannerSectionRef =
+    useRef(null);
+
+  const mapSectionRef =
+    useRef(null);
 
   const scannerId =
     "qr-reader-region";
-
-  // ==================================================
-  // TEST / LIVE STATUS
-  // ==================================================
 
   const testCompleted =
     TEST_MODE &&
@@ -417,6 +1006,29 @@ export default function App() {
   );
 
   // ==================================================
+  // LANGUAGE
+  // ==================================================
+
+  useEffect(() => {
+    localStorage.setItem(
+      LANGUAGE_STORAGE_KEY,
+      language
+    );
+  }, [language]);
+
+  useEffect(() => {
+    if (
+      user?.language &&
+      SUPPORTED_LANGUAGES.includes(
+        user.language
+      ) &&
+      user.language !== language
+    ) {
+      setLanguage(user.language);
+    }
+  }, []);
+
+  // ==================================================
   // SPLASH
   // ==================================================
 
@@ -431,21 +1043,31 @@ export default function App() {
   }, []);
 
   // ==================================================
-  // ADD RECOVERY CODE TO OLD USER
+  // UPDATE OLD USER
   // ==================================================
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     if (
-      !user ||
-      user.recoveryCode
+      user.recoveryCode &&
+      user.language
     ) {
       return;
     }
 
     const updatedUser = {
       ...user,
+
       recoveryCode:
+        user.recoveryCode ||
         createRecoveryCode(),
+
+      language:
+        user.language ||
+        language,
     };
 
     saveJSON(
@@ -454,7 +1076,7 @@ export default function App() {
     );
 
     setUser(updatedUser);
-  }, [user]);
+  }, [user, language]);
 
   // ==================================================
   // SAVE LOCAL RECOVERY SESSION
@@ -480,6 +1102,7 @@ export default function App() {
       user,
       visited,
       goodieData,
+      language,
       savedAt:
         new Date().toISOString(),
     };
@@ -492,10 +1115,11 @@ export default function App() {
     user,
     visited,
     goodieData,
+    language,
   ]);
 
   // ==================================================
-  // SAVE ACTIVE SESSION
+  // SAVE ACTIVE DATA
   // ==================================================
 
   useEffect(() => {
@@ -528,7 +1152,13 @@ export default function App() {
       !lastname
     ) {
       alert(
-        "Please enter your first and last name."
+        language === "de"
+          ? "Bitte Vorname und Nachname eingeben."
+          : language === "fr"
+            ? "Veuillez saisir votre prénom et votre nom."
+            : language === "it"
+              ? "Inserisci nome e cognome."
+              : "Please enter your first and last name."
       );
 
       return;
@@ -536,11 +1166,9 @@ export default function App() {
 
     const newUser = {
       id: createUserId(),
-
       firstname,
-
       lastname,
-
+      language,
       recoveryCode:
         createRecoveryCode(),
     };
@@ -565,7 +1193,6 @@ export default function App() {
     );
 
     setVisited([]);
-
     setGoodieData(
       emptyGoodieData
     );
@@ -585,7 +1212,7 @@ export default function App() {
 
     if (!key) {
       setRecoveryMessage(
-        "Please enter your recovery code."
+        t.recoveryRequired
       );
 
       return;
@@ -602,7 +1229,7 @@ export default function App() {
 
     if (!session) {
       setRecoveryMessage(
-        "Session not found in this test browser."
+        t.recoveryNotFound
       );
 
       return;
@@ -610,7 +1237,7 @@ export default function App() {
 
     if (!session.user) {
       setRecoveryMessage(
-        "The saved session is invalid."
+        t.recoveryInvalid
       );
 
       return;
@@ -628,9 +1255,26 @@ export default function App() {
         collectedAt: null,
       };
 
+    const restoredLanguage =
+      SUPPORTED_LANGUAGES.includes(
+        session.user.language
+      )
+        ? session.user.language
+        : SUPPORTED_LANGUAGES.includes(
+              session.language
+            )
+          ? session.language
+          : language;
+
+    const restoredUser = {
+      ...session.user,
+      language:
+        restoredLanguage,
+    };
+
     saveJSON(
       USER_STORAGE_KEY,
-      session.user
+      restoredUser
     );
 
     saveJSON(
@@ -643,6 +1287,11 @@ export default function App() {
       restoredGoodie
     );
 
+    localStorage.setItem(
+      LANGUAGE_STORAGE_KEY,
+      restoredLanguage
+    );
+
     setVisited(
       restoredVisited
     );
@@ -651,7 +1300,13 @@ export default function App() {
       restoredGoodie
     );
 
-    setUser(session.user);
+    setLanguage(
+      restoredLanguage
+    );
+
+    setUser(
+      restoredUser
+    );
 
     setRecoveryMessage("");
     setRecoveryInput("");
@@ -733,7 +1388,6 @@ export default function App() {
       await stopScanner();
 
       setScanTarget(null);
-
       setScannerStatus("");
 
       scanLockedRef.current =
@@ -754,7 +1408,9 @@ export default function App() {
         )
       ) {
         setMessage(
-          `✓ ${booth.name} already visited.`
+          t.alreadyVisited(
+            booth.name
+          )
         );
 
         return;
@@ -823,7 +1479,7 @@ export default function App() {
           false;
 
         setScannerStatus(
-          "Starting camera..."
+          t.startingCamera
         );
 
         await new Promise(
@@ -845,7 +1501,7 @@ export default function App() {
 
         if (!scannerElement) {
           setScannerStatus(
-            "Scanner could not be loaded."
+            t.scannerCouldNotLoad
           );
 
           return;
@@ -881,10 +1537,6 @@ export default function App() {
               let isCorrectQR =
                 false;
 
-              // ======================================
-              // TEST MODE
-              // ======================================
-
               if (TEST_MODE) {
                 isCorrectQR =
                   scannedValue.includes(
@@ -892,13 +1544,7 @@ export default function App() {
                       TEST_QR_VALUE
                     )
                   );
-              }
-
-              // ======================================
-              // LIVE GOODIE QR
-              // ======================================
-
-              else if (
+              } else if (
                 scanTarget.type ===
                 "goodie"
               ) {
@@ -907,13 +1553,7 @@ export default function App() {
                   normalizeQR(
                     GOODIE_QR_VALUE
                   );
-              }
-
-              // ======================================
-              // LIVE BOOTH QR
-              // ======================================
-
-              else {
+              } else {
                 isCorrectQR =
                   scannedValue ===
                   normalizeQR(
@@ -922,20 +1562,22 @@ export default function App() {
                   );
               }
 
-              setScannerStatus(
-                `QR detected: ${decodedText}`
-              );
-
               if (
                 !isCorrectQR
               ) {
                 setMessage(
                   TEST_MODE
-                    ? `Wrong test QR. Detected: ${decodedText}`
+                    ? t.wrongTestQr(
+                        decodedText
+                      )
                     : scanTarget.type ===
                         "goodie"
-                      ? "Wrong Goodie Bag QR code."
-                      : `Wrong QR code. Please scan the QR code for ${scanTarget.booth.name}.`
+                      ? t.wrongGoodieQr
+                      : t.wrongBoothQr(
+                          scanTarget
+                            .booth
+                            .name
+                        )
                 );
 
                 scanLockedRef.current =
@@ -997,20 +1639,18 @@ export default function App() {
               );
 
               setMessage(
-                `✓ ${booth.name} successfully collected.`
+                t.boothCollected(
+                  booth.name
+                )
               );
 
               await stopScanner();
 
               setScanTarget(null);
-
               setScannerStatus("");
 
               scanLockedRef.current =
                 false;
-
-              // Return to map
-              // after successful scan.
 
               scrollToMap();
             };
@@ -1059,12 +1699,12 @@ export default function App() {
               setScannerStatus(
                 scanTarget.type ===
                   "goodie"
-                  ? "TEST MODE – scan the GISADA QR code to approve the Goodie Bag."
-                  : "TEST MODE – scan the GISADA QR code."
+                  ? t.testScanGoodie
+                  : t.testScanBooth
               );
             } else {
               setScannerStatus(
-                "Camera ready – point it at the QR code."
+                t.cameraReady
               );
             }
           }
@@ -1078,11 +1718,11 @@ export default function App() {
             null;
 
           setScannerStatus(
-            "Camera could not be started."
+            t.cameraCouldNotStart
           );
 
           setMessage(
-            "Please allow camera access and try again."
+            t.cameraPermission
           );
         }
       };
@@ -1092,7 +1732,10 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [scanTarget]);
+  }, [
+    scanTarget,
+    language,
+  ]);
 
   // ==================================================
   // GOODIE BAG RECEIVED
@@ -1123,7 +1766,9 @@ export default function App() {
   // ==================================================
 
   if (showSplash) {
-    return <Splash />;
+    return (
+      <Splash t={t} />
+    );
   }
 
   // ==================================================
@@ -1133,13 +1778,21 @@ export default function App() {
   if (!user) {
     return (
       <Page>
-        <Header />
+        <Header t={t} />
 
         <main
           style={
             styles.registrationContent
           }
         >
+          <LanguageSelector
+            language={language}
+            setLanguage={
+              setLanguage
+            }
+            t={t}
+          />
+
           <div
             style={
               styles.jubiLogoWrapper
@@ -1147,7 +1800,9 @@ export default function App() {
           >
             <img
               src="/LogoJubi.png"
-              alt="50 Years Import Parfumerie"
+              alt={
+                t.anniversaryAlt
+              }
               style={
                 styles.jubiLogo
               }
@@ -1159,7 +1814,7 @@ export default function App() {
               styles.registrationTitle
             }
           >
-            Welcome!
+            {t.welcome}
           </h1>
 
           <p
@@ -1167,17 +1822,13 @@ export default function App() {
               styles.registrationIntro
             }
           >
-            Discover our anniversary
-            event and collect the
-            brands you visit in your
-            personal digital brand
-            pass.
+            {t.intro}
           </p>
 
           <label
             style={styles.label}
           >
-            First name
+            {t.firstName}
           </label>
 
           <input
@@ -1185,7 +1836,9 @@ export default function App() {
             value={
               form.firstname
             }
-            placeholder="First name"
+            placeholder={
+              t.firstName
+            }
             autoComplete="given-name"
             onChange={(event) =>
               setForm(
@@ -1203,7 +1856,7 @@ export default function App() {
           <label
             style={styles.label}
           >
-            Last name
+            {t.lastName}
           </label>
 
           <input
@@ -1211,7 +1864,9 @@ export default function App() {
             value={
               form.lastname
             }
-            placeholder="Last name"
+            placeholder={
+              t.lastName
+            }
             autoComplete="family-name"
             onChange={(event) =>
               setForm(
@@ -1233,7 +1888,7 @@ export default function App() {
             }
             onClick={register}
           >
-            START
+            {t.start}
           </button>
 
           <RecoveryPanel
@@ -1255,6 +1910,7 @@ export default function App() {
             onRestore={
               restoreSession
             }
+            t={t}
           />
         </main>
       </Page>
@@ -1267,7 +1923,7 @@ export default function App() {
 
   return (
     <Page>
-      <Header />
+      <Header t={t} />
 
       <main
         style={styles.content}
@@ -1275,20 +1931,21 @@ export default function App() {
         <p
           style={styles.eyebrow}
         >
-          50 YEARS IMPORT PARFUMERIE
+          {t.anniversaryLabel}
         </p>
 
         <h1
           style={styles.passTitle}
         >
-          Hi {user.firstname}!
+          {t.hello(
+            user.firstname
+          )}
         </h1>
 
         <p
           style={styles.intro}
         >
-          Welcome to our anniversary
-          event.
+          {t.welcomeEvent}
         </p>
 
         <Progress
@@ -1301,6 +1958,7 @@ export default function App() {
           progress={
             progress
           }
+          t={t}
         />
 
         {/* ======================================= */}
@@ -1318,7 +1976,7 @@ export default function App() {
               styles.sectionTitle
             }
           >
-            Your brand pass
+            {t.brandPass}
           </h2>
 
           <p
@@ -1326,8 +1984,7 @@ export default function App() {
               styles.mapIntro
             }
           >
-            Tap on a booth to scan
-            its QR code.
+            {t.tapBooth}
           </p>
 
           <div
@@ -1341,7 +1998,9 @@ export default function App() {
               >
                 <img
                   src="/brand-map.png"
-                  alt="Brand fair map"
+                  alt={
+                    t.mapAlt
+                  }
                   style={
                     styles.mapImage
                   }
@@ -1354,19 +2013,6 @@ export default function App() {
 
                 {booths.map(
                   (booth) => {
-                    // =================================
-                    // TEST VISUAL LOGIC
-                    //
-                    // 0 scans:
-                    // nothing green
-                    //
-                    // 1 scan:
-                    // only that booth green
-                    //
-                    // 2 scans:
-                    // everything green
-                    // =================================
-
                     const isVisited =
                       testCompleted ||
                       visited.includes(
@@ -1438,8 +2084,7 @@ export default function App() {
                 }
               >
                 <strong>
-                  Map image not
-                  found.
+                  {t.mapNotFound}
                 </strong>
 
                 <div
@@ -1447,17 +2092,21 @@ export default function App() {
                     marginTop: 8,
                   }}
                 >
-                  Upload the
-                  original image to
-                  the{" "}
+                  {
+                    t.mapUploadBefore
+                  }{" "}
                   <strong>
                     public
                   </strong>{" "}
-                  folder as:
+                  {
+                    t.mapUploadAfter
+                  }
                 </div>
 
                 <code
-                  style={styles.code}
+                  style={
+                    styles.code
+                  }
                 >
                   brand-map.png
                 </code>
@@ -1471,13 +2120,15 @@ export default function App() {
             <Legend
               color={GREEN_BG}
               border={GREEN}
-              label="Visited"
+              label={t.visited}
             />
 
             <Legend
               color="#FFFFFF"
               border="#BBBBBB"
-              label="Not visited"
+              label={
+                t.notVisited
+              }
             />
           </div>
 
@@ -1509,6 +2160,7 @@ export default function App() {
           onCollect={
             openGoodieScanner
           }
+          t={t}
         />
 
         {/* ======================================= */}
@@ -1529,6 +2181,7 @@ export default function App() {
             onClose={
               closeScanner
             }
+            t={t}
           />
         )}
 
@@ -1546,7 +2199,9 @@ export default function App() {
               styles.recoveryInfoLabel
             }
           >
-            Your recovery code
+            {
+              t.recoveryCodeLabel
+            }
           </div>
 
           <div
@@ -1554,7 +2209,9 @@ export default function App() {
               styles.recoveryCode
             }
           >
-            {user.recoveryCode}
+            {
+              user.recoveryCode
+            }
           </div>
 
           <div
@@ -1562,9 +2219,9 @@ export default function App() {
               styles.recoveryInfoText
             }
           >
-            Keep this code in case
-            you need to restore your
-            session.
+            {
+              t.recoveryCodeText
+            }
           </div>
         </section>
       </main>
@@ -1585,6 +2242,7 @@ export default function App() {
           onReceived={
             confirmGoodieReceived
           }
+          t={t}
         />
       )}
 
@@ -1599,6 +2257,7 @@ export default function App() {
               false
             )
           }
+          t={t}
         />
       )}
     </Page>
@@ -1619,28 +2278,30 @@ function Page({ children }) {
   );
 }
 
-function Header() {
+function Header({ t }) {
   return (
     <header
       style={styles.header}
     >
       <img
         src="/impo_logo.png"
-        alt="Import Parfumerie"
+        alt={t.logoAlt}
         style={styles.logo}
       />
     </header>
   );
 }
 
-function Splash() {
+function Splash({ t }) {
   return (
     <div
       style={styles.splash}
     >
       <img
         src="/LogoJubi.png"
-        alt="50 Years Import Parfumerie"
+        alt={
+          t.anniversaryAlt
+        }
         style={
           styles.splashLogo
         }
@@ -1649,10 +2310,99 @@ function Splash() {
   );
 }
 
+// ==================================================
+// LANGUAGE SELECTOR
+// ==================================================
+
+function LanguageSelector({
+  language,
+  setLanguage,
+  t,
+}) {
+  const options = [
+    {
+      code: "de",
+      label: "DE",
+    },
+    {
+      code: "fr",
+      label: "FR",
+    },
+    {
+      code: "it",
+      label: "IT",
+    },
+    {
+      code: "en",
+      label: "EN",
+    },
+  ];
+
+  return (
+    <div
+      style={
+        styles.languageSection
+      }
+    >
+      <div
+        style={
+          styles.languageLabel
+        }
+      >
+        {t.chooseLanguage}
+      </div>
+
+      <div
+        style={
+          styles.languageButtons
+        }
+      >
+        {options.map(
+          (option) => {
+            const active =
+              language ===
+              option.code;
+
+            return (
+              <button
+                key={
+                  option.code
+                }
+                type="button"
+                onClick={() =>
+                  setLanguage(
+                    option.code
+                  )
+                }
+                style={{
+                  ...styles.languageButton,
+
+                  ...(active
+                    ? styles.languageButtonActive
+                    : styles.languageButtonInactive),
+                }}
+              >
+                {
+                  option.label
+                }
+              </button>
+            );
+          }
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ==================================================
+// PROGRESS
+// ==================================================
+
 function Progress({
   visited,
   total,
   progress,
+  t,
 }) {
   return (
     <div
@@ -1679,7 +2429,7 @@ function Progress({
               styles.progressLabel
             }
           >
-            Booths visited
+            {t.boothsVisited}
           </div>
         </div>
 
@@ -1698,6 +2448,7 @@ function Progress({
         <div
           style={{
             ...styles.progressBar,
+
             width:
               `${progress}%`,
           }}
@@ -1743,6 +2494,7 @@ function RecoveryPanel({
   setValue,
   message,
   onRestore,
+  t,
 }) {
   return (
     <section
@@ -1759,7 +2511,7 @@ function RecoveryPanel({
           setOpen(!open)
         }
       >
-        Lost your session?
+        {t.recoveryLost}
       </button>
 
       {open && (
@@ -1773,7 +2525,7 @@ function RecoveryPanel({
               styles.recoveryTitle
             }
           >
-            Restore your session
+            {t.recoveryTitle}
           </div>
 
           <p
@@ -1781,8 +2533,7 @@ function RecoveryPanel({
               styles.recoveryText
             }
           >
-            Enter your personal
-            recovery code.
+            {t.recoveryText}
           </p>
 
           <input
@@ -1817,9 +2568,11 @@ function RecoveryPanel({
             style={
               styles.recoveryButton
             }
-            onClick={onRestore}
+            onClick={
+              onRestore
+            }
           >
-            RESTORE SESSION
+            {t.recoveryButton}
           </button>
 
           {TEST_MODE && (
@@ -1828,11 +2581,9 @@ function RecoveryPanel({
                 styles.testRecoveryNote
               }
             >
-              Test version:
-              recovery currently
-              works only with
-              sessions saved in
-              this browser.
+              {
+                t.recoveryTestNote
+              }
             </div>
           )}
         </div>
@@ -1850,6 +2601,7 @@ function GoodieBag({
   eligible,
   collected,
   onCollect,
+  t,
 }) {
   const required =
     TEST_MODE
@@ -1887,7 +2639,7 @@ function GoodieBag({
           styles.goodieTitle
         }
       >
-        Goodie Bag
+        {t.goodieBag}
       </div>
 
       {collected ? (
@@ -1896,7 +2648,9 @@ function GoodieBag({
             styles.goodieCollected
           }
         >
-          ✓ Goodie Bag collected
+          {
+            t.goodieCollected
+          }
         </div>
       ) : eligible ? (
         <>
@@ -1905,29 +2659,20 @@ function GoodieBag({
               styles.goodieUnlocked
             }
           >
-            You're ready!
+            {t.goodieReady}
           </div>
 
-          {TEST_MODE ? (
-            <div
-              style={
-                styles.goodieText
-              }
-            >
-              Test completed. Goodie
-              Bag collection is now
-              available.
-            </div>
-          ) : (
-            <div
-              style={
-                styles.goodieText
-              }
-            >
-              {visited} / 16 booths
-              visited
-            </div>
-          )}
+          <div
+            style={
+              styles.goodieText
+            }
+          >
+            {TEST_MODE
+              ? t.testGoodieReady
+              : t.goodieLiveReady(
+                  visited
+                )}
+          </div>
         </>
       ) : (
         <>
@@ -1937,8 +2682,8 @@ function GoodieBag({
             }
           >
             {TEST_MODE
-              ? "TEST MODE – scan 2 different booths to unlock the Goodie Bag."
-              : "Visit at least 14 of 16 booths to unlock your Goodie Bag."}
+              ? t.testGoodieInstruction
+              : t.liveGoodieInstruction}
           </div>
 
           <div
@@ -1970,8 +2715,10 @@ function GoodieBag({
             }
           >
             {remaining === 1
-              ? "1 more booth to go"
-              : `${remaining} more booths to go`}
+              ? t.remainingOne
+              : t.remainingMany(
+                  remaining
+                )}
           </div>
         </>
       )}
@@ -1993,7 +2740,7 @@ function GoodieBag({
               : styles.goodieButtonDisabled),
           }}
         >
-          COLLECT GOODIE BAG
+          {t.collectGoodie}
         </button>
       )}
     </section>
@@ -2009,11 +2756,12 @@ function Scanner({
   status,
   scannerSectionRef,
   onClose,
+  t,
 }) {
   const label =
     scanTarget.type ===
     "goodie"
-      ? "Goodie Bag"
+      ? t.goodieBag
       : scanTarget.booth.name;
 
   return (
@@ -2036,7 +2784,7 @@ function Scanner({
               styles.scannerTitle
             }
           >
-            Scan QR code
+            {t.scanQr}
           </div>
 
           <div
@@ -2079,7 +2827,7 @@ function Scanner({
         }
         onClick={onClose}
       >
-        CLOSE
+        {t.close}
       </button>
     </div>
   );
@@ -2094,6 +2842,7 @@ function GoodieApprovedScreen({
   visited,
   total,
   onReceived,
+  t,
 }) {
   return (
     <div
@@ -2119,7 +2868,9 @@ function GoodieApprovedScreen({
             styles.goodieApprovedEyebrow
           }
         >
-          GOODIE BAG
+          {
+            t.goodieApprovedEyebrow
+          }
         </div>
 
         <h1
@@ -2127,7 +2878,7 @@ function GoodieApprovedScreen({
             styles.goodieApprovedTitle
           }
         >
-          APPROVED
+          {t.approved}
         </h1>
 
         <div
@@ -2145,8 +2896,11 @@ function GoodieApprovedScreen({
           }
         >
           {TEST_MODE
-            ? "Test approval successful"
-            : `${visited} / ${total} booths visited`}
+            ? t.testApproval
+            : t.boothsVisitedApproval(
+                visited,
+                total
+              )}
         </div>
 
         <div
@@ -2154,8 +2908,7 @@ function GoodieApprovedScreen({
             styles.goodieApprovedInstruction
           }
         >
-          You may hand over the
-          Goodie Bag.
+          {t.mayHandOver}
         </div>
 
         <button
@@ -2167,7 +2920,7 @@ function GoodieApprovedScreen({
             onReceived
           }
         >
-          GOODIE BAG RECEIVED
+          {t.goodieReceived}
         </button>
       </div>
     </div>
@@ -2175,11 +2928,12 @@ function GoodieApprovedScreen({
 }
 
 // ==================================================
-// FINAL THANK YOU
+// FINAL THANK-YOU SCREEN
 // ==================================================
 
 function GoodieSuccessScreen({
   onDone,
+  t,
 }) {
   return (
     <div
@@ -2215,7 +2969,7 @@ function GoodieSuccessScreen({
       >
         <img
           src="/impo_logo.png"
-          alt="Import Parfumerie"
+          alt={t.logoAlt}
           style={
             styles.goodieFinalLogo
           }
@@ -2226,10 +2980,7 @@ function GoodieSuccessScreen({
             styles.goodieThankYou
           }
         >
-          Thank you for celebrating
-          our 50th anniversary with
-          us today. Have a safe trip
-          home!
+          {t.thankYou}
         </h1>
 
         <div
@@ -2238,7 +2989,9 @@ function GoodieSuccessScreen({
             styles.goodiePanorama
           }
           role="img"
-          aria-label="Import Parfumerie anniversary team illustration"
+          aria-label={
+            t.panoramaAlt
+          }
         />
 
         <button
@@ -2248,7 +3001,7 @@ function GoodieSuccessScreen({
           }
           onClick={onDone}
         >
-          DONE
+          {t.done}
         </button>
       </div>
     </div>
@@ -2275,6 +3028,10 @@ const styles = {
     background: "#FFFFFF",
   },
 
+  // ==================================================
+  // HEADER
+  // ==================================================
+
   header: {
     height: 70,
     display: "flex",
@@ -2288,6 +3045,10 @@ const styles = {
     width: 82,
     display: "block",
   },
+
+  // ==================================================
+  // SPLASH
+  // ==================================================
 
   splash: {
     position: "fixed",
@@ -2308,9 +3069,67 @@ const styles = {
       "contain",
   },
 
+  // ==================================================
+  // LANGUAGE
+  // ==================================================
+
+  languageSection: {
+    marginBottom: 26,
+    textAlign: "center",
+  },
+
+  languageLabel: {
+    marginBottom: 9,
+    color: "#888888",
+    fontSize: 11,
+    fontWeight: 700,
+    textTransform:
+      "uppercase",
+    letterSpacing:
+      "1px",
+  },
+
+  languageButtons: {
+    display: "flex",
+    justifyContent:
+      "center",
+    gap: 7,
+  },
+
+  languageButton: {
+    minWidth: 52,
+    height: 38,
+    padding: "0 12px",
+    borderRadius: 8,
+    fontSize: 12,
+    fontWeight: 800,
+    cursor: "pointer",
+    transition:
+      "all 0.15s ease",
+  },
+
+  languageButtonActive: {
+    border:
+      `1px solid ${RED}`,
+    background: RED,
+    color: "#FFFFFF",
+  },
+
+  languageButtonInactive: {
+    border:
+      `1px solid ${BORDER}`,
+    background:
+      "#FFFFFF",
+    color: "#555555",
+  },
+
+  // ==================================================
+  // REGISTRATION
+  // ==================================================
+
   registrationContent: {
     padding:
-      "30px 20px 50px",
+      "26px 20px 50px",
   },
 
   jubiLogoWrapper: {
@@ -2318,7 +3137,7 @@ const styles = {
     justifyContent:
       "center",
     margin:
-      "10px 0 34px",
+      "4px 0 30px",
   },
 
   jubiLogo: {
@@ -2386,6 +3205,10 @@ const styles = {
       "pointer",
   },
 
+  // ==================================================
+  // CONTENT
+  // ==================================================
+
   content: {
     padding:
       "28px 20px 60px",
@@ -2418,6 +3241,10 @@ const styles = {
     fontSize: 16,
     lineHeight: 1.5,
   },
+
+  // ==================================================
+  // PROGRESS
+  // ==================================================
 
   progressCard: {
     padding: 20,
@@ -2471,6 +3298,10 @@ const styles = {
     transition:
       "width 0.4s ease",
   },
+
+  // ==================================================
+  // MAP
+  // ==================================================
 
   mapSection: {
     scrollMarginTop: 16,
@@ -2592,6 +3423,10 @@ const styles = {
     fontSize: 13,
     lineHeight: 1.4,
   },
+
+  // ==================================================
+  // RECOVERY
+  // ==================================================
 
   recoveryPanel: {
     marginTop: 38,
@@ -2981,7 +3816,7 @@ const styles = {
   goodieApprovedTitle: {
     margin:
       "6px 0 30px",
-    fontSize: 48,
+    fontSize: 44,
     lineHeight: 1,
     fontWeight: 900,
     letterSpacing:
@@ -3018,7 +3853,7 @@ const styles = {
     fontSize: 14,
     fontWeight: 900,
     letterSpacing:
-      "0.5px",
+      "0.4px",
     cursor:
       "pointer",
   },
