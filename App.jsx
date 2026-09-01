@@ -14,29 +14,13 @@ const SUPABASE_PUBLISHABLE_KEY =
 // ==================================================
 // TEST / LIVE MODE
 // ==================================================
-//
-// TEST MODE:
-// - GISADA QR works for every booth
-// - first scanned booth becomes green
-// - after 2 different booths all booths become green
-// - Goodie Bag unlocks after 2 booths
-//
-// LIVE MODE LATER:
-// - TEST_MODE = false
-// - Supabase event_settings.test_mode = false
-// - every booth has its own secret server-side QR token
-// - only really visited booths become green
-// - Goodie Bag unlocks after 14 / 16
-//
-// Test and Live use DIFFERENT localStorage namespaces.
-// This prevents old test sessions from leaking into Live.
-//
+
 const TEST_MODE = true;
-
 const TEST_QR_VALUE = "GISADA";
-const TEST_UNLOCK_AT = 2;
 
-const GOODIE_UNLOCK_AT = 14;
+const TOTAL_BOOTHS = 20;
+const TEST_UNLOCK_AT = 2;
+const GOODIE_UNLOCK_AT = 18;
 
 // ==================================================
 // DESIGN
@@ -55,56 +39,25 @@ const GREEN_BG = "rgba(32, 148, 71, 0.18)";
 // ==================================================
 
 const STORAGE_SCOPE = TEST_MODE
-  ? "impoJubiTestV3"
-  : "impoJubiLiveV1";
+  ? "impoJubiTestV4"
+  : "impoJubiLiveV2";
 
-const USER_STORAGE_KEY =
-  `${STORAGE_SCOPE}:user`;
+const USER_STORAGE_KEY = `${STORAGE_SCOPE}:user`;
+const VISITED_STORAGE_KEY = `${STORAGE_SCOPE}:visited`;
+const GOODIE_STORAGE_KEY = `${STORAGE_SCOPE}:goodie`;
+const SESSIONS_STORAGE_KEY = `${STORAGE_SCOPE}:sessions`;
+const LANGUAGE_STORAGE_KEY = `${STORAGE_SCOPE}:language`;
+const VISIT_PROOFS_STORAGE_KEY = `${STORAGE_SCOPE}:visitProofs`;
+const DEVICE_ID_STORAGE_KEY = `${STORAGE_SCOPE}:deviceId`;
+const REGISTRATION_ID_STORAGE_KEY = `${STORAGE_SCOPE}:registrationId`;
 
-const VISITED_STORAGE_KEY =
-  `${STORAGE_SCOPE}:visited`;
+const LEGACY_USER_STORAGE_KEY = "impoJubiUserV2";
+const LEGACY_VISITED_STORAGE_KEY = "impoJubiVisitedV2";
+const LEGACY_GOODIE_STORAGE_KEY = "impoJubiGoodieV1";
+const LEGACY_SESSIONS_STORAGE_KEY = "impoJubiSessionsV1";
+const LEGACY_LANGUAGE_STORAGE_KEY = "impoJubiLanguageV1";
 
-const GOODIE_STORAGE_KEY =
-  `${STORAGE_SCOPE}:goodie`;
-
-const SESSIONS_STORAGE_KEY =
-  `${STORAGE_SCOPE}:sessions`;
-
-const LANGUAGE_STORAGE_KEY =
-  `${STORAGE_SCOPE}:language`;
-
-const VISIT_PROOFS_STORAGE_KEY =
-  `${STORAGE_SCOPE}:visitProofs`;
-
-const DEVICE_ID_STORAGE_KEY =
-  `${STORAGE_SCOPE}:deviceId`;
-
-const REGISTRATION_ID_STORAGE_KEY =
-  `${STORAGE_SCOPE}:registrationId`;
-
-// Old test-version keys.
-// Only used to migrate an existing browser session.
-const LEGACY_USER_STORAGE_KEY =
-  "impoJubiUserV2";
-
-const LEGACY_VISITED_STORAGE_KEY =
-  "impoJubiVisitedV2";
-
-const LEGACY_GOODIE_STORAGE_KEY =
-  "impoJubiGoodieV1";
-
-const LEGACY_SESSIONS_STORAGE_KEY =
-  "impoJubiSessionsV1";
-
-const LEGACY_LANGUAGE_STORAGE_KEY =
-  "impoJubiLanguageV1";
-
-const SUPPORTED_LANGUAGES = [
-  "de",
-  "fr",
-  "it",
-  "en",
-];
+const SUPPORTED_LANGUAGES = ["de", "fr", "it", "en"];
 
 // ==================================================
 // TRANSLATIONS
@@ -113,712 +66,394 @@ const SUPPORTED_LANGUAGES = [
 const translations = {
   en: {
     chooseLanguage: "Language",
-
     welcome: "Welcome!",
-
     intro:
       "Discover our anniversary event and collect the brands you visit in your personal digital brand pass.",
-
     firstName: "First name",
     lastName: "Last name",
-
     start: "START",
     starting: "STARTING...",
-
-    nameRequired:
-      "Please enter your first and last name.",
-
+    nameRequired: "Please enter your first and last name.",
     registrationError:
       "We could not connect to the event database. Please check your internet connection and try again.",
-
-    registrationClosed:
-      "Registration is currently closed.",
-
+    registrationClosed: "Registration is currently closed.",
     registrationLimit:
       "The maximum number of participants has been reached.",
-
-    anniversaryLabel:
-      "50 YEARS IMPORT PARFUMERIE",
-
-    hello: (name) =>
-      `Hi ${name}!`,
-
-    welcomeEvent:
-      "Welcome to our anniversary event.",
-
-    boothsVisited:
-      "Booths visited",
-
-    brandPass:
-      "Your brand pass",
-
-    tapBooth:
-      "Tap on a booth to scan its QR code.",
-
-    visited:
-      "Visited",
-
-    notVisited:
-      "Not visited",
-
-    mapNotFound:
-      "Map image not found.",
-
-    mapUploadBefore:
-      "Upload the original image to the",
-
-    mapUploadAfter:
-      "folder as:",
-
-    alreadyVisited: (name) =>
-      `✓ ${name} already visited.`,
-
-    boothCollected: (name) =>
-      `✓ ${name} successfully collected.`,
-
+    anniversaryLabel: "50 YEARS IMPORT PARFUMERIE",
+    hello: (name) => `Hi ${name}!`,
+    welcomeEvent: "Welcome to our anniversary event.",
+    boothsVisited: "Booths visited",
+    brandPass: "Your brand pass",
+    tapBooth: "Tap on a booth to scan its QR code.",
+    visited: "Visited",
+    notVisited: "Not visited",
+    mapNotFound: "Map image not found.",
+    mapUploadBefore: "Upload the original image to the",
+    mapUploadAfter: "folder as:",
+    alreadyVisited: (name) => `✓ ${name} already visited.`,
+    boothCollected: (name) => `✓ ${name} successfully collected.`,
     boothSavedOffline: (name) =>
       `✓ ${name} saved on this device. It will be synchronized automatically when the connection is available.`,
-
     wrongBoothQr: (name) =>
       `This QR code does not belong to ${name}. Please scan the QR code at this booth.`,
-
-    scanQr:
-      "Scan QR code",
-
-    startingCamera:
-      "Starting camera...",
-
-    scannerCouldNotLoad:
-      "Scanner could not be loaded.",
-
-    cameraReady:
-      "Camera ready – point it at the QR code.",
-
-    savingVisit:
-      "Saving visit...",
-
-    testScanBooth:
-      "TEST MODE – scan the GISADA QR code.",
-
+    scanQr: "Scan QR code",
+    startingCamera: "Starting camera...",
+    scannerCouldNotLoad: "Scanner could not be loaded.",
+    cameraReady: "Camera ready – point it at the QR code.",
+    savingVisit: "Saving visit...",
+    testScanBooth: "TEST MODE – scan the GISADA QR code.",
     testScanGoodie:
       "TEST MODE – scan the GISADA QR code to approve the Goodie Bag.",
-
-    wrongTestQr: (value) =>
-      `Wrong test QR. Detected: ${value}`,
-
-    wrongGoodieQr:
-      "Wrong Goodie Bag QR code.",
-
-    cameraCouldNotStart:
-      "Camera could not be started.",
-
+    wrongTestQr: (value) => `Wrong test QR. Detected: ${value}`,
+    wrongGoodieQr: "Wrong Goodie Bag QR code.",
+    cameraCouldNotStart: "Camera could not be started.",
     cameraPermission:
       "Please allow camera access and try again.",
-
-    close:
-      "CLOSE",
-
+    close: "CLOSE",
     sessionProblem:
       "Your session could not be found in the database. Please restore it with your recovery code.",
-
-    goodieBag:
-      "Goodie Bag",
-
-    goodieCollected:
-      "✓ Goodie Bag collected",
-
-    goodieReady:
-      "You're ready!",
-
+    goodieBag: "Goodie Bag",
+    goodieCollected: "✓ Goodie Bag collected",
+    goodieReady: "You're ready!",
     testGoodieReady:
       "Test completed. Goodie Bag collection is now available.",
-
-    goodieLiveReady: (visited) =>
-      `${visited} / 16 booths visited`,
-
+    goodieLiveReady: (visited, total) =>
+      `${visited} / ${total} booths visited`,
     testGoodieInstruction:
       "TEST MODE – scan 2 different booths to unlock the Goodie Bag.",
-
-    liveGoodieInstruction:
-      "Visit at least 14 of 16 booths to unlock your Goodie Bag.",
-
-    remainingOne:
-      "1 more booth to go",
-
-    remainingMany: (count) =>
-      `${count} more booths to go`,
-
-    collectGoodie:
-      "COLLECT GOODIE BAG",
-
-    checkingGoodie:
-      "Checking eligibility...",
-
+    liveGoodieInstruction: (required, total) =>
+      `Visit at least ${required} of ${total} booths to unlock your Goodie Bag.`,
+    remainingOne: "1 more booth to go",
+    remainingMany: (count) => `${count} more booths to go`,
+    collectGoodie: "COLLECT GOODIE BAG",
+    checkingGoodie: "Checking eligibility...",
     goodieConnection:
       "A connection to the event database is required before the Goodie Bag can be approved. Please try again.",
-
     goodieAlreadyCollected:
       "This Goodie Bag has already been collected.",
-
     goodieAlreadyProcessing:
       "This Goodie Bag is already being processed on another device.",
-
     goodieNotEligible: (required) =>
       `The required ${required} booth visits have not yet been confirmed.`,
-
     goodieApprovalExpired:
       "The Goodie Bag approval is no longer valid. Please scan the Goodie Bag QR code again.",
-
-    goodieApprovedEyebrow:
-      "GOODIE BAG",
-
-    approved:
-      "APPROVED",
-
-    testApproval:
-      "Test approval successful",
-
-    boothsVisitedApproval:
-      (visited, total) =>
-        `${visited} / ${total} booths visited`,
-
-    mayHandOver:
-      "You may hand over the Goodie Bag.",
-
-    goodieReceived:
-      "GOODIE BAG RECEIVED",
-
-    confirmingGoodie:
-      "CONFIRMING...",
-
+    goodieApprovedEyebrow: "GOODIE BAG",
+    approved: "APPROVED",
+    testApproval: "Test approval successful",
+    boothsVisitedApproval: (visited, total) =>
+      `${visited} / ${total} booths visited`,
+    mayHandOver: "You may hand over the Goodie Bag.",
+    goodieReceived: "GOODIE BAG RECEIVED",
+    confirmingGoodie: "CONFIRMING...",
     goodieConfirmError:
       "The handover could not be saved in the database. Please keep this screen open, check the connection and try again.",
-
-    recoveryLost:
-      "Lost your session?",
-
-    recoveryTitle:
-      "Restore your session",
-
-    recoveryText:
-      "Enter your personal recovery code.",
-
-    recoveryButton:
-      "RESTORE SESSION",
-
-    restoring:
-      "RESTORING...",
-
-    recoveryRequired:
-      "Please enter your recovery code.",
-
+    recoveryLost: "Lost your session?",
+    recoveryTitle: "Restore your session",
+    recoveryText: "Enter your personal recovery code.",
+    recoveryButton: "RESTORE SESSION",
+    restoring: "RESTORING...",
+    recoveryRequired: "Please enter your recovery code.",
     recoveryNotFound:
       "No session was found for this recovery code.",
-
     recoveryConnectionError:
       "The database could not be reached. Please check your internet connection and try again.",
-
-    recoveryCodeLabel:
-      "Your recovery code",
-
+    recoveryCodeLabel: "Your recovery code",
     recoveryCodeText:
       "Keep this code in case you need to restore your session.",
-
     thankYou:
       "Thank you for celebrating our 50th anniversary with us today. Have a safe trip home!",
-
-    done:
-      "DONE",
-
-    mapAlt:
-      "Brand fair map",
-
-    logoAlt:
-      "Import Parfumerie",
-
-    anniversaryAlt:
-      "50 Years Import Parfumerie",
-
+    done: "DONE",
+    mapAlt: "Brand fair map",
+    logoAlt: "Import Parfumerie",
+    anniversaryAlt: "50 Years Import Parfumerie",
     panoramaAlt:
       "Import Parfumerie anniversary team illustration",
   },
 
   de: {
-    chooseLanguage:
-      "Sprache",
-
-    welcome:
-      "Willkommen!",
-
+    chooseLanguage: "Sprache",
+    welcome: "Willkommen!",
     intro:
       "Entdecke unser Jubiläumsevent und sammle die besuchten Marken in deinem persönlichen digitalen Brand Pass.",
-
-    firstName:
-      "Vorname",
-
-    lastName:
-      "Nachname",
-
-    start:
-      "START",
-
-    starting:
-      "WIRD GESTARTET...",
-
-    nameRequired:
-      "Bitte Vorname und Nachname eingeben.",
-
+    firstName: "Vorname",
+    lastName: "Nachname",
+    start: "START",
+    starting: "WIRD GESTARTET...",
+    nameRequired: "Bitte Vorname und Nachname eingeben.",
     registrationError:
       "Die Verbindung zur Event-Datenbank konnte nicht hergestellt werden. Bitte prüfe deine Internetverbindung und versuche es erneut.",
-
     registrationClosed:
       "Die Registrierung ist momentan geschlossen.",
-
     registrationLimit:
       "Die maximale Anzahl Teilnehmender wurde erreicht.",
-
-    anniversaryLabel:
-      "50 JAHRE IMPORT PARFUMERIE",
-
-    hello: (name) =>
-      `Hallo ${name}!`,
-
+    anniversaryLabel: "50 JAHRE IMPORT PARFUMERIE",
+    hello: (name) => `Hallo ${name}!`,
     welcomeEvent:
       "Willkommen an unserem Jubiläumsevent.",
-
-    boothsVisited:
-      "Besuchte Stände",
-
-    brandPass:
-      "Dein Brand Pass",
-
+    boothsVisited: "Besuchte Stände",
+    brandPass: "Dein Brand Pass",
     tapBooth:
       "Tippe auf einen Stand, um den QR-Code zu scannen.",
-
-    visited:
-      "Besucht",
-
-    notVisited:
-      "Nicht besucht",
-
+    visited: "Besucht",
+    notVisited: "Nicht besucht",
     mapNotFound:
       "Der Übersichtsplan wurde nicht gefunden.",
-
     mapUploadBefore:
       "Lade das Originalbild in den",
-
     mapUploadAfter:
       "Ordner hoch als:",
-
     alreadyVisited: (name) =>
       `✓ ${name} bereits besucht.`,
-
     boothCollected: (name) =>
       `✓ ${name} erfolgreich erfasst.`,
-
     boothSavedOffline: (name) =>
       `✓ ${name} wurde auf diesem Gerät gespeichert. Der Besuch wird automatisch synchronisiert, sobald die Verbindung verfügbar ist.`,
-
     wrongBoothQr: (name) =>
       `Dieser QR-Code gehört nicht zu ${name}. Bitte scanne den QR-Code an diesem Stand.`,
-
-    scanQr:
-      "QR-Code scannen",
-
+    scanQr: "QR-Code scannen",
     startingCamera:
       "Kamera wird gestartet...",
-
     scannerCouldNotLoad:
       "Der Scanner konnte nicht geladen werden.",
-
     cameraReady:
       "Kamera bereit – richte sie auf den QR-Code.",
-
     savingVisit:
       "Besuch wird gespeichert...",
-
     testScanBooth:
       "TESTMODUS – scanne den GISADA QR-Code.",
-
     testScanGoodie:
       "TESTMODUS – scanne den GISADA QR-Code für die Goodie-Bag-Freigabe.",
-
     wrongTestQr: (value) =>
       `Falscher Test-QR. Erkannt: ${value}`,
-
     wrongGoodieQr:
       "Falscher Goodie-Bag-QR-Code.",
-
     cameraCouldNotStart:
       "Die Kamera konnte nicht gestartet werden.",
-
     cameraPermission:
       "Bitte erlaube den Kamerazugriff und versuche es erneut.",
-
-    close:
-      "SCHLIESSEN",
-
+    close: "SCHLIESSEN",
     sessionProblem:
       "Deine Session wurde in der Datenbank nicht gefunden. Bitte stelle sie mit deinem Recovery-Code wieder her.",
-
-    goodieBag:
-      "Goodie Bag",
-
+    goodieBag: "Goodie Bag",
     goodieCollected:
       "✓ Goodie Bag abgeholt",
-
-    goodieReady:
-      "Du bist bereit!",
-
+    goodieReady: "Du bist bereit!",
     testGoodieReady:
       "Test abgeschlossen. Das Goodie Bag kann jetzt abgeholt werden.",
-
-    goodieLiveReady: (visited) =>
-      `${visited} / 16 Stände besucht`,
-
+    goodieLiveReady: (visited, total) =>
+      `${visited} / ${total} Stände besucht`,
     testGoodieInstruction:
       "TESTMODUS – scanne 2 verschiedene Stände, um das Goodie Bag freizuschalten.",
-
-    liveGoodieInstruction:
-      "Besuche mindestens 14 von 16 Ständen, um dein Goodie Bag freizuschalten.",
-
-    remainingOne:
-      "Noch 1 Stand",
-
+    liveGoodieInstruction: (required, total) =>
+      `Besuche mindestens ${required} von ${total} Ständen, um dein Goodie Bag freizuschalten.`,
+    remainingOne: "Noch 1 Stand",
     remainingMany: (count) =>
       `Noch ${count} Stände`,
-
     collectGoodie:
       "GOODIE BAG ABHOLEN",
-
     checkingGoodie:
       "Berechtigung wird geprüft...",
-
     goodieConnection:
       "Für die Freigabe des Goodie Bags wird eine Verbindung zur Event-Datenbank benötigt. Bitte versuche es erneut.",
-
     goodieAlreadyCollected:
       "Dieses Goodie Bag wurde bereits abgeholt.",
-
     goodieAlreadyProcessing:
       "Dieses Goodie Bag wird bereits auf einem anderen Gerät bearbeitet.",
-
     goodieNotEligible: (required) =>
       `Die erforderlichen ${required} Standbesuche sind noch nicht bestätigt.`,
-
     goodieApprovalExpired:
       "Die Goodie-Bag-Freigabe ist nicht mehr gültig. Bitte scanne den Goodie-Bag-QR-Code erneut.",
-
-    goodieApprovedEyebrow:
-      "GOODIE BAG",
-
-    approved:
-      "FREIGEGEBEN",
-
+    goodieApprovedEyebrow: "GOODIE BAG",
+    approved: "FREIGEGEBEN",
     testApproval:
       "Testfreigabe erfolgreich",
-
-    boothsVisitedApproval:
-      (visited, total) =>
-        `${visited} / ${total} Stände besucht`,
-
+    boothsVisitedApproval: (visited, total) =>
+      `${visited} / ${total} Stände besucht`,
     mayHandOver:
       "Das Goodie Bag darf übergeben werden.",
-
     goodieReceived:
       "GOODIE BAG ÜBERGEBEN",
-
     confirmingGoodie:
       "WIRD BESTÄTIGT...",
-
     goodieConfirmError:
       "Die Übergabe konnte nicht in der Datenbank gespeichert werden. Bitte diesen Screen geöffnet lassen, Verbindung prüfen und erneut versuchen.",
-
-    recoveryLost:
-      "Session verloren?",
-
+    recoveryLost: "Session verloren?",
     recoveryTitle:
       "Session wiederherstellen",
-
     recoveryText:
       "Gib deinen persönlichen Recovery-Code ein.",
-
     recoveryButton:
       "SESSION WIEDERHERSTELLEN",
-
     restoring:
       "WIRD WIEDERHERGESTELLT...",
-
     recoveryRequired:
       "Bitte gib deinen Recovery-Code ein.",
-
     recoveryNotFound:
       "Für diesen Recovery-Code wurde keine Session gefunden.",
-
     recoveryConnectionError:
       "Die Datenbank ist momentan nicht erreichbar. Bitte prüfe deine Internetverbindung und versuche es erneut.",
-
     recoveryCodeLabel:
       "Dein Recovery-Code",
-
     recoveryCodeText:
       "Bewahre diesen Code auf, falls du deine Session wiederherstellen musst.",
-
     thankYou:
       "Vielen Dank, dass du heute mit uns unser 50-jähriges Jubiläum gefeiert hast. Komm gut nach Hause!",
-
-    done:
-      "FERTIG",
-
+    done: "FERTIG",
     mapAlt:
       "Übersichtsplan der Brandmesse",
-
-    logoAlt:
-      "Import Parfumerie",
-
+    logoAlt: "Import Parfumerie",
     anniversaryAlt:
       "50 Jahre Import Parfumerie",
-
     panoramaAlt:
       "Illustration des Import-Parfumerie-Teams",
   },
 
   fr: {
-    chooseLanguage:
-      "Langue",
-
-    welcome:
-      "Bienvenue !",
-
+    chooseLanguage: "Langue",
+    welcome: "Bienvenue !",
     intro:
       "Découvrez notre événement anniversaire et collectionnez les marques visitées dans votre Brand Pass numérique personnel.",
-
-    firstName:
-      "Prénom",
-
-    lastName:
-      "Nom",
-
-    start:
-      "COMMENCER",
-
-    starting:
-      "DÉMARRAGE...",
-
+    firstName: "Prénom",
+    lastName: "Nom",
+    start: "COMMENCER",
+    starting: "DÉMARRAGE...",
     nameRequired:
       "Veuillez saisir votre prénom et votre nom.",
-
     registrationError:
       "Impossible de se connecter à la base de données de l'événement. Vérifiez votre connexion Internet et réessayez.",
-
     registrationClosed:
       "Les inscriptions sont actuellement fermées.",
-
     registrationLimit:
       "Le nombre maximum de participants a été atteint.",
-
     anniversaryLabel:
       "50 ANS IMPORT PARFUMERIE",
-
-    hello: (name) =>
-      `Bonjour ${name} !`,
-
+    hello: (name) => `Bonjour ${name} !`,
     welcomeEvent:
       "Bienvenue à notre événement anniversaire.",
-
     boothsVisited:
       "Stands visités",
-
     brandPass:
       "Votre Brand Pass",
-
     tapBooth:
       "Touchez un stand pour scanner son code QR.",
-
-    visited:
-      "Visité",
-
-    notVisited:
-      "Non visité",
-
+    visited: "Visité",
+    notVisited: "Non visité",
     mapNotFound:
       "Le plan n'a pas été trouvé.",
-
     mapUploadBefore:
       "Téléchargez l'image originale dans le dossier",
-
     mapUploadAfter:
       "sous le nom :",
-
     alreadyVisited: (name) =>
       `✓ ${name} déjà visité.`,
-
     boothCollected: (name) =>
       `✓ ${name} enregistré avec succès.`,
-
     boothSavedOffline: (name) =>
       `✓ ${name} a été enregistré sur cet appareil. La visite sera synchronisée automatiquement dès que la connexion sera disponible.`,
-
     wrongBoothQr: (name) =>
       `Ce code QR n'appartient pas à ${name}. Veuillez scanner le code QR de ce stand.`,
-
     scanQr:
       "Scanner le code QR",
-
     startingCamera:
       "Démarrage de la caméra...",
-
     scannerCouldNotLoad:
       "Le scanner n'a pas pu être chargé.",
-
     cameraReady:
       "Caméra prête – dirigez-la vers le code QR.",
-
     savingVisit:
       "Enregistrement de la visite...",
-
     testScanBooth:
       "MODE TEST – scannez le code QR GISADA.",
-
     testScanGoodie:
       "MODE TEST – scannez le code QR GISADA pour valider le Goodie Bag.",
-
     wrongTestQr: (value) =>
       `Mauvais QR de test. Détecté : ${value}`,
-
     wrongGoodieQr:
       "Mauvais code QR du Goodie Bag.",
-
     cameraCouldNotStart:
       "La caméra n'a pas pu démarrer.",
-
     cameraPermission:
       "Veuillez autoriser l'accès à la caméra et réessayer.",
-
-    close:
-      "FERMER",
-
+    close: "FERMER",
     sessionProblem:
       "Votre session n'a pas été trouvée dans la base de données. Veuillez la restaurer avec votre code de récupération.",
-
     goodieBag:
       "Goodie Bag",
-
     goodieCollected:
       "✓ Goodie Bag récupéré",
-
     goodieReady:
       "C'est bon !",
-
     testGoodieReady:
       "Test terminé. Le Goodie Bag peut maintenant être récupéré.",
-
-    goodieLiveReady: (visited) =>
-      `${visited} / 16 stands visités`,
-
+    goodieLiveReady: (visited, total) =>
+      `${visited} / ${total} stands visités`,
     testGoodieInstruction:
       "MODE TEST – scannez 2 stands différents pour débloquer le Goodie Bag.",
-
-    liveGoodieInstruction:
-      "Visitez au moins 14 des 16 stands pour débloquer votre Goodie Bag.",
-
+    liveGoodieInstruction: (required, total) =>
+      `Visitez au moins ${required} des ${total} stands pour débloquer votre Goodie Bag.`,
     remainingOne:
       "Encore 1 stand",
-
     remainingMany: (count) =>
       `Encore ${count} stands`,
-
     collectGoodie:
       "RÉCUPÉRER LE GOODIE BAG",
-
     checkingGoodie:
       "Vérification en cours...",
-
     goodieConnection:
       "Une connexion à la base de données de l'événement est nécessaire pour valider le Goodie Bag. Veuillez réessayer.",
-
     goodieAlreadyCollected:
       "Ce Goodie Bag a déjà été récupéré.",
-
     goodieAlreadyProcessing:
       "Ce Goodie Bag est déjà en cours de traitement sur un autre appareil.",
-
     goodieNotEligible: (required) =>
       `Les ${required} visites requises ne sont pas encore confirmées.`,
-
     goodieApprovalExpired:
       "La validation du Goodie Bag n'est plus valable. Veuillez scanner à nouveau le code QR du Goodie Bag.",
-
     goodieApprovedEyebrow:
       "GOODIE BAG",
-
     approved:
       "VALIDÉ",
-
     testApproval:
       "Validation test réussie",
-
-    boothsVisitedApproval:
-      (visited, total) =>
-        `${visited} / ${total} stands visités`,
-
+    boothsVisitedApproval: (visited, total) =>
+      `${visited} / ${total} stands visités`,
     mayHandOver:
       "Le Goodie Bag peut être remis.",
-
     goodieReceived:
       "GOODIE BAG REMIS",
-
     confirmingGoodie:
       "CONFIRMATION...",
-
     goodieConfirmError:
       "La remise n'a pas pu être enregistrée dans la base de données. Gardez cet écran ouvert, vérifiez la connexion et réessayez.",
-
     recoveryLost:
       "Session perdue ?",
-
     recoveryTitle:
       "Restaurer votre session",
-
     recoveryText:
       "Saisissez votre code de récupération personnel.",
-
     recoveryButton:
       "RESTAURER LA SESSION",
-
     restoring:
       "RESTAURATION...",
-
     recoveryRequired:
       "Veuillez saisir votre code de récupération.",
-
     recoveryNotFound:
       "Aucune session n'a été trouvée pour ce code de récupération.",
-
     recoveryConnectionError:
       "La base de données est actuellement inaccessible. Vérifiez votre connexion Internet et réessayez.",
-
     recoveryCodeLabel:
       "Votre code de récupération",
-
     recoveryCodeText:
       "Conservez ce code au cas où vous devriez restaurer votre session.",
-
     thankYou:
       "Merci d'avoir célébré avec nous aujourd'hui notre 50e anniversaire. Nous vous souhaitons un bon retour !",
-
-    done:
-      "TERMINER",
-
+    done: "TERMINER",
     mapAlt:
       "Plan de l'événement",
-
     logoAlt:
       "Import Parfumerie",
-
     anniversaryAlt:
       "50 ans Import Parfumerie",
-
     panoramaAlt:
       "Illustration de l'équipe Import Parfumerie",
   },
@@ -826,239 +461,153 @@ const translations = {
   it: {
     chooseLanguage:
       "Lingua",
-
     welcome:
       "Benvenuto!",
-
     intro:
       "Scopri il nostro evento anniversario e raccogli i brand visitati nel tuo Brand Pass digitale personale.",
-
-    firstName:
-      "Nome",
-
-    lastName:
-      "Cognome",
-
-    start:
-      "INIZIA",
-
-    starting:
-      "AVVIO...",
-
+    firstName: "Nome",
+    lastName: "Cognome",
+    start: "INIZIA",
+    starting: "AVVIO...",
     nameRequired:
       "Inserisci nome e cognome.",
-
     registrationError:
       "Impossibile connettersi al database dell'evento. Controlla la connessione Internet e riprova.",
-
     registrationClosed:
       "Le registrazioni sono attualmente chiuse.",
-
     registrationLimit:
       "È stato raggiunto il numero massimo di partecipanti.",
-
     anniversaryLabel:
       "50 ANNI IMPORT PARFUMERIE",
-
-    hello: (name) =>
-      `Ciao ${name}!`,
-
+    hello: (name) => `Ciao ${name}!`,
     welcomeEvent:
       "Benvenuto al nostro evento anniversario.",
-
     boothsVisited:
       "Stand visitati",
-
     brandPass:
       "Il tuo Brand Pass",
-
     tapBooth:
       "Tocca uno stand per scansionare il suo codice QR.",
-
     visited:
       "Visitato",
-
     notVisited:
       "Non visitato",
-
     mapNotFound:
       "La mappa non è stata trovata.",
-
     mapUploadBefore:
       "Carica l'immagine originale nella cartella",
-
     mapUploadAfter:
       "con il nome:",
-
     alreadyVisited: (name) =>
       `✓ ${name} già visitato.`,
-
     boothCollected: (name) =>
       `✓ ${name} registrato con successo.`,
-
     boothSavedOffline: (name) =>
       `✓ ${name} è stato salvato su questo dispositivo. La visita verrà sincronizzata automaticamente quando la connessione sarà disponibile.`,
-
     wrongBoothQr: (name) =>
       `Questo codice QR non appartiene a ${name}. Scansiona il codice QR di questo stand.`,
-
     scanQr:
       "Scansiona il codice QR",
-
     startingCamera:
       "Avvio della fotocamera...",
-
     scannerCouldNotLoad:
       "Impossibile caricare lo scanner.",
-
     cameraReady:
       "Fotocamera pronta – inquadra il codice QR.",
-
     savingVisit:
       "Salvataggio della visita...",
-
     testScanBooth:
       "MODALITÀ TEST – scansiona il codice QR GISADA.",
-
     testScanGoodie:
       "MODALITÀ TEST – scansiona il codice QR GISADA per approvare il Goodie Bag.",
-
     wrongTestQr: (value) =>
       `QR di test errato. Rilevato: ${value}`,
-
     wrongGoodieQr:
       "Codice QR del Goodie Bag errato.",
-
     cameraCouldNotStart:
       "Impossibile avviare la fotocamera.",
-
     cameraPermission:
       "Consenti l'accesso alla fotocamera e riprova.",
-
-    close:
-      "CHIUDI",
-
+    close: "CHIUDI",
     sessionProblem:
       "La tua sessione non è stata trovata nel database. Ripristinala con il tuo codice di recupero.",
-
     goodieBag:
       "Goodie Bag",
-
     goodieCollected:
       "✓ Goodie Bag ritirato",
-
     goodieReady:
       "Ci siamo!",
-
     testGoodieReady:
       "Test completato. Ora puoi ritirare il Goodie Bag.",
-
-    goodieLiveReady: (visited) =>
-      `${visited} / 16 stand visitati`,
-
+    goodieLiveReady: (visited, total) =>
+      `${visited} / ${total} stand visitati`,
     testGoodieInstruction:
       "MODALITÀ TEST – scansiona 2 stand diversi per sbloccare il Goodie Bag.",
-
-    liveGoodieInstruction:
-      "Visita almeno 14 dei 16 stand per sbloccare il tuo Goodie Bag.",
-
+    liveGoodieInstruction: (required, total) =>
+      `Visita almeno ${required} dei ${total} stand per sbloccare il tuo Goodie Bag.`,
     remainingOne:
       "Manca ancora 1 stand",
-
     remainingMany: (count) =>
       `Mancano ancora ${count} stand`,
-
     collectGoodie:
       "RITIRA IL GOODIE BAG",
-
     checkingGoodie:
       "Verifica in corso...",
-
     goodieConnection:
       "È necessaria una connessione al database dell'evento per approvare il Goodie Bag. Riprova.",
-
     goodieAlreadyCollected:
       "Questo Goodie Bag è già stato ritirato.",
-
     goodieAlreadyProcessing:
       "Questo Goodie Bag è già in fase di elaborazione su un altro dispositivo.",
-
     goodieNotEligible: (required) =>
       `Le ${required} visite richieste non sono ancora confermate.`,
-
     goodieApprovalExpired:
       "L'approvazione del Goodie Bag non è più valida. Scansiona nuovamente il codice QR del Goodie Bag.",
-
     goodieApprovedEyebrow:
       "GOODIE BAG",
-
     approved:
       "APPROVATO",
-
     testApproval:
       "Approvazione test riuscita",
-
-    boothsVisitedApproval:
-      (visited, total) =>
-        `${visited} / ${total} stand visitati`,
-
+    boothsVisitedApproval: (visited, total) =>
+      `${visited} / ${total} stand visitati`,
     mayHandOver:
       "Il Goodie Bag può essere consegnato.",
-
     goodieReceived:
       "GOODIE BAG CONSEGNATO",
-
     confirmingGoodie:
       "CONFERMA...",
-
     goodieConfirmError:
       "La consegna non può essere salvata nel database. Mantieni aperta questa schermata, controlla la connessione e riprova.",
-
     recoveryLost:
       "Hai perso la sessione?",
-
     recoveryTitle:
       "Ripristina la sessione",
-
     recoveryText:
       "Inserisci il tuo codice di recupero personale.",
-
     recoveryButton:
       "RIPRISTINA SESSIONE",
-
     restoring:
       "RIPRISTINO...",
-
     recoveryRequired:
       "Inserisci il tuo codice di recupero.",
-
     recoveryNotFound:
       "Nessuna sessione trovata per questo codice di recupero.",
-
     recoveryConnectionError:
       "Il database non è attualmente raggiungibile. Controlla la connessione Internet e riprova.",
-
     recoveryCodeLabel:
       "Il tuo codice di recupero",
-
     recoveryCodeText:
       "Conserva questo codice nel caso in cui sia necessario ripristinare la sessione.",
-
     thankYou:
       "Grazie per aver festeggiato oggi con noi il nostro 50° anniversario. Buon rientro a casa!",
-
-    done:
-      "FINE",
-
+    done: "FINE",
     mapAlt:
       "Mappa dell'evento",
-
     logoAlt:
       "Import Parfumerie",
-
     anniversaryAlt:
       "50 anni Import Parfumerie",
-
     panoramaAlt:
       "Illustrazione del team Import Parfumerie",
   },
@@ -1067,174 +616,110 @@ const translations = {
 // ==================================================
 // BOOTHS
 // ==================================================
-//
-// IMPORTANT:
-// Live QR values are NOT stored here anymore.
-// They are stored only in Supabase.
-//
+
 const booths = [
   {
     id: 1,
     name: "Gisada",
-    area: {
-      left: 15.0,
-      top: 4.6,
-      width: 25.5,
-      height: 5.9,
-    },
+    area: { left: 15.0, top: 4.6, width: 25.5, height: 5.9 },
   },
   {
     id: 2,
     name: "P&I Parfums",
-    area: {
-      left: 48.6,
-      top: 3.1,
-      width: 15.4,
-      height: 9.0,
-    },
+    area: { left: 48.6, top: 3.1, width: 15.4, height: 9.0 },
   },
   {
     id: 3,
     name: "Karikaturist",
-    area: {
-      left: 66.8,
-      top: 3.2,
-      width: 12.5,
-      height: 8.0,
-    },
+    area: { left: 66.8, top: 3.2, width: 12.5, height: 8.0 },
   },
   {
     id: 4,
     name: "Jean-Pierre Rossellet",
-    area: {
-      left: 43.9,
-      top: 12.2,
-      width: 5.1,
-      height: 10.2,
-    },
+    area: { left: 43.9, top: 12.2, width: 5.1, height: 10.2 },
   },
   {
     id: 5,
     name: "Nobilis Group",
-    area: {
-      left: 48.6,
-      top: 12.0,
-      width: 15.4,
-      height: 8.9,
-    },
+    area: { left: 48.6, top: 12.0, width: 15.4, height: 8.9 },
   },
   {
     id: 6,
     name: "Flariel",
-    area: {
-      left: 43.9,
-      top: 22.4,
-      width: 5.1,
-      height: 10.4,
-    },
+    area: { left: 43.9, top: 22.4, width: 5.1, height: 10.4 },
   },
   {
     id: 7,
     name: "Bode Studios",
-    area: {
-      left: 48.6,
-      top: 20.8,
-      width: 15.4,
-      height: 11.8,
-    },
+    area: { left: 48.6, top: 20.8, width: 15.4, height: 11.8 },
   },
   {
     id: 8,
     name: "L'Oréal Luxe",
     shape: "circle",
-    area: {
-      left: 40.3,
-      top: 37.0,
-      width: 26.4,
-      height: 24.8,
-    },
+    area: { left: 40.3, top: 37.0, width: 26.4, height: 24.8 },
   },
   {
     id: 9,
     name: "Clarins",
-    area: {
-      left: 48.0,
-      top: 68.2,
-      width: 15.3,
-      height: 7.8,
-    },
+    area: { left: 48.0, top: 68.2, width: 15.3, height: 7.8 },
   },
   {
     id: 10,
     name: "Bvlgari",
-    area: {
-      left: 48.0,
-      top: 76.3,
-      width: 15.3,
-      height: 7.5,
-    },
+    area: { left: 48.0, top: 76.3, width: 15.3, height: 7.5 },
   },
   {
     id: 11,
     name: "Shiseido",
-    area: {
-      left: 48.0,
-      top: 89.0,
-      width: 15.3,
-      height: 8.3,
-    },
+    area: { left: 48.0, top: 89.0, width: 15.3, height: 8.3 },
   },
   {
     id: 12,
     name: "Deurocos Cosmetic",
     rotate: -45,
-    area: {
-      left: 20.8,
-      top: 68.0,
-      width: 15.5,
-      height: 8.0,
-    },
+    area: { left: 20.8, top: 68.0, width: 15.5, height: 8.0 },
   },
   {
     id: 13,
     name: "Give Back Beauty",
     rotate: -45,
-    area: {
-      left: 25.1,
-      top: 75.0,
-      width: 12.0,
-      height: 5.3,
-    },
+    area: { left: 25.1, top: 75.0, width: 12.0, height: 5.3 },
   },
   {
     id: 14,
     name: "Coty",
-    area: {
-      left: 13.6,
-      top: 87.7,
-      width: 25.3,
-      height: 8.5,
-    },
+    area: { left: 13.6, top: 87.7, width: 25.3, height: 8.5 },
   },
   {
     id: 15,
     name: "Puig",
-    area: {
-      left: 27.2,
-      top: 14.4,
-      width: 7.2,
-      height: 23.2,
-    },
+    area: { left: 27.2, top: 14.4, width: 7.2, height: 23.2 },
   },
   {
     id: 16,
+    name: "Clinique",
+    area: { left: 4.6, top: 14.2, width: 8.7, height: 16.7 },
+  },
+  {
+    id: 17,
+    name: "Dr.Jart+",
+    area: { left: 3.7, top: 33.4, width: 12.8, height: 11.2 },
+  },
+  {
+    id: 18,
+    name: "Tom Ford",
+    area: { left: 3.7, top: 44.9, width: 12.8, height: 11.5 },
+  },
+  {
+    id: 19,
     name: "Estée Lauder",
-    area: {
-      left: 3.3,
-      top: 18.7,
-      width: 10.0,
-      height: 68.3,
-    },
+    area: { left: 3.7, top: 56.5, width: 12.8, height: 11.6 },
+  },
+  {
+    id: 20,
+    name: "Jo Malone London",
+    area: { left: 3.9, top: 68.1, width: 8.8, height: 15.7 },
   },
 ];
 
@@ -1244,12 +729,8 @@ const booths = [
 
 function loadJSON(key, fallback) {
   try {
-    const value =
-      localStorage.getItem(key);
-
-    return value
-      ? JSON.parse(value)
-      : fallback;
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
   } catch {
     return fallback;
   }
@@ -1257,27 +738,14 @@ function loadJSON(key, fallback) {
 
 function saveJSON(key, value) {
   try {
-    localStorage.setItem(
-      key,
-      JSON.stringify(value)
-    );
+    localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    // App should continue even if storage fails.
-  }
-}
-
-function removeStorage(key) {
-  try {
-    localStorage.removeItem(key);
-  } catch {
-    // Ignore.
+    // ignore
   }
 }
 
 function uniqueNumbers(values) {
-  if (!Array.isArray(values)) {
-    return [];
-  }
+  if (!Array.isArray(values)) return [];
 
   return [
     ...new Set(
@@ -1287,7 +755,7 @@ function uniqueNumbers(values) {
           (value) =>
             Number.isInteger(value) &&
             value >= 1 &&
-            value <= 16
+            value <= TOTAL_BOOTHS
         )
     ),
   ].sort((a, b) => a - b);
@@ -1317,27 +785,18 @@ function createLocalId() {
 
   return `${Date.now()}-${Math.random()
     .toString(36)
-    .slice(2)}-${Math.random()
-    .toString(36)
-    .slice(2)}`;
+    .slice(2)}-${Math.random().toString(36).slice(2)}`;
 }
 
 function getOrCreateLocalId(key) {
   try {
-    const existing =
-      localStorage.getItem(key);
+    const existing = localStorage.getItem(key);
 
-    if (existing) {
-      return existing;
-    }
+    if (existing) return existing;
 
-    const value =
-      createLocalId();
+    const value = createLocalId();
 
-    localStorage.setItem(
-      key,
-      value
-    );
+    localStorage.setItem(key, value);
 
     return value;
   } catch {
@@ -1346,56 +805,35 @@ function getOrCreateLocalId(key) {
 }
 
 function wait(ms) {
-  return new Promise(
-    (resolve) =>
-      window.setTimeout(resolve, ms)
-  );
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
 // ==================================================
-// INITIAL STORAGE MIGRATION
+// INITIAL STORAGE
 // ==================================================
 
 function loadInitialUser() {
-  const current =
-    loadJSON(
-      USER_STORAGE_KEY,
-      null
-    );
+  const current = loadJSON(USER_STORAGE_KEY, null);
 
-  if (current) {
-    return current;
-  }
+  if (current) return current;
 
   if (TEST_MODE) {
-    return loadJSON(
-      LEGACY_USER_STORAGE_KEY,
-      null
-    );
+    return loadJSON(LEGACY_USER_STORAGE_KEY, null);
   }
 
   return null;
 }
 
 function loadInitialVisited() {
-  const current =
-    loadJSON(
-      VISITED_STORAGE_KEY,
-      null
-    );
+  const current = loadJSON(VISITED_STORAGE_KEY, null);
 
   if (Array.isArray(current)) {
-    return uniqueNumbers(
-      current
-    );
+    return uniqueNumbers(current);
   }
 
   if (TEST_MODE) {
     return uniqueNumbers(
-      loadJSON(
-        LEGACY_VISITED_STORAGE_KEY,
-        []
-      )
+      loadJSON(LEGACY_VISITED_STORAGE_KEY, [])
     );
   }
 
@@ -1403,23 +841,14 @@ function loadInitialVisited() {
 }
 
 function loadInitialGoodie() {
-  const current =
-    loadJSON(
-      GOODIE_STORAGE_KEY,
-      null
-    );
+  const current = loadJSON(GOODIE_STORAGE_KEY, null);
 
-  if (current) {
-    return current;
-  }
+  if (current) return current;
 
   if (TEST_MODE) {
-    return loadJSON(
-      LEGACY_GOODIE_STORAGE_KEY,
-      {
-        collectedAt: null,
-      }
-    );
+    return loadJSON(LEGACY_GOODIE_STORAGE_KEY, {
+      collectedAt: null,
+    });
   }
 
   return {
@@ -1430,46 +859,30 @@ function loadInitialGoodie() {
 function detectInitialLanguage() {
   try {
     const saved =
-      localStorage.getItem(
-        LANGUAGE_STORAGE_KEY
-      );
+      localStorage.getItem(LANGUAGE_STORAGE_KEY);
 
-    if (
-      SUPPORTED_LANGUAGES.includes(
-        saved
-      )
-    ) {
+    if (SUPPORTED_LANGUAGES.includes(saved)) {
       return saved;
     }
 
     if (TEST_MODE) {
       const legacy =
-        localStorage.getItem(
-          LEGACY_LANGUAGE_STORAGE_KEY
-        );
+        localStorage.getItem(LEGACY_LANGUAGE_STORAGE_KEY);
 
-      if (
-        SUPPORTED_LANGUAGES.includes(
-          legacy
-        )
-      ) {
+      if (SUPPORTED_LANGUAGES.includes(legacy)) {
         return legacy;
       }
     }
   } catch {
-    // Ignore.
+    // ignore
   }
 
   const browserLanguage =
-    String(
-      navigator.language || "en"
-    )
+    String(navigator.language || "en")
       .slice(0, 2)
       .toLowerCase();
 
-  return SUPPORTED_LANGUAGES.includes(
-    browserLanguage
-  )
+  return SUPPORTED_LANGUAGES.includes(browserLanguage)
     ? browserLanguage
     : "en";
 }
@@ -1477,29 +890,12 @@ function detectInitialLanguage() {
 // ==================================================
 // VISIT PROOFS
 // ==================================================
-//
-// Instead of a fragile pending-event queue we store
-// the scanned QR proof for each booth.
-//
-// Every sync sends the COMPLETE set.
-//
-// Example:
-// {
-//   "1": "GISADA",
-//   "2": "GISADA"
-// }
-//
-// Server validates all proofs again.
-// This makes synchronization idempotent and resistant
-// to duplicate/concurrent requests.
-// ==================================================
 
 function loadVisitProofs() {
-  const raw =
-    loadJSON(
-      VISIT_PROOFS_STORAGE_KEY,
-      {}
-    );
+  const raw = loadJSON(
+    VISIT_PROOFS_STORAGE_KEY,
+    {}
+  );
 
   if (
     !raw ||
@@ -1511,35 +907,25 @@ function loadVisitProofs() {
 
   const result = {};
 
-  Object.entries(raw).forEach(
-    ([key, value]) => {
-      const boothId =
-        Number(key);
+  Object.entries(raw).forEach(([key, value]) => {
+    const boothId = Number(key);
 
-      if (
-        Number.isInteger(
-          boothId
-        ) &&
-        boothId >= 1 &&
-        boothId <= 16 &&
-        typeof value === "string" &&
-        value.length > 0
-      ) {
-        result[boothId] =
-          value.slice(0, 500);
-      }
+    if (
+      Number.isInteger(boothId) &&
+      boothId >= 1 &&
+      boothId <= TOTAL_BOOTHS &&
+      typeof value === "string" &&
+      value.length > 0
+    ) {
+      result[boothId] = value.slice(0, 500);
     }
-  );
+  });
 
   return result;
 }
 
-function saveVisitProof(
-  boothId,
-  qrToken
-) {
-  const proofs =
-    loadVisitProofs();
+function saveVisitProof(boothId, qrToken) {
+  const proofs = loadVisitProofs();
 
   proofs[boothId] =
     String(qrToken || "")
@@ -1552,9 +938,7 @@ function saveVisitProof(
   );
 }
 
-function removeVisitProofs(
-  boothIds
-) {
+function removeVisitProofs(boothIds) {
   if (
     !Array.isArray(boothIds) ||
     boothIds.length === 0
@@ -1562,16 +946,11 @@ function removeVisitProofs(
     return;
   }
 
-  const proofs =
-    loadVisitProofs();
+  const proofs = loadVisitProofs();
 
-  boothIds.forEach(
-    (boothId) => {
-      delete proofs[
-        Number(boothId)
-      ];
-    }
-  );
+  boothIds.forEach((boothId) => {
+    delete proofs[Number(boothId)];
+  });
 
   saveJSON(
     VISIT_PROOFS_STORAGE_KEY,
@@ -1588,40 +967,25 @@ function clearVisitProofs() {
 
 function getVisitProofIds() {
   return uniqueNumbers(
-    Object.keys(
-      loadVisitProofs()
-    )
+    Object.keys(loadVisitProofs())
   );
 }
 
 function getVisitScanPayload() {
-  const proofs =
-    loadVisitProofs();
+  const proofs = loadVisitProofs();
 
-  return Object.entries(
-    proofs
-  )
-    .map(
-      ([boothId, qrToken]) => ({
-        boothId:
-          Number(boothId),
-
-        qrToken,
-      })
-    )
+  return Object.entries(proofs)
+    .map(([boothId, qrToken]) => ({
+      boothId: Number(boothId),
+      qrToken,
+    }))
     .filter(
       (entry) =>
-        Number.isInteger(
-          entry.boothId
-        ) &&
+        Number.isInteger(entry.boothId) &&
         entry.boothId >= 1 &&
-        entry.boothId <= 16
+        entry.boothId <= TOTAL_BOOTHS
     )
-    .sort(
-      (a, b) =>
-        a.boothId -
-        b.boothId
-    );
+    .sort((a, b) => a.boothId - b.boothId);
 }
 
 // ==================================================
@@ -1629,11 +993,7 @@ function getVisitScanPayload() {
 // ==================================================
 
 class RpcError extends Error {
-  constructor(
-    message,
-    status,
-    body
-  ) {
+  constructor(message, status, body) {
     super(message);
 
     this.name = "RpcError";
@@ -1642,25 +1002,16 @@ class RpcError extends Error {
   }
 }
 
-function isRetryableError(
-  error
-) {
-  if (
-    error?.name ===
-    "AbortError"
-  ) {
+function isRetryableError(error) {
+  if (error?.name === "AbortError") {
     return true;
   }
 
-  if (
-    error instanceof TypeError
-  ) {
+  if (error instanceof TypeError) {
     return true;
   }
 
-  if (
-    error instanceof RpcError
-  ) {
+  if (error instanceof RpcError) {
     return (
       error.status === 429 ||
       error.status >= 500
@@ -1691,12 +1042,9 @@ async function supabaseRpc(
       new AbortController();
 
     const timeout =
-      window.setTimeout(
-        () => {
-          controller.abort();
-        },
-        timeoutMs
-      );
+      window.setTimeout(() => {
+        controller.abort();
+      }, timeoutMs);
 
     try {
       const response =
@@ -1717,18 +1065,14 @@ async function supabaseRpc(
             },
 
             body:
-              JSON.stringify(
-                payload
-              ),
+              JSON.stringify(payload),
 
             signal:
               controller.signal,
           }
         );
 
-      window.clearTimeout(
-        timeout
-      );
+      window.clearTimeout(timeout);
 
       const text =
         await response.text();
@@ -1745,22 +1089,15 @@ async function supabaseRpc(
         return null;
       }
 
-      return JSON.parse(
-        text
-      );
+      return JSON.parse(text);
     } catch (error) {
-      window.clearTimeout(
-        timeout
-      );
+      window.clearTimeout(timeout);
 
-      lastError =
-        error;
+      lastError = error;
 
       const canRetry =
         attempt < retries &&
-        isRetryableError(
-          error
-        );
+        isRetryableError(error);
 
       if (!canRetry) {
         throw error;
@@ -1768,13 +1105,9 @@ async function supabaseRpc(
 
       const delay =
         350 *
-          Math.pow(
-            2,
-            attempt
-          ) +
+          Math.pow(2, attempt) +
         Math.floor(
-          Math.random() *
-            250
+          Math.random() * 250
         );
 
       await wait(delay);
@@ -1784,10 +1117,7 @@ async function supabaseRpc(
   throw lastError;
 }
 
-function serverErrorContains(
-  error,
-  value
-) {
+function serverErrorContains(error, value) {
   return String(
     error?.body ||
       error?.message ||
@@ -1799,27 +1129,23 @@ function serverErrorContains(
 // SCANNER HELPERS
 // ==================================================
 
-async function stopScannerInstance(
-  scanner
-) {
+async function stopScannerInstance(scanner) {
   if (!scanner) {
     return;
   }
 
   try {
-    if (
-      scanner.isScanning
-    ) {
+    if (scanner.isScanning) {
       await scanner.stop();
     }
   } catch {
-    // Ignore.
+    // ignore
   }
 
   try {
     scanner.clear();
   } catch {
-    // Ignore.
+    // ignore
   }
 }
 
@@ -1827,10 +1153,7 @@ function scannerConfig() {
   return {
     fps: 10,
 
-    qrbox: (
-      width,
-      height
-    ) => {
+    qrbox: (width, height) => {
       const size =
         Math.floor(
           Math.min(
@@ -1849,9 +1172,7 @@ function scannerConfig() {
   };
 }
 
-function chooseRearCamera(
-  cameras
-) {
+function chooseRearCamera(cameras) {
   if (
     !Array.isArray(cameras) ||
     cameras.length === 0
@@ -1870,21 +1191,17 @@ function chooseRearCamera(
   ];
 
   const match =
-    cameras.find(
-      (camera) => {
-        const label =
-          String(
-            camera.label || ""
-          ).toLowerCase();
+    cameras.find((camera) => {
+      const label =
+        String(
+          camera.label || ""
+        ).toLowerCase();
 
-        return keywords.some(
-          (keyword) =>
-            label.includes(
-              keyword
-            )
-        );
-      }
-    );
+      return keywords.some(
+        (keyword) =>
+          label.includes(keyword)
+      );
+    });
 
   return (
     match ||
@@ -2050,10 +1367,6 @@ export default function App() {
       DEVICE_ID_STORAGE_KEY
     );
 
-  // ==================================================
-  // DERIVED STATUS
-  // ==================================================
-
   const testCompleted =
     TEST_MODE &&
     visited.length >=
@@ -2078,10 +1391,6 @@ export default function App() {
         100
     );
 
-  // ==================================================
-  // LANGUAGE STORAGE
-  // ==================================================
-
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -2089,35 +1398,19 @@ export default function App() {
         language
       );
     } catch {
-      // Ignore.
+      // ignore
     }
   }, [language]);
 
-  // ==================================================
-  // SPLASH
-  // ==================================================
-
   useEffect(() => {
     const timer =
-      window.setTimeout(
-        () => {
-          setShowSplash(
-            false
-          );
-        },
-        2200
-      );
+      window.setTimeout(() => {
+        setShowSplash(false);
+      }, 2200);
 
-    return () => {
-      window.clearTimeout(
-        timer
-      );
-    };
+    return () =>
+      window.clearTimeout(timer);
   }, []);
-
-  // ==================================================
-  // LOCAL STORAGE
-  // ==================================================
 
   useEffect(() => {
     saveJSON(
@@ -2133,14 +1426,8 @@ export default function App() {
     );
   }, [goodieData]);
 
-  // ==================================================
-  // LOCAL SESSION BACKUP
-  // ==================================================
-
   useEffect(() => {
-    if (
-      !user?.recoveryCode
-    ) {
+    if (!user?.recoveryCode) {
       return;
     }
 
@@ -2176,10 +1463,6 @@ export default function App() {
     language,
   ]);
 
-  // ==================================================
-  // APPLY SERVER STATE
-  // ==================================================
-
   const applyServerState = (
     state,
     options = {}
@@ -2189,12 +1472,10 @@ export default function App() {
     }
 
     const {
-      mergeLocalProofs =
-        true,
+      mergeLocalProofs = true,
 
       clientRegistrationId =
-        user
-          ?.clientRegistrationId ||
+        user?.clientRegistrationId ||
         null,
     } = options;
 
@@ -2239,8 +1520,7 @@ export default function App() {
       recoveryCode:
         state.recoveryCode,
 
-      clientRegistrationId:
-        clientRegistrationId,
+      clientRegistrationId,
 
       dbSynced:
         true,
@@ -2267,31 +1547,18 @@ export default function App() {
       nextGoodie
     );
 
-    setUser(
-      nextUser
-    );
-
-    setVisited(
-      nextVisited
-    );
-
-    setGoodieData(
-      nextGoodie
-    );
+    setUser(nextUser);
+    setVisited(nextVisited);
+    setGoodieData(nextGoodie);
 
     if (
-      nextLanguage !==
-      language
+      nextLanguage !== language
     ) {
       setLanguage(
         nextLanguage
       );
     }
   };
-
-  // ==================================================
-  // FULL-STATE VISIT SYNC
-  // ==================================================
 
   const syncAllVisitProofs =
     async (
@@ -2301,8 +1568,7 @@ export default function App() {
       if (!recoveryCode) {
         return {
           ok: false,
-          sessionNotFound:
-            true,
+          sessionNotFound: true,
         };
       }
 
@@ -2338,15 +1604,13 @@ export default function App() {
         ) {
           return {
             ok: false,
-
             sessionNotFound:
               true,
           };
         }
 
         if (
-          result.status !==
-          "ok"
+          result.status !== "ok"
         ) {
           return {
             ok: false,
@@ -2379,8 +1643,7 @@ export default function App() {
         return {
           ok: true,
           invalidBooths,
-          state:
-            result.state,
+          state: result.state,
         };
       } catch (error) {
         console.error(
@@ -2395,18 +1658,6 @@ export default function App() {
         };
       }
     };
-
-  // ==================================================
-  // BACKGROUND SYNC
-  //
-  // Runs:
-  // - when app opens
-  // - when connection returns
-  // - when browser window gets focus
-  // - when app becomes visible again
-  //
-  // No aggressive polling.
-  // ==================================================
 
   useEffect(() => {
     if (
@@ -2494,10 +1745,6 @@ export default function App() {
     user?.recoveryCode,
   ]);
 
-  // ==================================================
-  // MIGRATE OLD TEST SESSION
-  // ==================================================
-
   useEffect(() => {
     if (
       !user ||
@@ -2516,11 +1763,6 @@ export default function App() {
     const migrate =
       async () => {
         try {
-          // ------------------------------------------
-          // 1. Maybe this recovery code already exists
-          // in Supabase from the previous app version.
-          // ------------------------------------------
-
           if (
             user.recoveryCode
           ) {
@@ -2534,8 +1776,7 @@ export default function App() {
                   },
                   {
                     retries: 0,
-                    timeoutMs:
-                      5000,
+                    timeoutMs: 5000,
                   }
                 );
 
@@ -2543,9 +1784,7 @@ export default function App() {
                 existing &&
                 !cancelled
               ) {
-                if (
-                  TEST_MODE
-                ) {
+                if (TEST_MODE) {
                   visited.forEach(
                     (boothId) => {
                       saveVisitProof(
@@ -2568,22 +1807,16 @@ export default function App() {
                   existing.recoveryCode,
                   {
                     retries: 1,
-                    timeoutMs:
-                      6000,
+                    timeoutMs: 6000,
                   }
                 );
 
                 return;
               }
             } catch {
-              // Continue with migration registration.
+              // continue
             }
           }
-
-          // ------------------------------------------
-          // 2. Create database participant.
-          // Idempotent legacy client ID.
-          // ------------------------------------------
 
           const legacyBase =
             String(
@@ -2594,11 +1827,10 @@ export default function App() {
             );
 
           const legacyClientId =
-            `legacy-${legacyBase}`
-              .slice(
-                0,
-                95
-              );
+            `legacy-${legacyBase}`.slice(
+              0,
+              95
+            );
 
           const state =
             await supabaseRpc(
@@ -2619,8 +1851,7 @@ export default function App() {
               },
               {
                 retries: 2,
-                timeoutMs:
-                  8000,
+                timeoutMs: 8000,
               }
             );
 
@@ -2669,9 +1900,7 @@ export default function App() {
           legacyMigrationRef.current =
             false;
 
-          if (
-            !cancelled
-          ) {
+          if (!cancelled) {
             legacyRetryTimerRef.current =
               window.setTimeout(
                 () => {
@@ -2703,11 +1932,8 @@ export default function App() {
     user,
     language,
     legacyRetryTick,
+    visited,
   ]);
-
-  // ==================================================
-  // REGISTER
-  // ==================================================
 
   const register =
     async () => {
@@ -2721,9 +1947,7 @@ export default function App() {
       const lastname =
         form.lastname.trim();
 
-      setRegistrationError(
-        ""
-      );
+      setRegistrationError("");
 
       if (
         !firstname ||
@@ -2736,9 +1960,7 @@ export default function App() {
         return;
       }
 
-      setRegistering(
-        true
-      );
+      setRegistering(true);
 
       const clientRegistrationId =
         getOrCreateLocalId(
@@ -2777,6 +1999,7 @@ export default function App() {
         clearVisitProofs();
 
         setVisited([]);
+
         setGoodieData({
           collectedAt: null,
         });
@@ -2820,15 +2043,9 @@ export default function App() {
           );
         }
       } finally {
-        setRegistering(
-          false
-        );
+        setRegistering(false);
       }
     };
-
-  // ==================================================
-  // LOCAL RECOVERY FALLBACK
-  // ==================================================
 
   const restoreLocalSession = (
     recoveryCode
@@ -2865,16 +2082,13 @@ export default function App() {
         ];
     }
 
-    if (
-      !session?.user
-    ) {
+    if (!session?.user) {
       return false;
     }
 
     const restoredVisited =
       uniqueNumbers(
-        session.visited ||
-          []
+        session.visited || []
       );
 
     const restoredGoodie =
@@ -2891,7 +2105,6 @@ export default function App() {
 
     const restoredUser = {
       ...session.user,
-
       language:
         restoredLanguage,
     };
@@ -2911,28 +2124,13 @@ export default function App() {
       restoredGoodie
     );
 
-    setUser(
-      restoredUser
-    );
-
-    setVisited(
-      restoredVisited
-    );
-
-    setGoodieData(
-      restoredGoodie
-    );
-
-    setLanguage(
-      restoredLanguage
-    );
+    setUser(restoredUser);
+    setVisited(restoredVisited);
+    setGoodieData(restoredGoodie);
+    setLanguage(restoredLanguage);
 
     return true;
   };
-
-  // ==================================================
-  // RESTORE SESSION FROM DATABASE
-  // ==================================================
 
   const restoreSession =
     async () => {
@@ -2943,9 +2141,7 @@ export default function App() {
       const code =
         recoveryInput.trim();
 
-      setRecoveryMessage(
-        ""
-      );
+      setRecoveryMessage("");
 
       if (
         normalizeRecoveryCode(
@@ -2959,9 +2155,7 @@ export default function App() {
         return;
       }
 
-      setRestoring(
-        true
-      );
+      setRestoring(true);
 
       try {
         const state =
@@ -2985,8 +2179,6 @@ export default function App() {
           return;
         }
 
-        // A recovered session on a new device must NOT
-        // inherit QR proofs from another local session.
         clearVisitProofs();
 
         applyServerState(
@@ -3000,25 +2192,11 @@ export default function App() {
           }
         );
 
-        setRecoveryMessage(
-          ""
-        );
-
-        setRecoveryInput(
-          ""
-        );
-
-        setRecoveryOpen(
-          false
-        );
-
-        setGoodieApproved(
-          false
-        );
-
-        setShowGoodieSuccess(
-          false
-        );
+        setRecoveryMessage("");
+        setRecoveryInput("");
+        setRecoveryOpen(false);
+        setGoodieApproved(false);
+        setShowGoodieSuccess(false);
       } catch (error) {
         console.error(
           "Recovery failed:",
@@ -3030,23 +2208,15 @@ export default function App() {
             code
           );
 
-        if (
-          !localRestored
-        ) {
+        if (!localRestored) {
           setRecoveryMessage(
             t.recoveryConnectionError
           );
         }
       } finally {
-        setRestoring(
-          false
-        );
+        setRestoring(false);
       }
     };
-
-  // ==================================================
-  // SCROLL
-  // ==================================================
 
   const scrollToScanner =
     () => {
@@ -3082,10 +2252,6 @@ export default function App() {
       );
     };
 
-  // ==================================================
-  // STOP ACTIVE SCANNER
-  // ==================================================
-
   const stopScanner =
     async () => {
       const scanner =
@@ -3103,10 +2269,6 @@ export default function App() {
       );
     };
 
-  // ==================================================
-  // CLOSE SCANNER
-  // ==================================================
-
   const closeScanner =
     async () => {
       scanLockedRef.current =
@@ -3114,13 +2276,8 @@ export default function App() {
 
       await stopScanner();
 
-      setScanTarget(
-        null
-      );
-
-      setScannerStatus(
-        ""
-      );
+      setScanTarget(null);
+      setScannerStatus("");
 
       scanLockedRef.current =
         false;
@@ -3128,14 +2285,8 @@ export default function App() {
       scrollToMap();
     };
 
-  // ==================================================
-  // OPEN BOOTH SCANNER
-  // ==================================================
-
   const openBoothScanner =
-    async (
-      booth
-    ) => {
+    async (booth) => {
       if (
         visited.includes(
           booth.id
@@ -3161,10 +2312,6 @@ export default function App() {
       });
     };
 
-  // ==================================================
-  // OPEN GOODIE SCANNER
-  // ==================================================
-
   const openGoodieScanner =
     async () => {
       if (
@@ -3184,10 +2331,6 @@ export default function App() {
       });
     };
 
-  // ==================================================
-  // SCANNER AUTO SCROLL
-  // ==================================================
-
   useEffect(() => {
     if (!scanTarget) {
       return;
@@ -3198,13 +2341,6 @@ export default function App() {
     scanTarget,
     scannerRestartKey,
   ]);
-
-  // ==================================================
-  // CAMERA PAUSE / RESUME
-  //
-  // Mobile browsers often suspend camera resources
-  // when screen is locked or another app is opened.
-  // ==================================================
 
   useEffect(() => {
     if (!scanTarget) {
@@ -3239,10 +2375,6 @@ export default function App() {
     };
   }, [scanTarget]);
 
-  // ==================================================
-  // QR SCANNER
-  // ==================================================
-
   useEffect(() => {
     if (!scanTarget) {
       return undefined;
@@ -3256,9 +2388,7 @@ export default function App() {
 
     const cleanupOwnedScanner =
       async () => {
-        if (
-          !ownedScanner
-        ) {
+        if (!ownedScanner) {
           return;
         }
 
@@ -3328,19 +2458,12 @@ export default function App() {
                 decodedText || ""
               )
                 .trim()
-                .slice(
-                  0,
-                  500
-                );
+                .slice(0, 500);
 
             const normalized =
               normalizeQR(
                 rawQr
               );
-
-            // ========================================
-            // TEST MODE CLIENT-SIDE CHECK
-            // ========================================
 
             if (
               TEST_MODE &&
@@ -3361,10 +2484,6 @@ export default function App() {
               return;
             }
 
-            // ========================================
-            // GOODIE BAG
-            // ========================================
-
             if (
               scanTarget.type ===
               "goodie"
@@ -3373,21 +2492,16 @@ export default function App() {
                 t.checkingGoodie
               );
 
-              // First ensure all booth proofs have
-              // reached Supabase.
               const syncResult =
                 await syncAllVisitProofs(
                   user?.recoveryCode,
                   {
                     retries: 1,
-                    timeoutMs:
-                      7000,
+                    timeoutMs: 7000,
                   }
                 );
 
-              if (
-                !syncResult.ok
-              ) {
+              if (!syncResult.ok) {
                 if (
                   syncResult.sessionNotFound
                 ) {
@@ -3412,8 +2526,7 @@ export default function App() {
                     "approve_goodie_bag",
                     {
                       p_recovery_code:
-                        user
-                          ?.recoveryCode,
+                        user?.recoveryCode,
 
                       p_qr_token:
                         rawQr,
@@ -3423,14 +2536,11 @@ export default function App() {
                     },
                     {
                       retries: 2,
-                      timeoutMs:
-                        8000,
+                      timeoutMs: 8000,
                     }
                   );
 
-                if (
-                  !approval
-                ) {
+                if (!approval) {
                   throw new Error(
                     "Empty Goodie approval response"
                   );
@@ -3448,42 +2558,22 @@ export default function App() {
                   );
                 }
 
-                // ------------------------------------
-                // APPROVED
-                // ------------------------------------
-
                 if (
                   approval.status ===
                   "approved"
                 ) {
                   await cleanupOwnedScanner();
 
-                  setScanTarget(
-                    null
-                  );
-
-                  setScannerStatus(
-                    ""
-                  );
-
-                  setGoodieApprovalError(
-                    ""
-                  );
-
-                  setGoodieApproved(
-                    true
-                  );
+                  setScanTarget(null);
+                  setScannerStatus("");
+                  setGoodieApprovalError("");
+                  setGoodieApproved(true);
 
                   scanLockedRef.current =
                     false;
 
                   return;
                 }
-
-                // ------------------------------------
-                // INVALID QR
-                // Keep scanner open.
-                // ------------------------------------
 
                 if (
                   approval.status ===
@@ -3498,10 +2588,6 @@ export default function App() {
 
                   return;
                 }
-
-                // ------------------------------------
-                // ALREADY COLLECTED
-                // ------------------------------------
 
                 if (
                   approval.status ===
@@ -3518,14 +2604,8 @@ export default function App() {
 
                   await cleanupOwnedScanner();
 
-                  setScanTarget(
-                    null
-                  );
-
-                  setScannerStatus(
-                    ""
-                  );
-
+                  setScanTarget(null);
+                  setScannerStatus("");
                   setMessage(
                     t.goodieAlreadyCollected
                   );
@@ -3538,24 +2618,14 @@ export default function App() {
                   return;
                 }
 
-                // ------------------------------------
-                // ANOTHER DEVICE HAS ACTIVE CLAIM
-                // ------------------------------------
-
                 if (
                   approval.status ===
                   "already_approved"
                 ) {
                   await cleanupOwnedScanner();
 
-                  setScanTarget(
-                    null
-                  );
-
-                  setScannerStatus(
-                    ""
-                  );
-
+                  setScanTarget(null);
+                  setScannerStatus("");
                   setMessage(
                     t.goodieAlreadyProcessing
                   );
@@ -3568,23 +2638,14 @@ export default function App() {
                   return;
                 }
 
-                // ------------------------------------
-                // SERVER SAYS NOT ELIGIBLE
-                // ------------------------------------
-
                 if (
                   approval.status ===
                   "not_eligible"
                 ) {
                   await cleanupOwnedScanner();
 
-                  setScanTarget(
-                    null
-                  );
-
-                  setScannerStatus(
-                    ""
-                  );
+                  setScanTarget(null);
+                  setScannerStatus("");
 
                   setMessage(
                     t.goodieNotEligible(
@@ -3603,19 +2664,13 @@ export default function App() {
                   return;
                 }
 
-                // ------------------------------------
-                // SESSION PROBLEM
-                // ------------------------------------
-
                 if (
                   approval.status ===
                   "session_not_found"
                 ) {
                   await cleanupOwnedScanner();
 
-                  setScanTarget(
-                    null
-                  );
+                  setScanTarget(null);
 
                   setMessage(
                     t.sessionProblem
@@ -3649,10 +2704,6 @@ export default function App() {
               }
             }
 
-            // ========================================
-            // BOOTH
-            // ========================================
-
             const booth =
               scanTarget.booth;
 
@@ -3660,9 +2711,6 @@ export default function App() {
               t.savingVisit
             );
 
-            // Save proof first.
-            // If network dies immediately after,
-            // the visit still survives locally.
             saveVisitProof(
               booth.id,
               rawQr
@@ -3676,22 +2724,14 @@ export default function App() {
                 ])
             );
 
-            // Fast online attempt.
-            // No aggressive retries here because
-            // booth scans should remain fast.
             const syncResult =
               await syncAllVisitProofs(
                 user?.recoveryCode,
                 {
                   retries: 0,
-                  timeoutMs:
-                    5000,
+                  timeoutMs: 5000,
                 }
               );
-
-            // ----------------------------------------
-            // SERVER REJECTED THIS QR
-            // ----------------------------------------
 
             if (
               syncResult.ok &&
@@ -3721,10 +2761,6 @@ export default function App() {
               return;
             }
 
-            // ----------------------------------------
-            // SESSION NOT FOUND
-            // ----------------------------------------
-
             if (
               syncResult.sessionNotFound
             ) {
@@ -3734,13 +2770,8 @@ export default function App() {
 
               await cleanupOwnedScanner();
 
-              setScanTarget(
-                null
-              );
-
-              setScannerStatus(
-                ""
-              );
+              setScanTarget(null);
+              setScannerStatus("");
 
               scanLockedRef.current =
                 false;
@@ -3749,10 +2780,6 @@ export default function App() {
 
               return;
             }
-
-            // ----------------------------------------
-            // SUCCESS
-            // ----------------------------------------
 
             if (
               syncResult.ok
@@ -3763,8 +2790,6 @@ export default function App() {
                 )
               );
             } else {
-              // Network failure:
-              // keep local proof.
               setMessage(
                 t.boothSavedOffline(
                   booth.name
@@ -3774,13 +2799,8 @@ export default function App() {
 
             await cleanupOwnedScanner();
 
-            setScanTarget(
-              null
-            );
-
-            setScannerStatus(
-              ""
-            );
+            setScanTarget(null);
+            setScannerStatus("");
 
             scanLockedRef.current =
               false;
@@ -3790,13 +2810,8 @@ export default function App() {
 
         const handleFailure =
           () => {
-            // Normal while no QR is visible.
+            // ignore
           };
-
-        // ============================================
-        // CAMERA ATTEMPT 1
-        // environment-facing camera
-        // ============================================
 
         try {
           ownedScanner =
@@ -3814,13 +2829,14 @@ export default function App() {
                   "environment",
               },
             },
+
             scannerConfig(),
+
             handleSuccess,
+
             handleFailure
           );
-        } catch (
-          firstError
-        ) {
+        } catch (firstError) {
           console.warn(
             "Environment camera start failed:",
             firstError
@@ -3831,11 +2847,6 @@ export default function App() {
           if (cancelled) {
             return;
           }
-
-          // ==========================================
-          // CAMERA ATTEMPT 2
-          // Find available rear camera manually.
-          // ==========================================
 
           try {
             const cameras =
@@ -3860,13 +2871,14 @@ export default function App() {
 
             await ownedScanner.start(
               camera.id,
+
               scannerConfig(),
+
               handleSuccess,
+
               handleFailure
             );
-          } catch (
-            secondError
-          ) {
+          } catch (secondError) {
             console.error(
               "Camera fallback failed:",
               secondError
@@ -3888,9 +2900,7 @@ export default function App() {
           }
         }
 
-        if (
-          cancelled
-        ) {
+        if (cancelled) {
           await cleanupOwnedScanner();
           return;
         }
@@ -3914,9 +2924,7 @@ export default function App() {
     return () => {
       cancelled = true;
 
-      if (
-        ownedScanner
-      ) {
+      if (ownedScanner) {
         const scanner =
           ownedScanner;
 
@@ -3943,28 +2951,17 @@ export default function App() {
     user?.recoveryCode,
   ]);
 
-  // ==================================================
-  // GOODIE BAG RECEIVED
-  // ==================================================
-
   const confirmGoodieReceived =
     async () => {
-      if (
-        goodieReceiving
-      ) {
+      if (goodieReceiving) {
         return;
       }
 
-      setGoodieApprovalError(
-        ""
-      );
+      setGoodieApprovalError("");
 
-      setGoodieReceiving(
-        true
-      );
+      setGoodieReceiving(true);
 
       try {
-        // One last full sync before final handover record.
         const syncResult =
           await syncAllVisitProofs(
             user?.recoveryCode,
@@ -3974,9 +2971,7 @@ export default function App() {
             }
           );
 
-        if (
-          !syncResult.ok
-        ) {
+        if (!syncResult.ok) {
           throw new Error(
             "Visit sync failed before Goodie handover"
           );
@@ -4004,9 +2999,7 @@ export default function App() {
           );
         }
 
-        if (
-          result.state
-        ) {
+        if (result.state) {
           applyServerState(
             result.state,
             {
@@ -4015,10 +3008,6 @@ export default function App() {
             }
           );
         }
-
-        // ------------------------------------------
-        // COLLECTED SUCCESSFULLY
-        // ------------------------------------------
 
         if (
           result.status ===
@@ -4043,28 +3032,18 @@ export default function App() {
             }
           );
 
-          setGoodieApproved(
-            false
-          );
+          setGoodieApproved(false);
 
-          setShowGoodieSuccess(
-            true
-          );
+          setShowGoodieSuccess(true);
 
           return;
         }
-
-        // ------------------------------------------
-        // CLAIM NO LONGER VALID
-        // ------------------------------------------
 
         if (
           result.status ===
           "approval_required"
         ) {
-          setGoodieApproved(
-            false
-          );
+          setGoodieApproved(false);
 
           setMessage(
             t.goodieApprovalExpired
@@ -4075,17 +3054,11 @@ export default function App() {
           return;
         }
 
-        // ------------------------------------------
-        // SERVER ELIGIBILITY CHANGED
-        // ------------------------------------------
-
         if (
           result.status ===
           "not_eligible"
         ) {
-          setGoodieApproved(
-            false
-          );
+          setGoodieApproved(false);
 
           setMessage(
             t.goodieNotEligible(
@@ -4105,9 +3078,7 @@ export default function App() {
           result.status ===
           "session_not_found"
         ) {
-          setGoodieApproved(
-            false
-          );
+          setGoodieApproved(false);
 
           setMessage(
             t.sessionProblem
@@ -4127,32 +3098,19 @@ export default function App() {
           error
         );
 
-        // IMPORTANT:
-        // Keep green approval screen open.
-        // Staff can retry until DB confirms.
         setGoodieApprovalError(
           t.goodieConfirmError
         );
       } finally {
-        setGoodieReceiving(
-          false
-        );
+        setGoodieReceiving(false);
       }
     };
-
-  // ==================================================
-  // SPLASH
-  // ==================================================
 
   if (showSplash) {
     return (
       <Splash t={t} />
     );
   }
-
-  // ==================================================
-  // REGISTRATION
-  // ==================================================
 
   if (!user) {
     return (
@@ -4165,12 +3123,8 @@ export default function App() {
           }
         >
           <LanguageSelector
-            language={
-              language
-            }
-            setLanguage={
-              setLanguage
-            }
+            language={language}
+            setLanguage={setLanguage}
             t={t}
           />
 
@@ -4181,12 +3135,8 @@ export default function App() {
           >
             <img
               src="/LogoJubi.png"
-              alt={
-                t.anniversaryAlt
-              }
-              style={
-                styles.jubiLogo
-              }
+              alt={t.anniversaryAlt}
+              style={styles.jubiLogo}
             />
           </div>
 
@@ -4226,19 +3176,13 @@ export default function App() {
             }
             autoComplete="given-name"
             maxLength={80}
-            disabled={
-              registering
-            }
-            onChange={(
-              event
-            ) =>
+            disabled={registering}
+            onChange={(event) =>
               setForm(
                 (current) => ({
                   ...current,
-
                   firstname:
-                    event.target
-                      .value,
+                    event.target.value,
                 })
               )
             }
@@ -4264,19 +3208,13 @@ export default function App() {
             }
             autoComplete="family-name"
             maxLength={80}
-            disabled={
-              registering
-            }
-            onChange={(
-              event
-            ) =>
+            disabled={registering}
+            onChange={(event) =>
               setForm(
                 (current) => ({
                   ...current,
-
                   lastname:
-                    event.target
-                      .value,
+                    event.target.value,
                 })
               )
             }
@@ -4286,18 +3224,13 @@ export default function App() {
             type="button"
             style={{
               ...styles.primaryButton,
-
               opacity:
                 registering
                   ? 0.65
                   : 1,
             }}
-            disabled={
-              registering
-            }
-            onClick={
-              register
-            }
+            disabled={registering}
+            onClick={register}
           >
             {registering
               ? t.starting
@@ -4310,44 +3243,24 @@ export default function App() {
                 styles.errorBox
               }
             >
-              {
-                registrationError
-              }
+              {registrationError}
             </div>
           )}
 
           <RecoveryPanel
-            open={
-              recoveryOpen
-            }
-            setOpen={
-              setRecoveryOpen
-            }
-            value={
-              recoveryInput
-            }
-            setValue={
-              setRecoveryInput
-            }
-            message={
-              recoveryMessage
-            }
-            onRestore={
-              restoreSession
-            }
-            restoring={
-              restoring
-            }
+            open={recoveryOpen}
+            setOpen={setRecoveryOpen}
+            value={recoveryInput}
+            setValue={setRecoveryInput}
+            message={recoveryMessage}
+            onRestore={restoreSession}
+            restoring={restoring}
             t={t}
           />
         </main>
       </Page>
     );
   }
-
-  // ==================================================
-  // BRAND PASS
-  // ==================================================
 
   return (
     <Page>
@@ -4363,9 +3276,7 @@ export default function App() {
             styles.eyebrow
           }
         >
-          {
-            t.anniversaryLabel
-          }
+          {t.anniversaryLabel}
         </p>
 
         <h1
@@ -4398,10 +3309,6 @@ export default function App() {
           }
           t={t}
         />
-
-        {/* ======================================= */}
-        {/* MAP */}
-        {/* ======================================= */}
 
         <section
           ref={
@@ -4439,17 +3346,13 @@ export default function App() {
                 }
               >
                 <img
-                  src="/brand-map.png"
-                  alt={
-                    t.mapAlt
-                  }
+                  src="/brand-map2.png"
+                  alt={t.mapAlt}
                   style={
                     styles.mapImage
                   }
                   onError={() =>
-                    setMapError(
-                      true
-                    )
+                    setMapError(true)
                   }
                 />
 
@@ -4463,9 +3366,7 @@ export default function App() {
 
                     return (
                       <button
-                        key={
-                          booth.id
-                        }
+                        key={booth.id}
                         type="button"
                         aria-label={
                           booth.name
@@ -4526,26 +3427,19 @@ export default function App() {
                 }
               >
                 <strong>
-                  {
-                    t.mapNotFound
-                  }
+                  {t.mapNotFound}
                 </strong>
 
                 <div
                   style={{
-                    marginTop:
-                      8,
+                    marginTop: 8,
                   }}
                 >
-                  {
-                    t.mapUploadBefore
-                  }{" "}
+                  {t.mapUploadBefore}{" "}
                   <strong>
                     public
                   </strong>{" "}
-                  {
-                    t.mapUploadAfter
-                  }
+                  {t.mapUploadAfter}
                 </div>
 
                 <code
@@ -4553,7 +3447,7 @@ export default function App() {
                     styles.code
                   }
                 >
-                  brand-map.png
+                  brand-map2.png
                 </code>
               </div>
             )}
@@ -4565,23 +3459,15 @@ export default function App() {
             }
           >
             <Legend
-              color={
-                GREEN_BG
-              }
-              border={
-                GREEN
-              }
-              label={
-                t.visited
-              }
+              color={GREEN_BG}
+              border={GREEN}
+              label={t.visited}
             />
 
             <Legend
               color="#FFFFFF"
               border="#BBBBBB"
-              label={
-                t.notVisited
-              }
+              label={t.notVisited}
             />
           </div>
 
@@ -4595,10 +3481,6 @@ export default function App() {
             </div>
           )}
         </section>
-
-        {/* ======================================= */}
-        {/* GOODIE BAG */}
-        {/* ======================================= */}
 
         <GoodieBag
           visited={
@@ -4615,10 +3497,6 @@ export default function App() {
           }
           t={t}
         />
-
-        {/* ======================================= */}
-        {/* SCANNER */}
-        {/* ======================================= */}
 
         {scanTarget && (
           <Scanner
@@ -4638,10 +3516,6 @@ export default function App() {
           />
         )}
 
-        {/* ======================================= */}
-        {/* RECOVERY */}
-        {/* ======================================= */}
-
         <section
           style={
             styles.recoveryInfo
@@ -4652,9 +3526,7 @@ export default function App() {
               styles.recoveryInfoLabel
             }
           >
-            {
-              t.recoveryCodeLabel
-            }
+            {t.recoveryCodeLabel}
           </div>
 
           <div
@@ -4662,9 +3534,7 @@ export default function App() {
               styles.recoveryCode
             }
           >
-            {
-              user.recoveryCode
-            }
+            {user.recoveryCode}
           </div>
 
           <div
@@ -4672,16 +3542,10 @@ export default function App() {
               styles.recoveryInfoText
             }
           >
-            {
-              t.recoveryCodeText
-            }
+            {t.recoveryCodeText}
           </div>
         </section>
       </main>
-
-      {/* ======================================= */}
-      {/* GOODIE APPROVED */}
-      {/* ======================================= */}
 
       {goodieApproved && (
         <GoodieApprovedScreen
@@ -4705,10 +3569,6 @@ export default function App() {
         />
       )}
 
-      {/* ======================================= */}
-      {/* FINAL SCREEN */}
-      {/* ======================================= */}
-
       {showGoodieSuccess && (
         <GoodieSuccessScreen
           onDone={() =>
@@ -4727,9 +3587,7 @@ export default function App() {
 // COMPONENTS
 // ==================================================
 
-function Page({
-  children,
-}) {
+function Page({ children }) {
   return (
     <div
       style={
@@ -4747,9 +3605,7 @@ function Page({
   );
 }
 
-function Header({
-  t,
-}) {
+function Header({ t }) {
   return (
     <header
       style={
@@ -4758,20 +3614,14 @@ function Header({
     >
       <img
         src="/impo_logo.png"
-        alt={
-          t.logoAlt
-        }
-        style={
-          styles.logo
-        }
+        alt={t.logoAlt}
+        style={styles.logo}
       />
     </header>
   );
 }
 
-function Splash({
-  t,
-}) {
+function Splash({ t }) {
   return (
     <div
       style={
@@ -4780,20 +3630,12 @@ function Splash({
     >
       <img
         src="/LogoJubi.png"
-        alt={
-          t.anniversaryAlt
-        }
-        style={
-          styles.splashLogo
-        }
+        alt={t.anniversaryAlt}
+        style={styles.splashLogo}
       />
     </div>
   );
 }
-
-// ==================================================
-// LANGUAGE SELECTOR
-// ==================================================
 
 function LanguageSelector({
   language,
@@ -4830,9 +3672,7 @@ function LanguageSelector({
           styles.languageLabel
         }
       >
-        {
-          t.chooseLanguage
-        }
+        {t.chooseLanguage}
       </div>
 
       <div
@@ -4865,9 +3705,7 @@ function LanguageSelector({
                     : styles.languageButtonInactive),
                 }}
               >
-                {
-                  option.label
-                }
+                {option.label}
               </button>
             );
           }
@@ -4876,10 +3714,6 @@ function LanguageSelector({
     </div>
   );
 }
-
-// ==================================================
-// PROGRESS
-// ==================================================
 
 function Progress({
   visited,
@@ -4912,9 +3746,7 @@ function Progress({
               styles.progressLabel
             }
           >
-            {
-              t.boothsVisited
-            }
+            {t.boothsVisited}
           </div>
         </div>
 
@@ -4935,7 +3767,6 @@ function Progress({
         <div
           style={{
             ...styles.progressBar,
-
             width:
               `${progress}%`,
           }}
@@ -4959,10 +3790,7 @@ function Legend({
       <span
         style={{
           ...styles.legendBox,
-
-          background:
-            color,
-
+          background: color,
           border:
             `1px solid ${border}`,
         }}
@@ -4974,10 +3802,6 @@ function Legend({
     </div>
   );
 }
-
-// ==================================================
-// RECOVERY
-// ==================================================
 
 function RecoveryPanel({
   open,
@@ -5001,14 +3825,10 @@ function RecoveryPanel({
           styles.recoveryToggle
         }
         onClick={() =>
-          setOpen(
-            !open
-          )
+          setOpen(!open)
         }
       >
-        {
-          t.recoveryLost
-        }
+        {t.recoveryLost}
       </button>
 
       {open && (
@@ -5022,9 +3842,7 @@ function RecoveryPanel({
               styles.recoveryTitle
             }
           >
-            {
-              t.recoveryTitle
-            }
+            {t.recoveryTitle}
           </div>
 
           <p
@@ -5032,32 +3850,23 @@ function RecoveryPanel({
               styles.recoveryText
             }
           >
-            {
-              t.recoveryText
-            }
+            {t.recoveryText}
           </p>
 
           <input
             type="text"
-            value={
-              value
-            }
+            value={value}
             placeholder="ABCD-1234"
             autoCapitalize="characters"
             autoComplete="off"
             maxLength={12}
-            disabled={
-              restoring
-            }
+            disabled={restoring}
             style={
               styles.recoveryInput
             }
-            onChange={(
-              event
-            ) =>
+            onChange={(event) =>
               setValue(
-                event.target.value
-                  .toUpperCase()
+                event.target.value.toUpperCase()
               )
             }
           />
@@ -5074,12 +3883,9 @@ function RecoveryPanel({
 
           <button
             type="button"
-            disabled={
-              restoring
-            }
+            disabled={restoring}
             style={{
               ...styles.recoveryButton,
-
               opacity:
                 restoring
                   ? 0.65
@@ -5098,10 +3904,6 @@ function RecoveryPanel({
     </section>
   );
 }
-
-// ==================================================
-// GOODIE BAG
-// ==================================================
 
 function GoodieBag({
   visited,
@@ -5157,9 +3959,7 @@ function GoodieBag({
             styles.goodieCollected
           }
         >
-          {
-            t.goodieCollected
-          }
+          {t.goodieCollected}
         </div>
       ) : eligible ? (
         <>
@@ -5168,9 +3968,7 @@ function GoodieBag({
               styles.goodieUnlocked
             }
           >
-            {
-              t.goodieReady
-            }
+            {t.goodieReady}
           </div>
 
           <div
@@ -5181,7 +3979,8 @@ function GoodieBag({
             {TEST_MODE
               ? t.testGoodieReady
               : t.goodieLiveReady(
-                  visited
+                  visited,
+                  TOTAL_BOOTHS
                 )}
           </div>
         </>
@@ -5194,7 +3993,10 @@ function GoodieBag({
           >
             {TEST_MODE
               ? t.testGoodieInstruction
-              : t.liveGoodieInstruction}
+              : t.liveGoodieInstruction(
+                  GOODIE_UNLOCK_AT,
+                  TOTAL_BOOTHS
+                )}
           </div>
 
           <div
@@ -5213,7 +4015,6 @@ function GoodieBag({
             <div
               style={{
                 ...styles.goodieProgressBar,
-
                 width:
                   `${goodieProgress}%`,
               }}
@@ -5225,8 +4026,7 @@ function GoodieBag({
               styles.goodieRemaining
             }
           >
-            {remaining ===
-            1
+            {remaining === 1
               ? t.remainingOne
               : t.remainingMany(
                   remaining
@@ -5238,12 +4038,8 @@ function GoodieBag({
       {!collected && (
         <button
           type="button"
-          disabled={
-            !eligible
-          }
-          onClick={
-            onCollect
-          }
+          disabled={!eligible}
+          onClick={onCollect}
           style={{
             ...styles.goodieButton,
 
@@ -5252,18 +4048,12 @@ function GoodieBag({
               : styles.goodieButtonDisabled),
           }}
         >
-          {
-            t.collectGoodie
-          }
+          {t.collectGoodie}
         </button>
       )}
     </section>
   );
 }
-
-// ==================================================
-// SCANNER
-// ==================================================
 
 function Scanner({
   scanTarget,
@@ -5276,9 +4066,7 @@ function Scanner({
     scanTarget.type ===
     "goodie"
       ? t.goodieBag
-      : scanTarget
-          .booth
-          .name;
+      : scanTarget.booth.name;
 
   return (
     <div
@@ -5341,19 +4129,13 @@ function Scanner({
         style={
           styles.secondaryButton
         }
-        onClick={
-          onClose
-        }
+        onClick={onClose}
       >
         {t.close}
       </button>
     </div>
   );
 }
-
-// ==================================================
-// GOODIE APPROVED
-// ==================================================
 
 function GoodieApprovedScreen({
   user,
@@ -5388,9 +4170,7 @@ function GoodieApprovedScreen({
             styles.goodieApprovedEyebrow
           }
         >
-          {
-            t.goodieApprovedEyebrow
-          }
+          {t.goodieApprovedEyebrow}
         </div>
 
         <h1
@@ -5406,12 +4186,8 @@ function GoodieApprovedScreen({
             styles.goodieApprovedName
           }
         >
-          {
-            user.firstname
-          }{" "}
-          {
-            user.lastname
-          }
+          {user.firstname}{" "}
+          {user.lastname}
         </div>
 
         <div
@@ -5432,9 +4208,7 @@ function GoodieApprovedScreen({
             styles.goodieApprovedInstruction
           }
         >
-          {
-            t.mayHandOver
-          }
+          {t.mayHandOver}
         </div>
 
         {error && (
@@ -5449,20 +4223,15 @@ function GoodieApprovedScreen({
 
         <button
           type="button"
-          disabled={
-            working
-          }
+          disabled={working}
           style={{
             ...styles.goodieReceivedButton,
-
             opacity:
               working
                 ? 0.7
                 : 1,
           }}
-          onClick={
-            onReceived
-          }
+          onClick={onReceived}
         >
           {working
             ? t.confirmingGoodie
@@ -5472,10 +4241,6 @@ function GoodieApprovedScreen({
     </div>
   );
 }
-
-// ==================================================
-// FINAL THANK-YOU SCREEN
-// ==================================================
 
 function GoodieSuccessScreen({
   onDone,
@@ -5515,9 +4280,7 @@ function GoodieSuccessScreen({
       >
         <img
           src="/impo_logo.png"
-          alt={
-            t.logoAlt
-          }
+          alt={t.logoAlt}
           style={
             styles.goodieFinalLogo
           }
@@ -5547,9 +4310,7 @@ function GoodieSuccessScreen({
           style={
             styles.goodieDoneButton
           }
-          onClick={
-            onDone
-          }
+          onClick={onDone}
         >
           {t.done}
         </button>
@@ -5564,165 +4325,78 @@ function GoodieSuccessScreen({
 
 const styles = {
   page: {
-    minHeight:
-      "100vh",
-
-    background:
-      LIGHT,
-
-    color:
-      BLACK,
-
+    minHeight: "100vh",
+    background: LIGHT,
+    color: BLACK,
     fontFamily:
       '"Helvetica Neue", Helvetica, Arial, sans-serif',
   },
 
   app: {
-    maxWidth:
-      430,
-
-    minHeight:
-      "100vh",
-
-    margin:
-      "0 auto",
-
-    background:
-      "#FFFFFF",
+    maxWidth: 430,
+    minHeight: "100vh",
+    margin: "0 auto",
+    background: "#FFFFFF",
   },
 
-  // ==================================================
-  // HEADER
-  // ==================================================
-
   header: {
-    height:
-      70,
-
-    display:
-      "flex",
-
-    alignItems:
-      "center",
-
-    padding:
-      "0 20px",
-
+    height: 70,
+    display: "flex",
+    alignItems: "center",
+    padding: "0 20px",
     borderBottom:
       `1px solid ${BORDER}`,
   },
 
   logo: {
-    width:
-      82,
-
-    display:
-      "block",
+    width: 82,
+    display: "block",
   },
 
-  // ==================================================
-  // SPLASH
-  // ==================================================
-
   splash: {
-    position:
-      "fixed",
-
-    inset:
-      0,
-
-    zIndex:
-      9999,
-
-    display:
-      "flex",
-
-    alignItems:
-      "center",
-
-    justifyContent:
-      "center",
-
-    background:
-      "#FFFFFF",
+    position: "fixed",
+    inset: 0,
+    zIndex: 9999,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#FFFFFF",
   },
 
   splashLogo: {
-    width:
-      "72%",
-
-    maxWidth:
-      350,
-
-    objectFit:
-      "contain",
+    width: "72%",
+    maxWidth: 350,
+    objectFit: "contain",
   },
 
-  // ==================================================
-  // LANGUAGE
-  // ==================================================
-
   languageSection: {
-    marginBottom:
-      26,
-
-    textAlign:
-      "center",
+    marginBottom: 26,
+    textAlign: "center",
   },
 
   languageLabel: {
-    marginBottom:
-      9,
-
-    color:
-      "#888888",
-
-    fontSize:
-      11,
-
-    fontWeight:
-      700,
-
-    textTransform:
-      "uppercase",
-
-    letterSpacing:
-      "1px",
+    marginBottom: 9,
+    color: "#888888",
+    fontSize: 11,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "1px",
   },
 
   languageButtons: {
-    display:
-      "flex",
-
-    justifyContent:
-      "center",
-
-    gap:
-      7,
+    display: "flex",
+    justifyContent: "center",
+    gap: 7,
   },
 
   languageButton: {
-    minWidth:
-      52,
-
-    height:
-      38,
-
-    padding:
-      "0 12px",
-
-    borderRadius:
-      8,
-
-    fontSize:
-      12,
-
-    fontWeight:
-      800,
-
-    cursor:
-      "pointer",
-
+    minWidth: 52,
+    height: 38,
+    padding: "0 12px",
+    borderRadius: 8,
+    fontSize: 12,
+    fontWeight: 800,
+    cursor: "pointer",
     transition:
       "all 0.15s ease",
   },
@@ -5730,28 +4404,16 @@ const styles = {
   languageButtonActive: {
     border:
       `1px solid ${RED}`,
-
-    background:
-      RED,
-
-    color:
-      "#FFFFFF",
+    background: RED,
+    color: "#FFFFFF",
   },
 
   languageButtonInactive: {
     border:
       `1px solid ${BORDER}`,
-
-    background:
-      "#FFFFFF",
-
-    color:
-      "#555555",
+    background: "#FFFFFF",
+    color: "#555555",
   },
-
-  // ==================================================
-  // REGISTRATION
-  // ==================================================
 
   registrationContent: {
     padding:
@@ -5759,165 +4421,82 @@ const styles = {
   },
 
   jubiLogoWrapper: {
-    display:
-      "flex",
-
-    justifyContent:
-      "center",
-
+    display: "flex",
+    justifyContent: "center",
     margin:
       "4px 0 30px",
   },
 
   jubiLogo: {
-    width:
-      "70%",
-
-    maxWidth:
-      280,
-
-    objectFit:
-      "contain",
+    width: "70%",
+    maxWidth: 280,
+    objectFit: "contain",
   },
 
   registrationTitle: {
-    margin:
-      0,
-
-    fontSize:
-      36,
-
-    lineHeight:
-      1.05,
-
-    fontWeight:
-      800,
-
-    letterSpacing:
-      "-1px",
+    margin: 0,
+    fontSize: 36,
+    lineHeight: 1.05,
+    fontWeight: 800,
+    letterSpacing: "-1px",
   },
 
   registrationIntro: {
     margin:
       "12px 0 30px",
-
-    color:
-      "#666666",
-
-    fontSize:
-      16,
-
-    lineHeight:
-      1.5,
+    color: "#666666",
+    fontSize: 16,
+    lineHeight: 1.5,
   },
 
   label: {
-    display:
-      "block",
-
-    marginBottom:
-      7,
-
-    fontSize:
-      13,
-
-    fontWeight:
-      700,
+    display: "block",
+    marginBottom: 7,
+    fontSize: 13,
+    fontWeight: 700,
   },
 
   input: {
-    width:
-      "100%",
-
+    width: "100%",
     boxSizing:
       "border-box",
-
-    padding:
-      15,
-
-    marginBottom:
-      18,
-
+    padding: 15,
+    marginBottom: 18,
     border:
       `1px solid ${BORDER}`,
-
-    borderRadius:
-      8,
-
+    borderRadius: 8,
     background:
       "#FFFFFF",
-
-    fontSize:
-      16,
-
-    outline:
-      "none",
+    fontSize: 16,
+    outline: "none",
   },
 
   primaryButton: {
-    width:
-      "100%",
-
-    padding:
-      16,
-
-    marginTop:
-      5,
-
-    border:
-      0,
-
-    borderRadius:
-      8,
-
-    background:
-      RED,
-
-    color:
-      "#FFFFFF",
-
-    fontSize:
-      14,
-
-    fontWeight:
-      800,
-
-    letterSpacing:
-      "0.7px",
-
-    cursor:
-      "pointer",
+    width: "100%",
+    padding: 16,
+    marginTop: 5,
+    border: 0,
+    borderRadius: 8,
+    background: RED,
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: 800,
+    letterSpacing: "0.7px",
+    cursor: "pointer",
   },
 
   errorBox: {
-    marginTop:
-      14,
-
-    padding:
-      13,
-
+    marginTop: 14,
+    padding: 13,
     border:
       "1px solid rgba(207,45,54,0.25)",
-
-    borderRadius:
-      9,
-
+    borderRadius: 9,
     background:
       "rgba(207,45,54,0.06)",
-
-    color:
-      RED,
-
-    fontSize:
-      12,
-
-    lineHeight:
-      1.45,
+    color: RED,
+    fontSize: 12,
+    lineHeight: 1.45,
   },
-
-  // ==================================================
-  // CONTENT
-  // ==================================================
 
   content: {
     padding:
@@ -5925,1203 +4504,604 @@ const styles = {
   },
 
   eyebrow: {
-    margin:
-      0,
-
-    color:
-      RED,
-
-    fontSize:
-      11,
-
-    fontWeight:
-      800,
-
-    letterSpacing:
-      "1.2px",
+    margin: 0,
+    color: RED,
+    fontSize: 11,
+    fontWeight: 800,
+    letterSpacing: "1.2px",
   },
 
   passTitle: {
     margin:
       "6px 0 8px",
-
-    fontSize:
-      34,
-
-    lineHeight:
-      1.05,
-
-    fontWeight:
-      800,
-
-    letterSpacing:
-      "-1px",
+    fontSize: 34,
+    lineHeight: 1.05,
+    fontWeight: 800,
+    letterSpacing: "-1px",
   },
 
   intro: {
     margin:
       "12px 0 26px",
-
-    color:
-      "#666666",
-
-    fontSize:
-      16,
-
-    lineHeight:
-      1.5,
+    color: "#666666",
+    fontSize: 16,
+    lineHeight: 1.5,
   },
 
-  // ==================================================
-  // PROGRESS
-  // ==================================================
-
   progressCard: {
-    padding:
-      20,
-
+    padding: 20,
     margin:
       "26px 0 28px",
-
-    borderRadius:
-      14,
-
-    background:
-      RED,
-
-    color:
-      "#FFFFFF",
+    borderRadius: 14,
+    background: RED,
+    color: "#FFFFFF",
   },
 
   progressTop: {
-    display:
-      "flex",
-
-    alignItems:
-      "center",
-
+    display: "flex",
+    alignItems: "center",
     justifyContent:
       "space-between",
   },
 
   progressNumber: {
-    fontSize:
-      30,
-
-    fontWeight:
-      800,
+    fontSize: 30,
+    fontWeight: 800,
   },
 
   progressLabel: {
-    marginTop:
-      2,
-
-    fontSize:
-      13,
-
-    opacity:
-      0.9,
+    marginTop: 2,
+    fontSize: 13,
+    opacity: 0.9,
   },
 
   percent: {
-    fontSize:
-      22,
-
-    fontWeight:
-      800,
+    fontSize: 22,
+    fontWeight: 800,
   },
 
   progressBackground: {
-    height:
-      7,
-
-    marginTop:
-      18,
-
-    overflow:
-      "hidden",
-
-    borderRadius:
-      999,
-
+    height: 7,
+    marginTop: 18,
+    overflow: "hidden",
+    borderRadius: 999,
     background:
       "rgba(255,255,255,0.30)",
   },
 
   progressBar: {
-    height:
-      "100%",
-
-    borderRadius:
-      999,
-
-    background:
-      "#FFFFFF",
-
+    height: "100%",
+    borderRadius: 999,
+    background: "#FFFFFF",
     transition:
       "width 0.4s ease",
   },
 
-  // ==================================================
-  // MAP
-  // ==================================================
-
   mapSection: {
-    scrollMarginTop:
-      16,
+    scrollMarginTop: 16,
   },
 
   sectionTitle: {
-    margin:
-      0,
-
-    fontSize:
-      22,
-
-    fontWeight:
-      800,
+    margin: 0,
+    fontSize: 22,
+    fontWeight: 800,
   },
 
   mapIntro: {
     margin:
       "6px 0 14px",
-
-    color:
-      "#777777",
-
-    fontSize:
-      13,
-
-    lineHeight:
-      1.4,
+    color: "#777777",
+    fontSize: 13,
+    lineHeight: 1.4,
   },
 
   mapCard: {
-    padding:
-      6,
-
-    overflow:
-      "hidden",
-
+    padding: 6,
+    overflow: "hidden",
     border:
       `1px solid ${BORDER}`,
-
-    borderRadius:
-      14,
-
-    background:
-      "#FFFFFF",
+    borderRadius: 14,
+    background: "#FFFFFF",
   },
 
   mapWrapper: {
-    position:
-      "relative",
-
-    width:
-      "100%",
-
-    lineHeight:
-      0,
+    position: "relative",
+    width: "100%",
+    lineHeight: 0,
   },
 
   mapImage: {
-    width:
-      "100%",
-
-    height:
-      "auto",
-
-    display:
-      "block",
-
-    userSelect:
-      "none",
-
-    WebkitUserDrag:
-      "none",
+    width: "100%",
+    height: "auto",
+    display: "block",
+    userSelect: "none",
+    WebkitUserDrag: "none",
   },
 
   boothOverlay: {
-    position:
-      "absolute",
-
-    zIndex:
-      5,
-
+    position: "absolute",
+    zIndex: 5,
     boxSizing:
       "border-box",
-
-    padding:
-      0,
-
-    margin:
-      0,
-
-    outline:
-      "none",
-
-    cursor:
-      "pointer",
-
+    padding: 0,
+    margin: 0,
+    outline: "none",
+    cursor: "pointer",
     WebkitTapHighlightColor:
       "transparent",
-
     transition:
       "background 0.2s ease, border 0.2s ease",
   },
 
   mapError: {
-    padding:
-      30,
-
-    background:
-      "#FAFAFA",
-
-    color:
-      "#555555",
-
-    fontSize:
-      14,
-
-    lineHeight:
-      1.5,
-
-    textAlign:
-      "center",
+    padding: 30,
+    background: "#FAFAFA",
+    color: "#555555",
+    fontSize: 14,
+    lineHeight: 1.5,
+    textAlign: "center",
   },
 
   code: {
     display:
       "inline-block",
-
     padding:
       "6px 10px",
-
-    marginTop:
-      12,
-
-    borderRadius:
-      6,
-
-    background:
-      "#EEEEEE",
+    marginTop: 12,
+    borderRadius: 6,
+    background: "#EEEEEE",
   },
 
   legend: {
-    display:
-      "flex",
-
-    gap:
-      22,
-
-    marginTop:
-      13,
-
-    color:
-      "#666666",
-
-    fontSize:
-      12,
+    display: "flex",
+    gap: 22,
+    marginTop: 13,
+    color: "#666666",
+    fontSize: 12,
   },
 
   legendItem: {
-    display:
-      "flex",
-
-    alignItems:
-      "center",
-
-    gap:
-      7,
+    display: "flex",
+    alignItems: "center",
+    gap: 7,
   },
 
   legendBox: {
-    width:
-      16,
-
-    height:
-      16,
-
-    borderRadius:
-      3,
+    width: 16,
+    height: 16,
+    borderRadius: 3,
   },
 
   message: {
-    padding:
-      13,
-
-    marginTop:
-      16,
-
+    padding: 13,
+    marginTop: 16,
     border:
       `1px solid ${BORDER}`,
-
-    borderRadius:
-      10,
-
-    background:
-      "#F7F7F7",
-
-    fontSize:
-      13,
-
-    lineHeight:
-      1.4,
+    borderRadius: 10,
+    background: "#F7F7F7",
+    fontSize: 13,
+    lineHeight: 1.4,
   },
 
-  // ==================================================
-  // RECOVERY
-  // ==================================================
-
   recoveryPanel: {
-    marginTop:
-      38,
-
-    paddingTop:
-      22,
-
+    marginTop: 38,
+    paddingTop: 22,
     borderTop:
       `1px solid ${BORDER}`,
-
-    textAlign:
-      "center",
+    textAlign: "center",
   },
 
   recoveryToggle: {
-    padding:
-      8,
-
-    border:
-      0,
-
+    padding: 8,
+    border: 0,
     background:
       "transparent",
-
-    color:
-      "#999999",
-
-    fontSize:
-      12,
-
+    color: "#999999",
+    fontSize: 12,
     textDecoration:
       "underline",
-
-    cursor:
-      "pointer",
+    cursor: "pointer",
   },
 
   recoveryBody: {
-    marginTop:
-      14,
-
-    padding:
-      16,
-
-    borderRadius:
-      12,
-
-    background:
-      "#F7F7F7",
-
-    textAlign:
-      "left",
+    marginTop: 14,
+    padding: 16,
+    borderRadius: 12,
+    background: "#F7F7F7",
+    textAlign: "left",
   },
 
   recoveryTitle: {
-    fontSize:
-      17,
-
-    fontWeight:
-      800,
+    fontSize: 17,
+    fontWeight: 800,
   },
 
   recoveryText: {
     margin:
       "6px 0 12px",
-
-    color:
-      "#777777",
-
-    fontSize:
-      13,
-
-    lineHeight:
-      1.4,
+    color: "#777777",
+    fontSize: 13,
+    lineHeight: 1.4,
   },
 
   recoveryInput: {
-    width:
-      "100%",
-
+    width: "100%",
     boxSizing:
       "border-box",
-
-    padding:
-      14,
-
+    padding: 14,
     border:
       `1px solid ${BORDER}`,
-
-    borderRadius:
-      8,
-
-    background:
-      "#FFFFFF",
-
-    fontSize:
-      18,
-
-    fontWeight:
-      700,
-
-    letterSpacing:
-      "2px",
-
-    textAlign:
-      "center",
-
+    borderRadius: 8,
+    background: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: 700,
+    letterSpacing: "2px",
+    textAlign: "center",
     textTransform:
       "uppercase",
-
-    outline:
-      "none",
+    outline: "none",
   },
 
   recoveryButton: {
-    width:
-      "100%",
-
-    padding:
-      14,
-
-    marginTop:
-      12,
-
-    border:
-      0,
-
-    borderRadius:
-      8,
-
-    background:
-      BLACK,
-
-    color:
-      "#FFFFFF",
-
-    fontSize:
-      13,
-
-    fontWeight:
-      800,
-
-    cursor:
-      "pointer",
+    width: "100%",
+    padding: 14,
+    marginTop: 12,
+    border: 0,
+    borderRadius: 8,
+    background: BLACK,
+    color: "#FFFFFF",
+    fontSize: 13,
+    fontWeight: 800,
+    cursor: "pointer",
   },
 
   recoveryMessage: {
-    marginTop:
-      10,
-
-    color:
-      RED,
-
-    fontSize:
-      12,
-
-    lineHeight:
-      1.4,
+    marginTop: 10,
+    color: RED,
+    fontSize: 12,
+    lineHeight: 1.4,
   },
 
   recoveryInfo: {
-    marginTop:
-      34,
-
-    paddingTop:
-      22,
-
+    marginTop: 34,
+    paddingTop: 22,
     borderTop:
       `1px solid ${BORDER}`,
-
-    textAlign:
-      "center",
+    textAlign: "center",
   },
 
   recoveryInfoLabel: {
-    color:
-      "#999999",
-
-    fontSize:
-      11,
-
+    color: "#999999",
+    fontSize: 11,
     textTransform:
       "uppercase",
-
-    letterSpacing:
-      "0.8px",
+    letterSpacing: "0.8px",
   },
 
   recoveryCode: {
-    marginTop:
-      7,
-
-    color:
-      BLACK,
-
-    fontSize:
-      18,
-
-    fontWeight:
-      800,
-
-    letterSpacing:
-      "2px",
+    marginTop: 7,
+    color: BLACK,
+    fontSize: 18,
+    fontWeight: 800,
+    letterSpacing: "2px",
   },
 
   recoveryInfoText: {
-    maxWidth:
-      280,
-
+    maxWidth: 280,
     margin:
       "7px auto 0",
-
-    color:
-      "#AAAAAA",
-
-    fontSize:
-      10,
-
-    lineHeight:
-      1.4,
+    color: "#AAAAAA",
+    fontSize: 10,
+    lineHeight: 1.4,
   },
 
-  // ==================================================
-  // GOODIE
-  // ==================================================
-
   goodieCard: {
-    marginTop:
-      30,
-
-    padding:
-      18,
-
+    marginTop: 30,
+    padding: 18,
     border:
       `1px solid ${BORDER}`,
-
-    borderRadius:
-      16,
-
-    background:
-      "#FFFFFF",
+    borderRadius: 16,
+    background: "#FFFFFF",
   },
 
   goodieIcon: {
-    marginBottom:
-      10,
-
-    fontSize:
-      26,
+    marginBottom: 10,
+    fontSize: 26,
   },
 
   goodieTitle: {
-    fontSize:
-      22,
-
-    fontWeight:
-      800,
+    fontSize: 22,
+    fontWeight: 800,
   },
 
   goodieText: {
-    marginTop:
-      8,
-
-    color:
-      "#666666",
-
-    fontSize:
-      14,
-
-    lineHeight:
-      1.45,
+    marginTop: 8,
+    color: "#666666",
+    fontSize: 14,
+    lineHeight: 1.45,
   },
 
   goodieCount: {
-    marginTop:
-      18,
-
-    fontSize:
-      24,
-
-    fontWeight:
-      800,
+    marginTop: 18,
+    fontSize: 24,
+    fontWeight: 800,
   },
 
   goodieProgressBackground: {
-    height:
-      7,
-
-    marginTop:
-      8,
-
-    overflow:
-      "hidden",
-
-    borderRadius:
-      999,
-
-    background:
-      "#EEEEEE",
+    height: 7,
+    marginTop: 8,
+    overflow: "hidden",
+    borderRadius: 999,
+    background: "#EEEEEE",
   },
 
   goodieProgressBar: {
-    height:
-      "100%",
-
-    borderRadius:
-      999,
-
-    background:
-      RED,
-
+    height: "100%",
+    borderRadius: 999,
+    background: RED,
     transition:
       "width 0.3s ease",
   },
 
   goodieRemaining: {
-    marginTop:
-      8,
-
-    color:
-      "#888888",
-
-    fontSize:
-      12,
+    marginTop: 8,
+    color: "#888888",
+    fontSize: 12,
   },
 
   goodieUnlocked: {
-    marginTop:
-      8,
-
-    color:
-      GREEN,
-
-    fontSize:
-      17,
-
-    fontWeight:
-      800,
+    marginTop: 8,
+    color: GREEN,
+    fontSize: 17,
+    fontWeight: 800,
   },
 
   goodieCollected: {
-    marginTop:
-      8,
-
-    color:
-      GREEN,
-
-    fontSize:
-      15,
-
-    fontWeight:
-      800,
+    marginTop: 8,
+    color: GREEN,
+    fontSize: 15,
+    fontWeight: 800,
   },
 
   goodieButton: {
-    width:
-      "100%",
-
-    padding:
-      15,
-
-    marginTop:
-      18,
-
-    border:
-      0,
-
-    borderRadius:
-      8,
-
-    fontSize:
-      13,
-
-    fontWeight:
-      800,
-
-    letterSpacing:
-      "0.5px",
+    width: "100%",
+    padding: 15,
+    marginTop: 18,
+    border: 0,
+    borderRadius: 8,
+    fontSize: 13,
+    fontWeight: 800,
+    letterSpacing: "0.5px",
   },
 
   goodieButtonActive: {
-    background:
-      RED,
-
-    color:
-      "#FFFFFF",
-
-    cursor:
-      "pointer",
+    background: RED,
+    color: "#FFFFFF",
+    cursor: "pointer",
   },
 
   goodieButtonDisabled: {
-    background:
-      "#E8E8E8",
-
-    color:
-      "#999999",
-
-    cursor:
-      "default",
+    background: "#E8E8E8",
+    color: "#999999",
+    cursor: "default",
   },
 
-  // ==================================================
-  // SCANNER
-  // ==================================================
-
   scannerCard: {
-    padding:
-      16,
-
-    marginTop:
-      20,
-
+    padding: 16,
+    marginTop: 20,
     border:
       `1px solid ${BORDER}`,
-
-    borderRadius:
-      14,
-
-    background:
-      "#FFFFFF",
-
+    borderRadius: 14,
+    background: "#FFFFFF",
     boxShadow:
       "0 8px 30px rgba(0,0,0,0.08)",
-
-    scrollMarginTop:
-      16,
+    scrollMarginTop: 16,
   },
 
   scannerHeader: {
-    display:
-      "flex",
-
-    alignItems:
-      "center",
-
+    display: "flex",
+    alignItems: "center",
     justifyContent:
       "space-between",
-
-    gap:
-      12,
+    gap: 12,
   },
 
   scannerTitle: {
-    fontSize:
-      20,
-
-    fontWeight:
-      800,
+    fontSize: 20,
+    fontWeight: 800,
   },
 
   scannerSubtitle: {
-    marginTop:
-      4,
-
-    color:
-      "#666666",
-
-    fontSize:
-      14,
+    marginTop: 4,
+    color: "#666666",
+    fontSize: 14,
   },
 
   scannerBadge: {
-    minWidth:
-      38,
-
-    height:
-      38,
-
-    display:
-      "flex",
-
-    alignItems:
-      "center",
-
-    justifyContent:
-      "center",
-
+    minWidth: 38,
+    height: 38,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     padding:
       "0 8px",
-
-    borderRadius:
-      8,
-
-    background:
-      RED,
-
-    color:
-      "#FFFFFF",
-
-    fontSize:
-      11,
-
-    fontWeight:
-      800,
+    borderRadius: 8,
+    background: RED,
+    color: "#FFFFFF",
+    fontSize: 11,
+    fontWeight: 800,
   },
 
   scannerStatus: {
     margin:
       "10px 0 14px",
-
-    color:
-      "#777777",
-
-    fontSize:
-      12,
-
-    lineHeight:
-      1.4,
+    color: "#777777",
+    fontSize: 12,
+    lineHeight: 1.4,
   },
 
   scannerRegion: {
-    width:
-      "100%",
-
-    minHeight:
-      300,
-
-    overflow:
-      "hidden",
-
-    borderRadius:
-      10,
-
-    background:
-      "#111111",
+    width: "100%",
+    minHeight: 300,
+    overflow: "hidden",
+    borderRadius: 10,
+    background: "#111111",
   },
 
   secondaryButton: {
-    width:
-      "100%",
-
-    padding:
-      14,
-
-    marginTop:
-      14,
-
+    width: "100%",
+    padding: 14,
+    marginTop: 14,
     border:
       `1px solid ${BLACK}`,
-
-    borderRadius:
-      8,
-
-    background:
-      "#FFFFFF",
-
-    color:
-      BLACK,
-
-    fontSize:
-      13,
-
-    fontWeight:
-      800,
-
-    cursor:
-      "pointer",
+    borderRadius: 8,
+    background: "#FFFFFF",
+    color: BLACK,
+    fontSize: 13,
+    fontWeight: 800,
+    cursor: "pointer",
   },
 
-  // ==================================================
-  // GOODIE APPROVAL
-  // ==================================================
-
   goodieApprovedScreen: {
-    position:
-      "fixed",
-
-    inset:
-      0,
-
-    zIndex:
-      10000,
-
-    display:
-      "flex",
-
-    alignItems:
-      "center",
-
-    justifyContent:
-      "center",
-
-    padding:
-      24,
-
-    background:
-      GREEN,
+    position: "fixed",
+    inset: 0,
+    zIndex: 10000,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+    background: GREEN,
   },
 
   goodieApprovedContent: {
-    width:
-      "100%",
-
-    maxWidth:
-      390,
-
-    color:
-      "#FFFFFF",
-
-    textAlign:
-      "center",
+    width: "100%",
+    maxWidth: 390,
+    color: "#FFFFFF",
+    textAlign: "center",
   },
 
   goodieApprovedCheck: {
-    width:
-      82,
-
-    height:
-      82,
-
-    display:
-      "flex",
-
-    alignItems:
-      "center",
-
-    justifyContent:
-      "center",
-
+    width: 82,
+    height: 82,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     margin:
       "0 auto 26px",
-
     border:
       "3px solid rgba(255,255,255,0.9)",
-
-    borderRadius:
-      "50%",
-
-    fontSize:
-      46,
-
-    fontWeight:
-      900,
+    borderRadius: "50%",
+    fontSize: 46,
+    fontWeight: 900,
   },
 
   goodieApprovedEyebrow: {
-    fontSize:
-      13,
-
-    fontWeight:
-      800,
-
-    letterSpacing:
-      "2px",
+    fontSize: 13,
+    fontWeight: 800,
+    letterSpacing: "2px",
   },
 
   goodieApprovedTitle: {
     margin:
       "6px 0 30px",
-
-    fontSize:
-      44,
-
-    lineHeight:
-      1,
-
-    fontWeight:
-      900,
-
-    letterSpacing:
-      "-1px",
+    fontSize: 44,
+    lineHeight: 1,
+    fontWeight: 900,
+    letterSpacing: "-1px",
   },
 
   goodieApprovedName: {
-    fontSize:
-      25,
-
-    fontWeight:
-      800,
+    fontSize: 25,
+    fontWeight: 800,
   },
 
   goodieApprovedProgress: {
-    marginTop:
-      7,
-
-    fontSize:
-      16,
-
-    opacity:
-      0.9,
+    marginTop: 7,
+    fontSize: 16,
+    opacity: 0.9,
   },
 
   goodieApprovedInstruction: {
     margin:
       "34px 0 28px",
-
-    fontSize:
-      19,
-
-    lineHeight:
-      1.4,
-
-    fontWeight:
-      700,
+    fontSize: 19,
+    lineHeight: 1.4,
+    fontWeight: 700,
   },
 
   goodieApprovalError: {
-    padding:
-      12,
-
-    marginBottom:
-      15,
-
-    borderRadius:
-      9,
-
+    padding: 12,
+    marginBottom: 15,
+    borderRadius: 9,
     background:
       "rgba(255,255,255,0.16)",
-
-    fontSize:
-      12,
-
-    lineHeight:
-      1.4,
+    fontSize: 12,
+    lineHeight: 1.4,
   },
 
   goodieReceivedButton: {
-    width:
-      "100%",
-
-    padding:
-      18,
-
-    border:
-      0,
-
-    borderRadius:
-      10,
-
-    background:
-      "#FFFFFF",
-
-    color:
-      GREEN,
-
-    fontSize:
-      14,
-
-    fontWeight:
-      900,
-
-    letterSpacing:
-      "0.4px",
-
-    cursor:
-      "pointer",
+    width: "100%",
+    padding: 18,
+    border: 0,
+    borderRadius: 10,
+    background: "#FFFFFF",
+    color: GREEN,
+    fontSize: 14,
+    fontWeight: 900,
+    letterSpacing: "0.4px",
+    cursor: "pointer",
   },
 
-  // ==================================================
-  // FINAL SCREEN
-  // ==================================================
-
   goodieSuccessScreen: {
-    position:
-      "fixed",
-
-    inset:
-      0,
-
-    zIndex:
-      10001,
-
-    overflowY:
-      "auto",
-
-    background:
-      "#FFFFFF",
+    position: "fixed",
+    inset: 0,
+    zIndex: 10001,
+    overflowY: "auto",
+    background: "#FFFFFF",
   },
 
   goodieSuccessContent: {
-    minHeight:
-      "100%",
-
-    display:
-      "flex",
-
-    flexDirection:
-      "column",
-
-    justifyContent:
-      "center",
-
-    boxSizing:
-      "border-box",
-
+    minHeight: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    boxSizing: "border-box",
     padding:
       "34px 0",
-
-    textAlign:
-      "center",
+    textAlign: "center",
   },
 
   goodieFinalLogo: {
-    width:
-      90,
-
-    display:
-      "block",
-
+    width: 90,
+    display: "block",
     margin:
       "0 auto 30px",
   },
 
   goodieThankYou: {
-    maxWidth:
-      360,
-
+    maxWidth: 360,
     margin:
       "0 auto 36px",
-
     padding:
       "0 24px",
-
-    color:
-      BLACK,
-
-    fontSize:
-      27,
-
-    lineHeight:
-      1.2,
-
-    fontWeight:
-      800,
-
-    letterSpacing:
-      "-0.5px",
+    color: BLACK,
+    fontSize: 27,
+    lineHeight: 1.2,
+    fontWeight: 800,
+    letterSpacing: "-0.5px",
   },
 
   goodiePanorama: {
-    width:
-      "100%",
-
-    height:
-      245,
-
+    width: "100%",
+    height: 245,
     backgroundImage:
       'url("/goodie-bag-success.png")',
-
     backgroundRepeat:
       "no-repeat",
-
     backgroundSize:
       "auto 100%",
-
     backgroundPosition:
       "left center",
-
     animation:
       "goodiePan 14s linear infinite alternate",
   },
@@ -7129,35 +5109,16 @@ const styles = {
   goodieDoneButton: {
     width:
       "calc(100% - 40px)",
-
-    maxWidth:
-      390,
-
-    padding:
-      16,
-
+    maxWidth: 390,
+    padding: 16,
     margin:
       "34px auto 0",
-
-    border:
-      0,
-
-    borderRadius:
-      8,
-
-    background:
-      RED,
-
-    color:
-      "#FFFFFF",
-
-    fontSize:
-      14,
-
-    fontWeight:
-      800,
-
-    cursor:
-      "pointer",
+    border: 0,
+    borderRadius: 8,
+    background: RED,
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: 800,
+    cursor: "pointer",
   },
 };
