@@ -32,7 +32,10 @@ const LIGHT = "#F5F5F5";
 const BORDER = "#E7E7E7";
 
 const GREEN = "#209447";
-const GREEN_BG = "rgba(32, 148, 71, 0.18)";
+const GREEN_BG = "rgba(32, 148, 71, 0.16)";
+
+const UNVISITED_BG = "rgba(90, 90, 90, 0.05)";
+const UNVISITED_BORDER = "rgba(90, 90, 90, 0.28)";
 
 // ==================================================
 // STORAGE
@@ -459,10 +462,8 @@ const translations = {
   },
 
   it: {
-    chooseLanguage:
-      "Lingua",
-    welcome:
-      "Benvenuto!",
+    chooseLanguage: "Lingua",
+    welcome: "Benvenuto!",
     intro:
       "Scopri il nostro evento anniversario e raccogli i brand visitati nel tuo Brand Pass digitale personale.",
     firstName: "Nome",
@@ -621,105 +622,205 @@ const booths = [
   {
     id: 1,
     name: "Gisada",
-    area: { left: 15.0, top: 4.6, width: 25.5, height: 5.9 },
+    area: {
+      left: 15.9,
+      top: 4.8,
+      width: 25.1,
+      height: 7.0,
+    },
   },
   {
     id: 2,
     name: "P&I Parfums",
-    area: { left: 48.6, top: 3.1, width: 15.4, height: 9.0 },
+    area: {
+      left: 49.4,
+      top: 4.8,
+      width: 14.4,
+      height: 7.0,
+    },
   },
   {
     id: 3,
     name: "Karikaturist",
-    area: { left: 66.8, top: 3.2, width: 12.5, height: 8.0 },
+    area: {
+      left: 66.8,
+      top: 4.8,
+      width: 11.3,
+      height: 7.0,
+    },
   },
   {
     id: 4,
     name: "Jean-Pierre Rossellet",
-    area: { left: 43.9, top: 12.2, width: 5.1, height: 10.2 },
+    area: {
+      left: 44.1,
+      top: 16.1,
+      width: 4.8,
+      height: 7.0,
+    },
   },
   {
     id: 5,
     name: "Nobilis Group",
-    area: { left: 48.6, top: 12.0, width: 15.4, height: 8.9 },
+    area: {
+      left: 49.5,
+      top: 16.1,
+      width: 14.3,
+      height: 7.0,
+    },
   },
   {
     id: 6,
     name: "Flariel",
-    area: { left: 43.9, top: 22.4, width: 5.1, height: 10.4 },
+    area: {
+      left: 44.1,
+      top: 23.7,
+      width: 4.8,
+      height: 8.5,
+    },
   },
   {
     id: 7,
     name: "Bode Studios",
-    area: { left: 48.6, top: 20.8, width: 15.4, height: 11.8 },
+    area: {
+      left: 49.7,
+      top: 23.7,
+      width: 14.1,
+      height: 8.5,
+    },
   },
   {
     id: 8,
     name: "L'Oréal Luxe",
     shape: "circle",
-    area: { left: 40.3, top: 37.0, width: 26.4, height: 24.8 },
+    area: {
+      left: 41.6,
+      top: 38.1,
+      width: 25.4,
+      height: 23.6,
+    },
   },
   {
     id: 9,
     name: "Clarins",
-    area: { left: 48.0, top: 68.2, width: 15.3, height: 7.8 },
+    area: {
+      left: 48.8,
+      top: 68.6,
+      width: 14.3,
+      height: 7.0,
+    },
   },
   {
     id: 10,
     name: "Bvlgari",
-    area: { left: 48.0, top: 76.3, width: 15.3, height: 7.5 },
+    area: {
+      left: 48.8,
+      top: 76.3,
+      width: 14.3,
+      height: 7.0,
+    },
   },
   {
     id: 11,
     name: "Shiseido",
-    area: { left: 48.0, top: 89.0, width: 15.3, height: 8.3 },
+    area: {
+      left: 48.8,
+      top: 88.8,
+      width: 14.3,
+      height: 7.1,
+    },
   },
   {
     id: 12,
     name: "Deurocos Cosmetic",
     rotate: -45,
-    area: { left: 20.8, top: 68.0, width: 15.5, height: 8.0 },
+    area: {
+      left: 22.1,
+      top: 68.5,
+      width: 13.8,
+      height: 6.8,
+    },
   },
   {
     id: 13,
     name: "Give Back Beauty",
     rotate: -45,
-    area: { left: 25.1, top: 75.0, width: 12.0, height: 5.3 },
+    area: {
+      left: 27.1,
+      top: 74.9,
+      width: 10.6,
+      height: 4.8,
+    },
   },
   {
     id: 14,
     name: "Coty",
-    area: { left: 13.6, top: 87.7, width: 25.3, height: 8.5 },
+    area: {
+      left: 14.7,
+      top: 88.8,
+      width: 25.1,
+      height: 7.1,
+    },
   },
   {
     id: 15,
     name: "Puig",
-    area: { left: 27.2, top: 14.4, width: 7.2, height: 23.2 },
+    area: {
+      left: 28.2,
+      top: 16.1,
+      width: 6.5,
+      height: 22.1,
+    },
   },
   {
     id: 16,
     name: "Clinique",
-    area: { left: 4.6, top: 14.2, width: 8.7, height: 16.7 },
+    area: {
+      left: 5.1,
+      top: 16.6,
+      width: 8.3,
+      height: 16.6,
+    },
   },
   {
     id: 17,
     name: "Dr.Jart+",
-    area: { left: 3.7, top: 33.4, width: 12.8, height: 11.2 },
+    area: {
+      left: 5.1,
+      top: 33.4,
+      width: 12.8,
+      height: 11.0,
+    },
   },
   {
     id: 18,
     name: "Tom Ford",
-    area: { left: 3.7, top: 44.9, width: 12.8, height: 11.5 },
+    area: {
+      left: 5.1,
+      top: 44.7,
+      width: 12.8,
+      height: 11.0,
+    },
   },
   {
     id: 19,
     name: "Estée Lauder",
-    area: { left: 3.7, top: 56.5, width: 12.8, height: 11.6 },
+    area: {
+      left: 5.1,
+      top: 56.1,
+      width: 12.8,
+      height: 11.0,
+    },
   },
   {
     id: 20,
     name: "Jo Malone London",
-    area: { left: 3.9, top: 68.1, width: 8.8, height: 15.7 },
+    area: {
+      left: 5.1,
+      top: 67.6,
+      width: 8.3,
+      height: 16.2,
+    },
   },
 ];
 
@@ -740,12 +841,14 @@ function saveJSON(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    // ignore
+    // Ignore.
   }
 }
 
 function uniqueNumbers(values) {
-  if (!Array.isArray(values)) return [];
+  if (!Array.isArray(values)) {
+    return [];
+  }
 
   return [
     ...new Set(
@@ -785,14 +888,18 @@ function createLocalId() {
 
   return `${Date.now()}-${Math.random()
     .toString(36)
-    .slice(2)}-${Math.random().toString(36).slice(2)}`;
+    .slice(2)}-${Math.random()
+    .toString(36)
+    .slice(2)}`;
 }
 
 function getOrCreateLocalId(key) {
   try {
     const existing = localStorage.getItem(key);
 
-    if (existing) return existing;
+    if (existing) {
+      return existing;
+    }
 
     const value = createLocalId();
 
@@ -805,7 +912,9 @@ function getOrCreateLocalId(key) {
 }
 
 function wait(ms) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms));
+  return new Promise((resolve) =>
+    window.setTimeout(resolve, ms)
+  );
 }
 
 // ==================================================
@@ -815,7 +924,9 @@ function wait(ms) {
 function loadInitialUser() {
   const current = loadJSON(USER_STORAGE_KEY, null);
 
-  if (current) return current;
+  if (current) {
+    return current;
+  }
 
   if (TEST_MODE) {
     return loadJSON(LEGACY_USER_STORAGE_KEY, null);
@@ -843,7 +954,9 @@ function loadInitialVisited() {
 function loadInitialGoodie() {
   const current = loadJSON(GOODIE_STORAGE_KEY, null);
 
-  if (current) return current;
+  if (current) {
+    return current;
+  }
 
   if (TEST_MODE) {
     return loadJSON(LEGACY_GOODIE_STORAGE_KEY, {
@@ -858,29 +971,30 @@ function loadInitialGoodie() {
 
 function detectInitialLanguage() {
   try {
-    const saved =
-      localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
 
     if (SUPPORTED_LANGUAGES.includes(saved)) {
       return saved;
     }
 
     if (TEST_MODE) {
-      const legacy =
-        localStorage.getItem(LEGACY_LANGUAGE_STORAGE_KEY);
+      const legacy = localStorage.getItem(
+        LEGACY_LANGUAGE_STORAGE_KEY
+      );
 
       if (SUPPORTED_LANGUAGES.includes(legacy)) {
         return legacy;
       }
     }
   } catch {
-    // ignore
+    // Ignore.
   }
 
-  const browserLanguage =
-    String(navigator.language || "en")
-      .slice(0, 2)
-      .toLowerCase();
+  const browserLanguage = String(
+    navigator.language || "en"
+  )
+    .slice(0, 2)
+    .toLowerCase();
 
   return SUPPORTED_LANGUAGES.includes(browserLanguage)
     ? browserLanguage
@@ -892,10 +1006,7 @@ function detectInitialLanguage() {
 // ==================================================
 
 function loadVisitProofs() {
-  const raw = loadJSON(
-    VISIT_PROOFS_STORAGE_KEY,
-    {}
-  );
+  const raw = loadJSON(VISIT_PROOFS_STORAGE_KEY, {});
 
   if (
     !raw ||
@@ -927,22 +1038,15 @@ function loadVisitProofs() {
 function saveVisitProof(boothId, qrToken) {
   const proofs = loadVisitProofs();
 
-  proofs[boothId] =
-    String(qrToken || "")
-      .trim()
-      .slice(0, 500);
+  proofs[boothId] = String(qrToken || "")
+    .trim()
+    .slice(0, 500);
 
-  saveJSON(
-    VISIT_PROOFS_STORAGE_KEY,
-    proofs
-  );
+  saveJSON(VISIT_PROOFS_STORAGE_KEY, proofs);
 }
 
 function removeVisitProofs(boothIds) {
-  if (
-    !Array.isArray(boothIds) ||
-    boothIds.length === 0
-  ) {
+  if (!Array.isArray(boothIds) || boothIds.length === 0) {
     return;
   }
 
@@ -952,23 +1056,15 @@ function removeVisitProofs(boothIds) {
     delete proofs[Number(boothId)];
   });
 
-  saveJSON(
-    VISIT_PROOFS_STORAGE_KEY,
-    proofs
-  );
+  saveJSON(VISIT_PROOFS_STORAGE_KEY, proofs);
 }
 
 function clearVisitProofs() {
-  saveJSON(
-    VISIT_PROOFS_STORAGE_KEY,
-    {}
-  );
+  saveJSON(VISIT_PROOFS_STORAGE_KEY, {});
 }
 
 function getVisitProofIds() {
-  return uniqueNumbers(
-    Object.keys(loadVisitProofs())
-  );
+  return uniqueNumbers(Object.keys(loadVisitProofs()));
 }
 
 function getVisitScanPayload() {
@@ -1038,44 +1134,33 @@ async function supabaseRpc(
     attempt <= retries;
     attempt += 1
   ) {
-    const controller =
-      new AbortController();
+    const controller = new AbortController();
 
-    const timeout =
-      window.setTimeout(() => {
-        controller.abort();
-      }, timeoutMs);
+    const timeout = window.setTimeout(() => {
+      controller.abort();
+    }, timeoutMs);
 
     try {
-      const response =
-        await fetch(
-          `${SUPABASE_URL}/rest/v1/rpc/${functionName}`,
-          {
-            method: "POST",
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/rpc/${functionName}`,
+        {
+          method: "POST",
 
-            headers: {
-              apikey:
-                SUPABASE_PUBLISHABLE_KEY,
+          headers: {
+            apikey: SUPABASE_PUBLISHABLE_KEY,
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store",
+          },
 
-              "Content-Type":
-                "application/json",
+          body: JSON.stringify(payload),
 
-              "Cache-Control":
-                "no-store",
-            },
-
-            body:
-              JSON.stringify(payload),
-
-            signal:
-              controller.signal,
-          }
-        );
+          signal: controller.signal,
+        }
+      );
 
       window.clearTimeout(timeout);
 
-      const text =
-        await response.text();
+      const text = await response.text();
 
       if (!response.ok) {
         throw new RpcError(
@@ -1104,11 +1189,8 @@ async function supabaseRpc(
       }
 
       const delay =
-        350 *
-          Math.pow(2, attempt) +
-        Math.floor(
-          Math.random() * 250
-        );
+        350 * Math.pow(2, attempt) +
+        Math.floor(Math.random() * 250);
 
       await wait(delay);
     }
@@ -1139,13 +1221,13 @@ async function stopScannerInstance(scanner) {
       await scanner.stop();
     }
   } catch {
-    // ignore
+    // Ignore.
   }
 
   try {
     scanner.clear();
   } catch {
-    // ignore
+    // Ignore.
   }
 }
 
@@ -1154,13 +1236,9 @@ function scannerConfig() {
     fps: 10,
 
     qrbox: (width, height) => {
-      const size =
-        Math.floor(
-          Math.min(
-            width,
-            height
-          ) * 0.9
-        );
+      const size = Math.floor(
+        Math.min(width, height) * 0.9
+      );
 
       return {
         width: size,
@@ -1190,25 +1268,17 @@ function chooseRearCamera(cameras) {
     "trasera",
   ];
 
-  const match =
-    cameras.find((camera) => {
-      const label =
-        String(
-          camera.label || ""
-        ).toLowerCase();
+  const match = cameras.find((camera) => {
+    const label = String(
+      camera.label || ""
+    ).toLowerCase();
 
-      return keywords.some(
-        (keyword) =>
-          label.includes(keyword)
-      );
-    });
+    return keywords.some((keyword) =>
+      label.includes(keyword)
+    );
+  });
 
-  return (
-    match ||
-    cameras[
-      cameras.length - 1
-    ]
-  );
+  return match || cameras[cameras.length - 1];
 }
 
 // ==================================================
@@ -1216,15 +1286,9 @@ function chooseRearCamera(cameras) {
 // ==================================================
 
 export default function App() {
-  const [
-    showSplash,
-    setShowSplash,
-  ] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
 
-  const [
-    language,
-    setLanguage,
-  ] = useState(
+  const [language, setLanguage] = useState(
     detectInitialLanguage
   );
 
@@ -1232,164 +1296,76 @@ export default function App() {
     translations[language] ||
     translations.en;
 
-  const [
-    user,
-    setUser,
-  ] = useState(
-    loadInitialUser
-  );
+  const [user, setUser] = useState(loadInitialUser);
 
-  const [
-    form,
-    setForm,
-  ] = useState({
+  const [form, setForm] = useState({
     firstname: "",
     lastname: "",
   });
 
-  const [
-    visited,
-    setVisited,
-  ] = useState(
+  const [visited, setVisited] = useState(
     loadInitialVisited
   );
 
-  const [
-    goodieData,
-    setGoodieData,
-  ] = useState(
+  const [goodieData, setGoodieData] = useState(
     loadInitialGoodie
   );
 
-  const [
-    scanTarget,
-    setScanTarget,
-  ] = useState(null);
+  const [scanTarget, setScanTarget] = useState(null);
+  const [scannerStatus, setScannerStatus] = useState("");
+  const [scannerRestartKey, setScannerRestartKey] = useState(0);
 
-  const [
-    scannerStatus,
-    setScannerStatus,
-  ] = useState("");
+  const [message, setMessage] = useState("");
+  const [mapError, setMapError] = useState(false);
 
-  const [
-    scannerRestartKey,
-    setScannerRestartKey,
-  ] = useState(0);
+  const [goodieApproved, setGoodieApproved] = useState(false);
+  const [goodieApprovalError, setGoodieApprovalError] = useState("");
+  const [goodieReceiving, setGoodieReceiving] = useState(false);
+  const [showGoodieSuccess, setShowGoodieSuccess] = useState(false);
 
-  const [
-    message,
-    setMessage,
-  ] = useState("");
+  const [recoveryOpen, setRecoveryOpen] = useState(false);
+  const [recoveryInput, setRecoveryInput] = useState("");
+  const [recoveryMessage, setRecoveryMessage] = useState("");
+  const [restoring, setRestoring] = useState(false);
 
-  const [
-    mapError,
-    setMapError,
-  ] = useState(false);
+  const [registering, setRegistering] = useState(false);
+  const [registrationError, setRegistrationError] = useState("");
 
-  const [
-    goodieApproved,
-    setGoodieApproved,
-  ] = useState(false);
+  const [legacyRetryTick, setLegacyRetryTick] = useState(0);
 
-  const [
-    goodieApprovalError,
-    setGoodieApprovalError,
-  ] = useState("");
+  const scannerRef = useRef(null);
+  const scanLockedRef = useRef(false);
+  const scannerSectionRef = useRef(null);
+  const mapSectionRef = useRef(null);
+  const legacyMigrationRef = useRef(false);
+  const legacyRetryTimerRef = useRef(null);
 
-  const [
-    goodieReceiving,
-    setGoodieReceiving,
-  ] = useState(false);
+  const scannerId = "qr-reader-region";
 
-  const [
-    showGoodieSuccess,
-    setShowGoodieSuccess,
-  ] = useState(false);
-
-  const [
-    recoveryOpen,
-    setRecoveryOpen,
-  ] = useState(false);
-
-  const [
-    recoveryInput,
-    setRecoveryInput,
-  ] = useState("");
-
-  const [
-    recoveryMessage,
-    setRecoveryMessage,
-  ] = useState("");
-
-  const [
-    restoring,
-    setRestoring,
-  ] = useState(false);
-
-  const [
-    registering,
-    setRegistering,
-  ] = useState(false);
-
-  const [
-    registrationError,
-    setRegistrationError,
-  ] = useState("");
-
-  const [
-    legacyRetryTick,
-    setLegacyRetryTick,
-  ] = useState(0);
-
-  const scannerRef =
-    useRef(null);
-
-  const scanLockedRef =
-    useRef(false);
-
-  const scannerSectionRef =
-    useRef(null);
-
-  const mapSectionRef =
-    useRef(null);
-
-  const legacyMigrationRef =
-    useRef(false);
-
-  const legacyRetryTimerRef =
-    useRef(null);
-
-  const scannerId =
-    "qr-reader-region";
-
-  const deviceId =
-    getOrCreateLocalId(
-      DEVICE_ID_STORAGE_KEY
-    );
+  const deviceId = getOrCreateLocalId(
+    DEVICE_ID_STORAGE_KEY
+  );
 
   const testCompleted =
     TEST_MODE &&
-    visited.length >=
-      TEST_UNLOCK_AT;
+    visited.length >= TEST_UNLOCK_AT;
 
   const goodieEligible =
     TEST_MODE
-      ? visited.length >=
-        TEST_UNLOCK_AT
-      : visited.length >=
-        GOODIE_UNLOCK_AT;
+      ? visited.length >= TEST_UNLOCK_AT
+      : visited.length >= GOODIE_UNLOCK_AT;
 
-  const goodieCollected =
-    Boolean(
-      goodieData?.collectedAt
-    );
+  const goodieCollected = Boolean(
+    goodieData?.collectedAt
+  );
 
-  const progress =
-    Math.round(
-      (visited.length /
-        booths.length) *
-        100
-    );
+  const progress = Math.round(
+    (visited.length / booths.length) * 100
+  );
+
+  // ==================================================
+  // STORAGE
+  // ==================================================
 
   useEffect(() => {
     try {
@@ -1398,18 +1374,18 @@ export default function App() {
         language
       );
     } catch {
-      // ignore
+      // Ignore.
     }
   }, [language]);
 
   useEffect(() => {
-    const timer =
-      window.setTimeout(() => {
-        setShowSplash(false);
-      }, 2200);
+    const timer = window.setTimeout(() => {
+      setShowSplash(false);
+    }, 2200);
 
-    return () =>
+    return () => {
       window.clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -1431,25 +1407,21 @@ export default function App() {
       return;
     }
 
-    const sessions =
-      loadJSON(
-        SESSIONS_STORAGE_KEY,
-        {}
-      );
+    const sessions = loadJSON(
+      SESSIONS_STORAGE_KEY,
+      {}
+    );
 
-    const key =
-      normalizeRecoveryCode(
-        user.recoveryCode
-      );
+    const key = normalizeRecoveryCode(
+      user.recoveryCode
+    );
 
     sessions[key] = {
       user,
       visited,
       goodieData,
       language,
-
-      savedAt:
-        new Date().toISOString(),
+      savedAt: new Date().toISOString(),
     };
 
     saveJSON(
@@ -1463,6 +1435,10 @@ export default function App() {
     language,
   ]);
 
+  // ==================================================
+  // APPLY SERVER STATE
+  // ==================================================
+
   const applyServerState = (
     state,
     options = {}
@@ -1473,29 +1449,25 @@ export default function App() {
 
     const {
       mergeLocalProofs = true,
-
       clientRegistrationId =
         user?.clientRegistrationId ||
         null,
     } = options;
 
-    const serverVisited =
-      uniqueNumbers(
-        state.visited || []
-      );
+    const serverVisited = uniqueNumbers(
+      state.visited || []
+    );
 
-    const localProofIds =
-      mergeLocalProofs
-        ? getVisitProofIds()
-        : [];
+    const localProofIds = mergeLocalProofs
+      ? getVisitProofIds()
+      : [];
 
-    const nextVisited =
-      mergeLocalProofs
-        ? uniqueNumbers([
-            ...serverVisited,
-            ...localProofIds,
-          ])
-        : serverVisited;
+    const nextVisited = mergeLocalProofs
+      ? uniqueNumbers([
+          ...serverVisited,
+          ...localProofIds,
+        ])
+      : serverVisited;
 
     const nextLanguage =
       SUPPORTED_LANGUAGES.includes(
@@ -1505,25 +1477,13 @@ export default function App() {
         : language;
 
     const nextUser = {
-      id:
-        state.id,
-
-      firstname:
-        state.firstname,
-
-      lastname:
-        state.lastname,
-
-      language:
-        nextLanguage,
-
-      recoveryCode:
-        state.recoveryCode,
-
+      id: state.id,
+      firstname: state.firstname,
+      lastname: state.lastname,
+      language: nextLanguage,
+      recoveryCode: state.recoveryCode,
       clientRegistrationId,
-
-      dbSynced:
-        true,
+      dbSynced: true,
     };
 
     const nextGoodie = {
@@ -1551,113 +1511,101 @@ export default function App() {
     setVisited(nextVisited);
     setGoodieData(nextGoodie);
 
-    if (
-      nextLanguage !== language
-    ) {
-      setLanguage(
-        nextLanguage
-      );
+    if (nextLanguage !== language) {
+      setLanguage(nextLanguage);
     }
   };
 
-  const syncAllVisitProofs =
-    async (
-      recoveryCode,
-      options = {}
-    ) => {
-      if (!recoveryCode) {
+  // ==================================================
+  // FULL STATE SYNC
+  // ==================================================
+
+  const syncAllVisitProofs = async (
+    recoveryCode,
+    options = {}
+  ) => {
+    if (!recoveryCode) {
+      return {
+        ok: false,
+        sessionNotFound: true,
+      };
+    }
+
+    const {
+      retries = 1,
+      timeoutMs = 7000,
+    } = options;
+
+    const scans = getVisitScanPayload();
+
+    try {
+      const result = await supabaseRpc(
+        "sync_visits",
+        {
+          p_recovery_code: recoveryCode,
+          p_scans: scans,
+        },
+        {
+          retries,
+          timeoutMs,
+        }
+      );
+
+      if (
+        !result ||
+        result.status === "session_not_found"
+      ) {
         return {
           ok: false,
           sessionNotFound: true,
         };
       }
 
-      const {
-        retries = 1,
-        timeoutMs = 7000,
-      } = options;
-
-      const scans =
-        getVisitScanPayload();
-
-      try {
-        const result =
-          await supabaseRpc(
-            "sync_visits",
-            {
-              p_recovery_code:
-                recoveryCode,
-
-              p_scans:
-                scans,
-            },
-            {
-              retries,
-              timeoutMs,
-            }
-          );
-
-        if (
-          !result ||
-          result.status ===
-            "session_not_found"
-        ) {
-          return {
-            ok: false,
-            sessionNotFound:
-              true,
-          };
-        }
-
-        if (
-          result.status !== "ok"
-        ) {
-          return {
-            ok: false,
-          };
-        }
-
-        const invalidBooths =
-          uniqueNumbers(
-            result.invalidBooths ||
-              []
-          );
-
-        if (
-          invalidBooths.length >
-          0
-        ) {
-          removeVisitProofs(
-            invalidBooths
-          );
-        }
-
-        applyServerState(
-          result.state,
-          {
-            mergeLocalProofs:
-              true,
-          }
-        );
-
-        return {
-          ok: true,
-          invalidBooths,
-          state: result.state,
-        };
-      } catch (error) {
-        console.error(
-          "Visit sync failed:",
-          error
-        );
-
+      if (result.status !== "ok") {
         return {
           ok: false,
-          networkError: true,
-          error,
         };
       }
-    };
+
+      const invalidBooths = uniqueNumbers(
+        result.invalidBooths || []
+      );
+
+      if (invalidBooths.length > 0) {
+        removeVisitProofs(
+          invalidBooths
+        );
+      }
+
+      applyServerState(
+        result.state,
+        {
+          mergeLocalProofs: true,
+        }
+      );
+
+      return {
+        ok: true,
+        invalidBooths,
+        state: result.state,
+      };
+    } catch (error) {
+      console.error(
+        "Visit sync failed:",
+        error
+      );
+
+      return {
+        ok: false,
+        networkError: true,
+        error,
+      };
+    }
+  };
+
+  // ==================================================
+  // BACKGROUND SYNC
+  // ==================================================
 
   useEffect(() => {
     if (
@@ -1667,43 +1615,38 @@ export default function App() {
       return undefined;
     }
 
-    let cancelled =
-      false;
+    let cancelled = false;
 
-    const syncNow =
-      async () => {
-        if (cancelled) {
-          return;
+    const syncNow = async () => {
+      if (cancelled) {
+        return;
+      }
+
+      await syncAllVisitProofs(
+        user.recoveryCode,
+        {
+          retries: 1,
+          timeoutMs: 6000,
         }
+      );
+    };
 
-        await syncAllVisitProofs(
-          user.recoveryCode,
-          {
-            retries: 1,
-            timeoutMs: 6000,
-          }
-        );
-      };
+    const handleOnline = () => {
+      syncNow();
+    };
 
-    const handleOnline =
-      () => {
+    const handleFocus = () => {
+      syncNow();
+    };
+
+    const handleVisibility = () => {
+      if (
+        document.visibilityState ===
+        "visible"
+      ) {
         syncNow();
-      };
-
-    const handleFocus =
-      () => {
-        syncNow();
-      };
-
-    const handleVisibility =
-      () => {
-        if (
-          document.visibilityState ===
-          "visible"
-        ) {
-          syncNow();
-        }
-      };
+      }
+    };
 
     syncNow();
 
@@ -1745,6 +1688,10 @@ export default function App() {
     user?.recoveryCode,
   ]);
 
+  // ==================================================
+  // LEGACY MIGRATION
+  // ==================================================
+
   useEffect(() => {
     if (
       !user ||
@@ -1754,166 +1701,147 @@ export default function App() {
       return;
     }
 
-    legacyMigrationRef.current =
-      true;
+    legacyMigrationRef.current = true;
+    let cancelled = false;
 
-    let cancelled =
-      false;
-
-    const migrate =
-      async () => {
-        try {
-          if (
-            user.recoveryCode
-          ) {
-            try {
-              const existing =
-                await supabaseRpc(
-                  "get_participant_state",
-                  {
-                    p_recovery_code:
-                      user.recoveryCode,
-                  },
-                  {
-                    retries: 0,
-                    timeoutMs: 5000,
-                  }
-                );
-
-              if (
-                existing &&
-                !cancelled
-              ) {
-                if (TEST_MODE) {
-                  visited.forEach(
-                    (boothId) => {
-                      saveVisitProof(
-                        boothId,
-                        TEST_QR_VALUE
-                      );
-                    }
-                  );
-                }
-
-                applyServerState(
-                  existing,
-                  {
-                    mergeLocalProofs:
-                      true,
-                  }
-                );
-
-                await syncAllVisitProofs(
-                  existing.recoveryCode,
-                  {
-                    retries: 1,
-                    timeoutMs: 6000,
-                  }
-                );
-
-                return;
-              }
-            } catch {
-              // continue
-            }
-          }
-
-          const legacyBase =
-            String(
-              user.id ||
-                getOrCreateLocalId(
-                  REGISTRATION_ID_STORAGE_KEY
-                )
-            );
-
-          const legacyClientId =
-            `legacy-${legacyBase}`.slice(
-              0,
-              95
-            );
-
-          const state =
-            await supabaseRpc(
-              "register_participant",
+    const migrate = async () => {
+      try {
+        if (user.recoveryCode) {
+          try {
+            const existing = await supabaseRpc(
+              "get_participant_state",
               {
-                p_first_name:
-                  user.firstname,
-
-                p_last_name:
-                  user.lastname,
-
-                p_language:
-                  user.language ||
-                  language,
-
-                p_client_registration_id:
-                  legacyClientId,
+                p_recovery_code:
+                  user.recoveryCode,
               },
               {
-                retries: 2,
-                timeoutMs: 8000,
+                retries: 0,
+                timeoutMs: 5000,
               }
             );
 
-          if (
-            !state ||
-            cancelled
-          ) {
-            return;
-          }
-
-          if (TEST_MODE) {
-            visited.forEach(
-              (boothId) => {
-                saveVisitProof(
-                  boothId,
-                  TEST_QR_VALUE
+            if (
+              existing &&
+              !cancelled
+            ) {
+              if (TEST_MODE) {
+                visited.forEach(
+                  (boothId) => {
+                    saveVisitProof(
+                      boothId,
+                      TEST_QR_VALUE
+                    );
+                  }
                 );
               }
-            );
-          }
 
-          applyServerState(
-            state,
-            {
-              mergeLocalProofs:
-                true,
-
-              clientRegistrationId:
-                legacyClientId,
-            }
-          );
-
-          await syncAllVisitProofs(
-            state.recoveryCode,
-            {
-              retries: 1,
-              timeoutMs: 6000,
-            }
-          );
-        } catch (error) {
-          console.error(
-            "Legacy migration failed:",
-            error
-          );
-
-          legacyMigrationRef.current =
-            false;
-
-          if (!cancelled) {
-            legacyRetryTimerRef.current =
-              window.setTimeout(
-                () => {
-                  setLegacyRetryTick(
-                    (value) =>
-                      value + 1
-                  );
-                },
-                5000
+              applyServerState(
+                existing,
+                {
+                  mergeLocalProofs: true,
+                }
               );
+
+              await syncAllVisitProofs(
+                existing.recoveryCode,
+                {
+                  retries: 1,
+                  timeoutMs: 6000,
+                }
+              );
+
+              return;
+            }
+          } catch {
+            // Continue.
           }
         }
-      };
+
+        const legacyBase = String(
+          user.id ||
+            getOrCreateLocalId(
+              REGISTRATION_ID_STORAGE_KEY
+            )
+        );
+
+        const legacyClientId =
+          `legacy-${legacyBase}`.slice(
+            0,
+            95
+          );
+
+        const state = await supabaseRpc(
+          "register_participant",
+          {
+            p_first_name:
+              user.firstname,
+            p_last_name:
+              user.lastname,
+            p_language:
+              user.language ||
+              language,
+            p_client_registration_id:
+              legacyClientId,
+          },
+          {
+            retries: 2,
+            timeoutMs: 8000,
+          }
+        );
+
+        if (
+          !state ||
+          cancelled
+        ) {
+          return;
+        }
+
+        if (TEST_MODE) {
+          visited.forEach(
+            (boothId) => {
+              saveVisitProof(
+                boothId,
+                TEST_QR_VALUE
+              );
+            }
+          );
+        }
+
+        applyServerState(
+          state,
+          {
+            mergeLocalProofs: true,
+            clientRegistrationId:
+              legacyClientId,
+          }
+        );
+
+        await syncAllVisitProofs(
+          state.recoveryCode,
+          {
+            retries: 1,
+            timeoutMs: 6000,
+          }
+        );
+      } catch (error) {
+        console.error(
+          "Legacy migration failed:",
+          error
+        );
+
+        legacyMigrationRef.current = false;
+
+        if (!cancelled) {
+          legacyRetryTimerRef.current =
+            window.setTimeout(() => {
+              setLegacyRetryTick(
+                (value) =>
+                  value + 1
+              );
+            }, 5000);
+        }
+      }
+    };
 
     migrate();
 
@@ -1935,117 +1863,115 @@ export default function App() {
     visited,
   ]);
 
-  const register =
-    async () => {
-      if (registering) {
-        return;
+  // ==================================================
+  // REGISTER
+  // ==================================================
+
+  const register = async () => {
+    if (registering) {
+      return;
+    }
+
+    const firstname =
+      form.firstname.trim();
+
+    const lastname =
+      form.lastname.trim();
+
+    setRegistrationError("");
+
+    if (
+      !firstname ||
+      !lastname
+    ) {
+      setRegistrationError(
+        t.nameRequired
+      );
+
+      return;
+    }
+
+    setRegistering(true);
+
+    const clientRegistrationId =
+      getOrCreateLocalId(
+        REGISTRATION_ID_STORAGE_KEY
+      );
+
+    try {
+      const state = await supabaseRpc(
+        "register_participant",
+        {
+          p_first_name: firstname,
+          p_last_name: lastname,
+          p_language: language,
+          p_client_registration_id:
+            clientRegistrationId,
+        },
+        {
+          retries: 2,
+          timeoutMs: 8000,
+        }
+      );
+
+      if (!state) {
+        throw new Error(
+          "Empty registration response"
+        );
       }
 
-      const firstname =
-        form.firstname.trim();
+      clearVisitProofs();
 
-      const lastname =
-        form.lastname.trim();
+      setVisited([]);
 
-      setRegistrationError("");
+      setGoodieData({
+        collectedAt: null,
+      });
+
+      applyServerState(
+        state,
+        {
+          mergeLocalProofs: false,
+          clientRegistrationId,
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Registration failed:",
+        error
+      );
 
       if (
-        !firstname ||
-        !lastname
+        serverErrorContains(
+          error,
+          "REGISTRATION_CLOSED"
+        )
       ) {
         setRegistrationError(
-          t.nameRequired
+          t.registrationClosed
         );
-
-        return;
+      } else if (
+        serverErrorContains(
+          error,
+          "REGISTRATION_LIMIT_REACHED"
+        )
+      ) {
+        setRegistrationError(
+          t.registrationLimit
+        );
+      } else {
+        setRegistrationError(
+          t.registrationError
+        );
       }
+    } finally {
+      setRegistering(false);
+    }
+  };
 
-      setRegistering(true);
-
-      const clientRegistrationId =
-        getOrCreateLocalId(
-          REGISTRATION_ID_STORAGE_KEY
-        );
-
-      try {
-        const state =
-          await supabaseRpc(
-            "register_participant",
-            {
-              p_first_name:
-                firstname,
-
-              p_last_name:
-                lastname,
-
-              p_language:
-                language,
-
-              p_client_registration_id:
-                clientRegistrationId,
-            },
-            {
-              retries: 2,
-              timeoutMs: 8000,
-            }
-          );
-
-        if (!state) {
-          throw new Error(
-            "Empty registration response"
-          );
-        }
-
-        clearVisitProofs();
-
-        setVisited([]);
-
-        setGoodieData({
-          collectedAt: null,
-        });
-
-        applyServerState(
-          state,
-          {
-            mergeLocalProofs:
-              false,
-
-            clientRegistrationId,
-          }
-        );
-      } catch (error) {
-        console.error(
-          "Registration failed:",
-          error
-        );
-
-        if (
-          serverErrorContains(
-            error,
-            "REGISTRATION_CLOSED"
-          )
-        ) {
-          setRegistrationError(
-            t.registrationClosed
-          );
-        } else if (
-          serverErrorContains(
-            error,
-            "REGISTRATION_LIMIT_REACHED"
-          )
-        ) {
-          setRegistrationError(
-            t.registrationLimit
-          );
-        } else {
-          setRegistrationError(
-            t.registrationError
-          );
-        }
-      } finally {
-        setRegistering(false);
-      }
-    };
+  // ==================================================
+  // LOCAL RECOVERY
+  // ==================================================
 
   const restoreLocalSession = (
     recoveryCode
@@ -2055,31 +1981,25 @@ export default function App() {
         recoveryCode
       );
 
-    const currentSessions =
-      loadJSON(
-        SESSIONS_STORAGE_KEY,
-        {}
-      );
+    const currentSessions = loadJSON(
+      SESSIONS_STORAGE_KEY,
+      {}
+    );
 
     let session =
-      currentSessions[
-        normalized
-      ];
+      currentSessions[normalized];
 
     if (
       !session &&
       TEST_MODE
     ) {
-      const legacySessions =
-        loadJSON(
-          LEGACY_SESSIONS_STORAGE_KEY,
-          {}
-        );
+      const legacySessions = loadJSON(
+        LEGACY_SESSIONS_STORAGE_KEY,
+        {}
+      );
 
       session =
-        legacySessions[
-          normalized
-        ];
+        legacySessions[normalized];
     }
 
     if (!session?.user) {
@@ -2132,204 +2052,186 @@ export default function App() {
     return true;
   };
 
-  const restoreSession =
-    async () => {
-      if (restoring) {
+  // ==================================================
+  // RECOVERY DATABASE
+  // ==================================================
+
+  const restoreSession = async () => {
+    if (restoring) {
+      return;
+    }
+
+    const code = recoveryInput.trim();
+
+    setRecoveryMessage("");
+
+    if (
+      normalizeRecoveryCode(
+        code
+      ).length !== 8
+    ) {
+      setRecoveryMessage(
+        t.recoveryRequired
+      );
+
+      return;
+    }
+
+    setRestoring(true);
+
+    try {
+      const state = await supabaseRpc(
+        "get_participant_state",
+        {
+          p_recovery_code:
+            code,
+        },
+        {
+          retries: 1,
+          timeoutMs: 8000,
+        }
+      );
+
+      if (!state) {
+        setRecoveryMessage(
+          t.recoveryNotFound
+        );
+
         return;
       }
 
-      const code =
-        recoveryInput.trim();
+      clearVisitProofs();
+
+      applyServerState(
+        state,
+        {
+          mergeLocalProofs: false,
+          clientRegistrationId:
+            null,
+        }
+      );
 
       setRecoveryMessage("");
+      setRecoveryInput("");
+      setRecoveryOpen(false);
+      setGoodieApproved(false);
+      setShowGoodieSuccess(false);
+    } catch (error) {
+      console.error(
+        "Recovery failed:",
+        error
+      );
 
-      if (
-        normalizeRecoveryCode(
+      const localRestored =
+        restoreLocalSession(
           code
-        ).length !== 8
-      ) {
+        );
+
+      if (!localRestored) {
         setRecoveryMessage(
-          t.recoveryRequired
+          t.recoveryConnectionError
         );
-
-        return;
       }
+    } finally {
+      setRestoring(false);
+    }
+  };
 
-      setRestoring(true);
+  // ==================================================
+  // SCROLL
+  // ==================================================
 
-      try {
-        const state =
-          await supabaseRpc(
-            "get_participant_state",
-            {
-              p_recovery_code:
-                code,
-            },
-            {
-              retries: 1,
-              timeoutMs: 8000,
-            }
-          );
+  const scrollToScanner = () => {
+    window.setTimeout(() => {
+      scannerSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 250);
+  };
 
-        if (!state) {
-          setRecoveryMessage(
-            t.recoveryNotFound
-          );
+  const scrollToMap = () => {
+    window.setTimeout(() => {
+      mapSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 250);
+  };
 
-          return;
-        }
+  // ==================================================
+  // SCANNER CONTROL
+  // ==================================================
 
-        clearVisitProofs();
+  const stopScanner = async () => {
+    const scanner =
+      scannerRef.current;
 
-        applyServerState(
-          state,
-          {
-            mergeLocalProofs:
-              false,
+    if (!scanner) {
+      return;
+    }
 
-            clientRegistrationId:
-              null,
-          }
-        );
+    scannerRef.current = null;
 
-        setRecoveryMessage("");
-        setRecoveryInput("");
-        setRecoveryOpen(false);
-        setGoodieApproved(false);
-        setShowGoodieSuccess(false);
-      } catch (error) {
-        console.error(
-          "Recovery failed:",
-          error
-        );
+    await stopScannerInstance(scanner);
+  };
 
-        const localRestored =
-          restoreLocalSession(
-            code
-          );
+  const closeScanner = async () => {
+    scanLockedRef.current = true;
 
-        if (!localRestored) {
-          setRecoveryMessage(
-            t.recoveryConnectionError
-          );
-        }
-      } finally {
-        setRestoring(false);
-      }
-    };
+    await stopScanner();
 
-  const scrollToScanner =
-    () => {
-      window.setTimeout(
-        () => {
-          scannerSectionRef.current
-            ?.scrollIntoView({
-              behavior:
-                "smooth",
+    setScanTarget(null);
+    setScannerStatus("");
 
-              block:
-                "start",
-            });
-        },
-        250
-      );
-    };
+    scanLockedRef.current = false;
 
-  const scrollToMap =
-    () => {
-      window.setTimeout(
-        () => {
-          mapSectionRef.current
-            ?.scrollIntoView({
-              behavior:
-                "smooth",
+    scrollToMap();
+  };
 
-              block:
-                "start",
-            });
-        },
-        250
-      );
-    };
-
-  const stopScanner =
-    async () => {
-      const scanner =
-        scannerRef.current;
-
-      if (!scanner) {
-        return;
-      }
-
-      scannerRef.current =
-        null;
-
-      await stopScannerInstance(
-        scanner
-      );
-    };
-
-  const closeScanner =
-    async () => {
-      scanLockedRef.current =
-        true;
-
-      await stopScanner();
-
-      setScanTarget(null);
-      setScannerStatus("");
-
-      scanLockedRef.current =
-        false;
-
-      scrollToMap();
-    };
-
-  const openBoothScanner =
-    async (booth) => {
-      if (
-        visited.includes(
-          booth.id
+  const openBoothScanner = async (
+    booth
+  ) => {
+    if (
+      visited.includes(booth.id)
+    ) {
+      setMessage(
+        t.alreadyVisited(
+          booth.name
         )
-      ) {
-        setMessage(
-          t.alreadyVisited(
-            booth.name
-          )
-        );
+      );
 
-        return;
-      }
+      return;
+    }
 
-      await stopScanner();
+    await stopScanner();
 
-      setMessage("");
-      setScannerStatus("");
+    setMessage("");
+    setScannerStatus("");
 
-      setScanTarget({
-        type: "booth",
-        booth,
-      });
-    };
+    setScanTarget({
+      type: "booth",
+      booth,
+    });
+  };
 
-  const openGoodieScanner =
-    async () => {
-      if (
-        !goodieEligible ||
-        goodieCollected
-      ) {
-        return;
-      }
+  const openGoodieScanner = async () => {
+    if (
+      !goodieEligible ||
+      goodieCollected
+    ) {
+      return;
+    }
 
-      await stopScanner();
+    await stopScanner();
 
-      setMessage("");
-      setScannerStatus("");
+    setMessage("");
+    setScannerStatus("");
 
-      setScanTarget({
-        type: "goodie",
-      });
-    };
+    setScanTarget({
+      type: "goodie",
+    });
+  };
 
   useEffect(() => {
     if (!scanTarget) {
@@ -2375,16 +2277,17 @@ export default function App() {
     };
   }, [scanTarget]);
 
+  // ==================================================
+  // QR SCANNER
+  // ==================================================
+
   useEffect(() => {
     if (!scanTarget) {
       return undefined;
     }
 
-    let cancelled =
-      false;
-
-    let ownedScanner =
-      null;
+    let cancelled = false;
+    let ownedScanner = null;
 
     const cleanupOwnedScanner =
       async () => {
@@ -2395,8 +2298,7 @@ export default function App() {
         const scanner =
           ownedScanner;
 
-        ownedScanner =
-          null;
+        ownedScanner = null;
 
         if (
           scannerRef.current ===
@@ -2411,370 +2313,193 @@ export default function App() {
         );
       };
 
-    const startScanner =
-      async () => {
-        scanLockedRef.current =
-          false;
+    const startScanner = async () => {
+      scanLockedRef.current = false;
 
-        setScannerStatus(
-          t.startingCamera
+      setScannerStatus(
+        t.startingCamera
+      );
+
+      await wait(350);
+
+      if (cancelled) {
+        return;
+      }
+
+      const scannerElement =
+        document.getElementById(
+          scannerId
         );
 
-        await wait(350);
+      if (!scannerElement) {
+        setScannerStatus(
+          t.scannerCouldNotLoad
+        );
 
-        if (cancelled) {
+        return;
+      }
+
+      const handleSuccess = async (
+        decodedText
+      ) => {
+        if (
+          cancelled ||
+          scanLockedRef.current
+        ) {
           return;
         }
 
-        const scannerElement =
-          document.getElementById(
-            scannerId
+        scanLockedRef.current = true;
+
+        const rawQr = String(
+          decodedText || ""
+        )
+          .trim()
+          .slice(0, 500);
+
+        const normalized =
+          normalizeQR(rawQr);
+
+        if (
+          TEST_MODE &&
+          normalized !==
+            normalizeQR(
+              TEST_QR_VALUE
+            )
+        ) {
+          setMessage(
+            t.wrongTestQr(rawQr)
           );
 
-        if (!scannerElement) {
+          scanLockedRef.current = false;
+
+          return;
+        }
+
+        // ========================================
+        // GOODIE
+        // ========================================
+
+        if (
+          scanTarget.type ===
+          "goodie"
+        ) {
           setScannerStatus(
-            t.scannerCouldNotLoad
+            t.checkingGoodie
           );
 
-          return;
-        }
-
-        const handleSuccess =
-          async (
-            decodedText
-          ) => {
-            if (
-              cancelled ||
-              scanLockedRef.current
-            ) {
-              return;
-            }
-
-            scanLockedRef.current =
-              true;
-
-            const rawQr =
-              String(
-                decodedText || ""
-              )
-                .trim()
-                .slice(0, 500);
-
-            const normalized =
-              normalizeQR(
-                rawQr
-              );
-
-            if (
-              TEST_MODE &&
-              normalized !==
-                normalizeQR(
-                  TEST_QR_VALUE
-                )
-            ) {
-              setMessage(
-                t.wrongTestQr(
-                  rawQr
-                )
-              );
-
-              scanLockedRef.current =
-                false;
-
-              return;
-            }
-
-            if (
-              scanTarget.type ===
-              "goodie"
-            ) {
-              setScannerStatus(
-                t.checkingGoodie
-              );
-
-              const syncResult =
-                await syncAllVisitProofs(
-                  user?.recoveryCode,
-                  {
-                    retries: 1,
-                    timeoutMs: 7000,
-                  }
-                );
-
-              if (!syncResult.ok) {
-                if (
-                  syncResult.sessionNotFound
-                ) {
-                  setMessage(
-                    t.sessionProblem
-                  );
-                } else {
-                  setMessage(
-                    t.goodieConnection
-                  );
-                }
-
-                scanLockedRef.current =
-                  false;
-
-                return;
+          const syncResult =
+            await syncAllVisitProofs(
+              user?.recoveryCode,
+              {
+                retries: 1,
+                timeoutMs: 7000,
               }
-
-              try {
-                const approval =
-                  await supabaseRpc(
-                    "approve_goodie_bag",
-                    {
-                      p_recovery_code:
-                        user?.recoveryCode,
-
-                      p_qr_token:
-                        rawQr,
-
-                      p_device_id:
-                        deviceId,
-                    },
-                    {
-                      retries: 2,
-                      timeoutMs: 8000,
-                    }
-                  );
-
-                if (!approval) {
-                  throw new Error(
-                    "Empty Goodie approval response"
-                  );
-                }
-
-                if (
-                  approval.state
-                ) {
-                  applyServerState(
-                    approval.state,
-                    {
-                      mergeLocalProofs:
-                        true,
-                    }
-                  );
-                }
-
-                if (
-                  approval.status ===
-                  "approved"
-                ) {
-                  await cleanupOwnedScanner();
-
-                  setScanTarget(null);
-                  setScannerStatus("");
-                  setGoodieApprovalError("");
-                  setGoodieApproved(true);
-
-                  scanLockedRef.current =
-                    false;
-
-                  return;
-                }
-
-                if (
-                  approval.status ===
-                  "invalid_qr"
-                ) {
-                  setMessage(
-                    t.wrongGoodieQr
-                  );
-
-                  scanLockedRef.current =
-                    false;
-
-                  return;
-                }
-
-                if (
-                  approval.status ===
-                  "already_collected"
-                ) {
-                  if (
-                    approval.collectedAt
-                  ) {
-                    setGoodieData({
-                      collectedAt:
-                        approval.collectedAt,
-                    });
-                  }
-
-                  await cleanupOwnedScanner();
-
-                  setScanTarget(null);
-                  setScannerStatus("");
-                  setMessage(
-                    t.goodieAlreadyCollected
-                  );
-
-                  scanLockedRef.current =
-                    false;
-
-                  scrollToMap();
-
-                  return;
-                }
-
-                if (
-                  approval.status ===
-                  "already_approved"
-                ) {
-                  await cleanupOwnedScanner();
-
-                  setScanTarget(null);
-                  setScannerStatus("");
-                  setMessage(
-                    t.goodieAlreadyProcessing
-                  );
-
-                  scanLockedRef.current =
-                    false;
-
-                  scrollToMap();
-
-                  return;
-                }
-
-                if (
-                  approval.status ===
-                  "not_eligible"
-                ) {
-                  await cleanupOwnedScanner();
-
-                  setScanTarget(null);
-                  setScannerStatus("");
-
-                  setMessage(
-                    t.goodieNotEligible(
-                      approval.required ||
-                        (TEST_MODE
-                          ? TEST_UNLOCK_AT
-                          : GOODIE_UNLOCK_AT)
-                    )
-                  );
-
-                  scanLockedRef.current =
-                    false;
-
-                  scrollToMap();
-
-                  return;
-                }
-
-                if (
-                  approval.status ===
-                  "session_not_found"
-                ) {
-                  await cleanupOwnedScanner();
-
-                  setScanTarget(null);
-
-                  setMessage(
-                    t.sessionProblem
-                  );
-
-                  scanLockedRef.current =
-                    false;
-
-                  scrollToMap();
-
-                  return;
-                }
-
-                throw new Error(
-                  `Unexpected Goodie status: ${approval.status}`
-                );
-              } catch (error) {
-                console.error(
-                  "Goodie approval failed:",
-                  error
-                );
-
-                setMessage(
-                  t.goodieConnection
-                );
-
-                scanLockedRef.current =
-                  false;
-
-                return;
-              }
-            }
-
-            const booth =
-              scanTarget.booth;
-
-            setScannerStatus(
-              t.savingVisit
             );
 
-            saveVisitProof(
-              booth.id,
-              rawQr
-            );
-
-            setVisited(
-              (current) =>
-                uniqueNumbers([
-                  ...current,
-                  booth.id,
-                ])
-            );
-
-            const syncResult =
-              await syncAllVisitProofs(
-                user?.recoveryCode,
-                {
-                  retries: 0,
-                  timeoutMs: 5000,
-                }
-              );
-
-            if (
-              syncResult.ok &&
-              syncResult.invalidBooths?.includes(
-                booth.id
-              )
-            ) {
-              setMessage(
-                TEST_MODE
-                  ? t.wrongTestQr(
-                      rawQr
-                    )
-                  : t.wrongBoothQr(
-                      booth.name
-                    )
-              );
-
-              setScannerStatus(
-                TEST_MODE
-                  ? t.testScanBooth
-                  : t.cameraReady
-              );
-
-              scanLockedRef.current =
-                false;
-
-              return;
-            }
-
+          if (!syncResult.ok) {
             if (
               syncResult.sessionNotFound
             ) {
               setMessage(
                 t.sessionProblem
               );
+            } else {
+              setMessage(
+                t.goodieConnection
+              );
+            }
+
+            scanLockedRef.current = false;
+
+            return;
+          }
+
+          try {
+            const approval =
+              await supabaseRpc(
+                "approve_goodie_bag",
+                {
+                  p_recovery_code:
+                    user?.recoveryCode,
+                  p_qr_token:
+                    rawQr,
+                  p_device_id:
+                    deviceId,
+                },
+                {
+                  retries: 2,
+                  timeoutMs: 8000,
+                }
+              );
+
+            if (!approval) {
+              throw new Error(
+                "Empty Goodie approval response"
+              );
+            }
+
+            if (approval.state) {
+              applyServerState(
+                approval.state,
+                {
+                  mergeLocalProofs: true,
+                }
+              );
+            }
+
+            if (
+              approval.status ===
+              "approved"
+            ) {
+              await cleanupOwnedScanner();
+
+              setScanTarget(null);
+              setScannerStatus("");
+              setGoodieApprovalError("");
+              setGoodieApproved(true);
+
+              scanLockedRef.current = false;
+
+              return;
+            }
+
+            if (
+              approval.status ===
+              "invalid_qr"
+            ) {
+              setMessage(
+                t.wrongGoodieQr
+              );
+
+              scanLockedRef.current = false;
+
+              return;
+            }
+
+            if (
+              approval.status ===
+              "already_collected"
+            ) {
+              if (
+                approval.collectedAt
+              ) {
+                setGoodieData({
+                  collectedAt:
+                    approval.collectedAt,
+                });
+              }
 
               await cleanupOwnedScanner();
 
               setScanTarget(null);
               setScannerStatus("");
 
-              scanLockedRef.current =
-                false;
+              setMessage(
+                t.goodieAlreadyCollected
+              );
+
+              scanLockedRef.current = false;
 
               scrollToMap();
 
@@ -2782,38 +2507,239 @@ export default function App() {
             }
 
             if (
-              syncResult.ok
+              approval.status ===
+              "already_approved"
             ) {
+              await cleanupOwnedScanner();
+
+              setScanTarget(null);
+              setScannerStatus("");
+
               setMessage(
-                t.boothCollected(
-                  booth.name
-                )
+                t.goodieAlreadyProcessing
               );
-            } else {
-              setMessage(
-                t.boothSavedOffline(
-                  booth.name
-                )
-              );
+
+              scanLockedRef.current = false;
+
+              scrollToMap();
+
+              return;
             }
 
-            await cleanupOwnedScanner();
+            if (
+              approval.status ===
+              "not_eligible"
+            ) {
+              await cleanupOwnedScanner();
 
-            setScanTarget(null);
-            setScannerStatus("");
+              setScanTarget(null);
+              setScannerStatus("");
 
-            scanLockedRef.current =
-              false;
+              setMessage(
+                t.goodieNotEligible(
+                  approval.required ||
+                    (TEST_MODE
+                      ? TEST_UNLOCK_AT
+                      : GOODIE_UNLOCK_AT)
+                )
+              );
 
-            scrollToMap();
-          };
+              scanLockedRef.current = false;
 
-        const handleFailure =
-          () => {
-            // ignore
-          };
+              scrollToMap();
+
+              return;
+            }
+
+            if (
+              approval.status ===
+              "session_not_found"
+            ) {
+              await cleanupOwnedScanner();
+
+              setScanTarget(null);
+
+              setMessage(
+                t.sessionProblem
+              );
+
+              scanLockedRef.current = false;
+
+              scrollToMap();
+
+              return;
+            }
+
+            throw new Error(
+              `Unexpected Goodie status: ${approval.status}`
+            );
+          } catch (error) {
+            console.error(
+              "Goodie approval failed:",
+              error
+            );
+
+            setMessage(
+              t.goodieConnection
+            );
+
+            scanLockedRef.current = false;
+
+            return;
+          }
+        }
+
+        // ========================================
+        // BOOTH
+        // ========================================
+
+        const booth =
+          scanTarget.booth;
+
+        setScannerStatus(
+          t.savingVisit
+        );
+
+        saveVisitProof(
+          booth.id,
+          rawQr
+        );
+
+        setVisited(
+          (current) =>
+            uniqueNumbers([
+              ...current,
+              booth.id,
+            ])
+        );
+
+        const syncResult =
+          await syncAllVisitProofs(
+            user?.recoveryCode,
+            {
+              retries: 0,
+              timeoutMs: 5000,
+            }
+          );
+
+        if (
+          syncResult.ok &&
+          syncResult.invalidBooths?.includes(
+            booth.id
+          )
+        ) {
+          setMessage(
+            TEST_MODE
+              ? t.wrongTestQr(
+                  rawQr
+                )
+              : t.wrongBoothQr(
+                  booth.name
+                )
+          );
+
+          setScannerStatus(
+            TEST_MODE
+              ? t.testScanBooth
+              : t.cameraReady
+          );
+
+          scanLockedRef.current = false;
+
+          return;
+        }
+
+        if (
+          syncResult.sessionNotFound
+        ) {
+          setMessage(
+            t.sessionProblem
+          );
+
+          await cleanupOwnedScanner();
+
+          setScanTarget(null);
+          setScannerStatus("");
+
+          scanLockedRef.current = false;
+
+          scrollToMap();
+
+          return;
+        }
+
+        if (syncResult.ok) {
+          setMessage(
+            t.boothCollected(
+              booth.name
+            )
+          );
+        } else {
+          setMessage(
+            t.boothSavedOffline(
+              booth.name
+            )
+          );
+        }
+
+        await cleanupOwnedScanner();
+
+        setScanTarget(null);
+        setScannerStatus("");
+
+        scanLockedRef.current = false;
+
+        scrollToMap();
+      };
+
+      const handleFailure = () => {
+        // Normal while looking for QR.
+      };
+
+      try {
+        ownedScanner =
+          new Html5Qrcode(
+            scannerId
+          );
+
+        scannerRef.current =
+          ownedScanner;
+
+        await ownedScanner.start(
+          {
+            facingMode: {
+              ideal: "environment",
+            },
+          },
+          scannerConfig(),
+          handleSuccess,
+          handleFailure
+        );
+      } catch (firstError) {
+        console.warn(
+          "Environment camera start failed:",
+          firstError
+        );
+
+        await cleanupOwnedScanner();
+
+        if (cancelled) {
+          return;
+        }
 
         try {
+          const cameras =
+            await Html5Qrcode.getCameras();
+
+          const camera =
+            chooseRearCamera(
+              cameras
+            );
+
+          if (!camera) {
+            throw firstError;
+          }
+
           ownedScanner =
             new Html5Qrcode(
               scannerId
@@ -2823,101 +2749,51 @@ export default function App() {
             ownedScanner;
 
           await ownedScanner.start(
-            {
-              facingMode: {
-                ideal:
-                  "environment",
-              },
-            },
-
+            camera.id,
             scannerConfig(),
-
             handleSuccess,
-
             handleFailure
           );
-        } catch (firstError) {
-          console.warn(
-            "Environment camera start failed:",
-            firstError
+        } catch (secondError) {
+          console.error(
+            "Camera fallback failed:",
+            secondError
           );
 
           await cleanupOwnedScanner();
 
-          if (cancelled) {
-            return;
-          }
-
-          try {
-            const cameras =
-              await Html5Qrcode.getCameras();
-
-            const camera =
-              chooseRearCamera(
-                cameras
-              );
-
-            if (!camera) {
-              throw firstError;
-            }
-
-            ownedScanner =
-              new Html5Qrcode(
-                scannerId
-              );
-
-            scannerRef.current =
-              ownedScanner;
-
-            await ownedScanner.start(
-              camera.id,
-
-              scannerConfig(),
-
-              handleSuccess,
-
-              handleFailure
-            );
-          } catch (secondError) {
-            console.error(
-              "Camera fallback failed:",
-              secondError
+          if (!cancelled) {
+            setScannerStatus(
+              t.cameraCouldNotStart
             );
 
-            await cleanupOwnedScanner();
-
-            if (!cancelled) {
-              setScannerStatus(
-                t.cameraCouldNotStart
-              );
-
-              setMessage(
-                t.cameraPermission
-              );
-            }
-
-            return;
+            setMessage(
+              t.cameraPermission
+            );
           }
-        }
 
-        if (cancelled) {
-          await cleanupOwnedScanner();
           return;
         }
+      }
 
-        if (TEST_MODE) {
-          setScannerStatus(
-            scanTarget.type ===
-              "goodie"
-              ? t.testScanGoodie
-              : t.testScanBooth
-          );
-        } else {
-          setScannerStatus(
-            t.cameraReady
-          );
-        }
-      };
+      if (cancelled) {
+        await cleanupOwnedScanner();
+        return;
+      }
+
+      if (TEST_MODE) {
+        setScannerStatus(
+          scanTarget.type ===
+            "goodie"
+            ? t.testScanGoodie
+            : t.testScanBooth
+        );
+      } else {
+        setScannerStatus(
+          t.cameraReady
+        );
+      }
+    };
 
     startScanner();
 
@@ -2928,8 +2804,7 @@ export default function App() {
         const scanner =
           ownedScanner;
 
-        ownedScanner =
-          null;
+        ownedScanner = null;
 
         if (
           scannerRef.current ===
@@ -2951,188 +2826,183 @@ export default function App() {
     user?.recoveryCode,
   ]);
 
-  const confirmGoodieReceived =
-    async () => {
-      if (goodieReceiving) {
+  // ==================================================
+  // GOODIE CONFIRM
+  // ==================================================
+
+  const confirmGoodieReceived = async () => {
+    if (goodieReceiving) {
+      return;
+    }
+
+    setGoodieApprovalError("");
+
+    setGoodieReceiving(true);
+
+    try {
+      const syncResult =
+        await syncAllVisitProofs(
+          user?.recoveryCode,
+          {
+            retries: 2,
+            timeoutMs: 8000,
+          }
+        );
+
+      if (!syncResult.ok) {
+        throw new Error(
+          "Visit sync failed before Goodie handover"
+        );
+      }
+
+      const result =
+        await supabaseRpc(
+          "collect_goodie_bag",
+          {
+            p_recovery_code:
+              user?.recoveryCode,
+            p_device_id:
+              deviceId,
+          },
+          {
+            retries: 2,
+            timeoutMs: 8000,
+          }
+        );
+
+      if (!result) {
+        throw new Error(
+          "Empty Goodie collection response"
+        );
+      }
+
+      if (result.state) {
+        applyServerState(
+          result.state,
+          {
+            mergeLocalProofs: true,
+          }
+        );
+      }
+
+      if (
+        result.status === "collected" ||
+        result.status === "already_collected"
+      ) {
+        const collectedAt =
+          result.collectedAt ||
+          result.state?.goodieCollectedAt ||
+          new Date().toISOString();
+
+        setGoodieData({
+          collectedAt,
+        });
+
+        saveJSON(
+          GOODIE_STORAGE_KEY,
+          {
+            collectedAt,
+          }
+        );
+
+        setGoodieApproved(false);
+        setShowGoodieSuccess(true);
+
         return;
       }
 
-      setGoodieApprovalError("");
+      if (
+        result.status ===
+        "approval_required"
+      ) {
+        setGoodieApproved(false);
 
-      setGoodieReceiving(true);
-
-      try {
-        const syncResult =
-          await syncAllVisitProofs(
-            user?.recoveryCode,
-            {
-              retries: 2,
-              timeoutMs: 8000,
-            }
-          );
-
-        if (!syncResult.ok) {
-          throw new Error(
-            "Visit sync failed before Goodie handover"
-          );
-        }
-
-        const result =
-          await supabaseRpc(
-            "collect_goodie_bag",
-            {
-              p_recovery_code:
-                user?.recoveryCode,
-
-              p_device_id:
-                deviceId,
-            },
-            {
-              retries: 2,
-              timeoutMs: 8000,
-            }
-          );
-
-        if (!result) {
-          throw new Error(
-            "Empty Goodie collection response"
-          );
-        }
-
-        if (result.state) {
-          applyServerState(
-            result.state,
-            {
-              mergeLocalProofs:
-                true,
-            }
-          );
-        }
-
-        if (
-          result.status ===
-            "collected" ||
-          result.status ===
-            "already_collected"
-        ) {
-          const collectedAt =
-            result.collectedAt ||
-            result.state
-              ?.goodieCollectedAt ||
-            new Date().toISOString();
-
-          setGoodieData({
-            collectedAt,
-          });
-
-          saveJSON(
-            GOODIE_STORAGE_KEY,
-            {
-              collectedAt,
-            }
-          );
-
-          setGoodieApproved(false);
-
-          setShowGoodieSuccess(true);
-
-          return;
-        }
-
-        if (
-          result.status ===
-          "approval_required"
-        ) {
-          setGoodieApproved(false);
-
-          setMessage(
-            t.goodieApprovalExpired
-          );
-
-          scrollToMap();
-
-          return;
-        }
-
-        if (
-          result.status ===
-          "not_eligible"
-        ) {
-          setGoodieApproved(false);
-
-          setMessage(
-            t.goodieNotEligible(
-              result.required ||
-                (TEST_MODE
-                  ? TEST_UNLOCK_AT
-                  : GOODIE_UNLOCK_AT)
-            )
-          );
-
-          scrollToMap();
-
-          return;
-        }
-
-        if (
-          result.status ===
-          "session_not_found"
-        ) {
-          setGoodieApproved(false);
-
-          setMessage(
-            t.sessionProblem
-          );
-
-          scrollToMap();
-
-          return;
-        }
-
-        throw new Error(
-          `Unexpected collect status: ${result.status}`
-        );
-      } catch (error) {
-        console.error(
-          "Goodie confirmation failed:",
-          error
+        setMessage(
+          t.goodieApprovalExpired
         );
 
-        setGoodieApprovalError(
-          t.goodieConfirmError
-        );
-      } finally {
-        setGoodieReceiving(false);
+        scrollToMap();
+
+        return;
       }
-    };
+
+      if (
+        result.status ===
+        "not_eligible"
+      ) {
+        setGoodieApproved(false);
+
+        setMessage(
+          t.goodieNotEligible(
+            result.required ||
+              (TEST_MODE
+                ? TEST_UNLOCK_AT
+                : GOODIE_UNLOCK_AT)
+          )
+        );
+
+        scrollToMap();
+
+        return;
+      }
+
+      if (
+        result.status ===
+        "session_not_found"
+      ) {
+        setGoodieApproved(false);
+
+        setMessage(
+          t.sessionProblem
+        );
+
+        scrollToMap();
+
+        return;
+      }
+
+      throw new Error(
+        `Unexpected collect status: ${result.status}`
+      );
+    } catch (error) {
+      console.error(
+        "Goodie confirmation failed:",
+        error
+      );
+
+      setGoodieApprovalError(
+        t.goodieConfirmError
+      );
+    } finally {
+      setGoodieReceiving(false);
+    }
+  };
+
+  // ==================================================
+  // SPLASH
+  // ==================================================
 
   if (showSplash) {
-    return (
-      <Splash t={t} />
-    );
+    return <Splash t={t} />;
   }
+
+  // ==================================================
+  // REGISTRATION
+  // ==================================================
 
   if (!user) {
     return (
       <Page>
         <Header t={t} />
 
-        <main
-          style={
-            styles.registrationContent
-          }
-        >
+        <main style={styles.registrationContent}>
           <LanguageSelector
             language={language}
             setLanguage={setLanguage}
             t={t}
           />
 
-          <div
-            style={
-              styles.jubiLogoWrapper
-            }
-          >
+          <div style={styles.jubiLogoWrapper}>
             <img
               src="/LogoJubi.png"
               alt={t.anniversaryAlt}
@@ -3140,83 +3010,51 @@ export default function App() {
             />
           </div>
 
-          <h1
-            style={
-              styles.registrationTitle
-            }
-          >
+          <h1 style={styles.registrationTitle}>
             {t.welcome}
           </h1>
 
-          <p
-            style={
-              styles.registrationIntro
-            }
-          >
+          <p style={styles.registrationIntro}>
             {t.intro}
           </p>
 
-          <label
-            style={
-              styles.label
-            }
-          >
+          <label style={styles.label}>
             {t.firstName}
           </label>
 
           <input
-            style={
-              styles.input
-            }
-            value={
-              form.firstname
-            }
-            placeholder={
-              t.firstName
-            }
+            style={styles.input}
+            value={form.firstname}
+            placeholder={t.firstName}
             autoComplete="given-name"
             maxLength={80}
             disabled={registering}
             onChange={(event) =>
-              setForm(
-                (current) => ({
-                  ...current,
-                  firstname:
-                    event.target.value,
-                })
-              )
+              setForm((current) => ({
+                ...current,
+                firstname:
+                  event.target.value,
+              }))
             }
           />
 
-          <label
-            style={
-              styles.label
-            }
-          >
+          <label style={styles.label}>
             {t.lastName}
           </label>
 
           <input
-            style={
-              styles.input
-            }
-            value={
-              form.lastname
-            }
-            placeholder={
-              t.lastName
-            }
+            style={styles.input}
+            value={form.lastname}
+            placeholder={t.lastName}
             autoComplete="family-name"
             maxLength={80}
             disabled={registering}
             onChange={(event) =>
-              setForm(
-                (current) => ({
-                  ...current,
-                  lastname:
-                    event.target.value,
-                })
-              )
+              setForm((current) => ({
+                ...current,
+                lastname:
+                  event.target.value,
+              }))
             }
           />
 
@@ -3238,11 +3076,7 @@ export default function App() {
           </button>
 
           {registrationError && (
-            <div
-              style={
-                styles.errorBox
-              }
-            >
+            <div style={styles.errorBox}>
               {registrationError}
             </div>
           )}
@@ -3262,170 +3096,159 @@ export default function App() {
     );
   }
 
+  // ==================================================
+  // MAIN
+  // ==================================================
+
   return (
     <Page>
+      <style>
+        {`
+          @keyframes boothShimmer {
+            0% {
+              background-color: rgba(90, 90, 90, 0.045);
+              border-color: rgba(90, 90, 90, 0.22);
+            }
+
+            50% {
+              background-color: rgba(90, 90, 90, 0.12);
+              border-color: rgba(90, 90, 90, 0.42);
+            }
+
+            100% {
+              background-color: rgba(90, 90, 90, 0.045);
+              border-color: rgba(90, 90, 90, 0.22);
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .booth-unvisited {
+              animation: none !important;
+            }
+          }
+        `}
+      </style>
+
       <Header t={t} />
 
-      <main
-        style={
-          styles.content
-        }
-      >
-        <p
-          style={
-            styles.eyebrow
-          }
-        >
+      <main style={styles.content}>
+        <p style={styles.eyebrow}>
           {t.anniversaryLabel}
         </p>
 
-        <h1
-          style={
-            styles.passTitle
-          }
-        >
-          {t.hello(
-            user.firstname
-          )}
+        <h1 style={styles.passTitle}>
+          {t.hello(user.firstname)}
         </h1>
 
-        <p
-          style={
-            styles.intro
-          }
-        >
+        <p style={styles.intro}>
           {t.welcomeEvent}
         </p>
 
         <Progress
-          visited={
-            visited.length
-          }
-          total={
-            booths.length
-          }
-          progress={
-            progress
-          }
+          visited={visited.length}
+          total={booths.length}
+          progress={progress}
           t={t}
         />
 
         <section
-          ref={
-            mapSectionRef
-          }
-          style={
-            styles.mapSection
-          }
+          ref={mapSectionRef}
+          style={styles.mapSection}
         >
-          <h2
-            style={
-              styles.sectionTitle
-            }
-          >
+          <h2 style={styles.sectionTitle}>
             {t.brandPass}
           </h2>
 
-          <p
-            style={
-              styles.mapIntro
-            }
-          >
+          <p style={styles.mapIntro}>
             {t.tapBooth}
           </p>
 
-          <div
-            style={
-              styles.mapCard
-            }
-          >
+          <div style={styles.mapCard}>
             {!mapError ? (
-              <div
-                style={
-                  styles.mapWrapper
-                }
-              >
+              <div style={styles.mapWrapper}>
                 <img
                   src="/brand-map2.png"
                   alt={t.mapAlt}
-                  style={
-                    styles.mapImage
-                  }
+                  style={styles.mapImage}
                   onError={() =>
                     setMapError(true)
                   }
                 />
 
-                {booths.map(
-                  (booth) => {
-                    const isVisited =
-                      testCompleted ||
-                      visited.includes(
-                        booth.id
-                      );
-
-                    return (
-                      <button
-                        key={booth.id}
-                        type="button"
-                        aria-label={
-                          booth.name
-                        }
-                        title={
-                          booth.name
-                        }
-                        onClick={() =>
-                          openBoothScanner(
-                            booth
-                          )
-                        }
-                        style={{
-                          ...styles.boothOverlay,
-
-                          left:
-                            `${booth.area.left}%`,
-
-                          top:
-                            `${booth.area.top}%`,
-
-                          width:
-                            `${booth.area.width}%`,
-
-                          height:
-                            `${booth.area.height}%`,
-
-                          transform:
-                            booth.rotate
-                              ? `rotate(${booth.rotate}deg)`
-                              : undefined,
-
-                          borderRadius:
-                            booth.shape ===
-                            "circle"
-                              ? "50%"
-                              : 2,
-
-                          background:
-                            isVisited
-                              ? GREEN_BG
-                              : "transparent",
-
-                          border:
-                            isVisited
-                              ? `1.5px solid ${GREEN}`
-                              : "1.5px solid transparent",
-                        }}
-                      />
+                {booths.map((booth) => {
+                  const isVisited =
+                    testCompleted ||
+                    visited.includes(
+                      booth.id
                     );
-                  }
-                )}
+
+                  return (
+                    <button
+                      key={booth.id}
+                      type="button"
+                      className={
+                        isVisited
+                          ? ""
+                          : "booth-unvisited"
+                      }
+                      aria-label={`${booth.name} – ${
+                        isVisited
+                          ? t.visited
+                          : t.notVisited
+                      }`}
+                      title={booth.name}
+                      onClick={() =>
+                        openBoothScanner(
+                          booth
+                        )
+                      }
+                      style={{
+                        ...styles.boothOverlay,
+
+                        left:
+                          `${booth.area.left}%`,
+
+                        top:
+                          `${booth.area.top}%`,
+
+                        width:
+                          `${booth.area.width}%`,
+
+                        height:
+                          `${booth.area.height}%`,
+
+                        transform:
+                          booth.rotate
+                            ? `rotate(${booth.rotate}deg)`
+                            : undefined,
+
+                        borderRadius:
+                          booth.shape ===
+                          "circle"
+                            ? "50%"
+                            : 1,
+
+                        background:
+                          isVisited
+                            ? GREEN_BG
+                            : UNVISITED_BG,
+
+                        border:
+                          isVisited
+                            ? `2px solid ${GREEN}`
+                            : `1px solid ${UNVISITED_BORDER}`,
+
+                        animation:
+                          isVisited
+                            ? "none"
+                            : "boothShimmer 3.8s ease-in-out infinite",
+                      }}
+                    />
+                  );
+                })}
               </div>
             ) : (
-              <div
-                style={
-                  styles.mapError
-                }
-              >
+              <div style={styles.mapError}>
                 <strong>
                   {t.mapNotFound}
                 </strong>
@@ -3442,106 +3265,64 @@ export default function App() {
                   {t.mapUploadAfter}
                 </div>
 
-                <code
-                  style={
-                    styles.code
-                  }
-                >
+                <code style={styles.code}>
                   brand-map2.png
                 </code>
               </div>
             )}
           </div>
 
-          <div
-            style={
-              styles.legend
-            }
-          >
+          <div style={styles.legend}>
             <Legend
               color={GREEN_BG}
               border={GREEN}
+              borderWidth={2}
               label={t.visited}
             />
 
             <Legend
-              color="#FFFFFF"
-              border="#BBBBBB"
+              color={UNVISITED_BG}
+              border={UNVISITED_BORDER}
+              borderWidth={1}
               label={t.notVisited}
             />
           </div>
 
           {message && (
-            <div
-              style={
-                styles.message
-              }
-            >
+            <div style={styles.message}>
               {message}
             </div>
           )}
         </section>
 
         <GoodieBag
-          visited={
-            visited.length
-          }
-          eligible={
-            goodieEligible
-          }
-          collected={
-            goodieCollected
-          }
-          onCollect={
-            openGoodieScanner
-          }
+          visited={visited.length}
+          eligible={goodieEligible}
+          collected={goodieCollected}
+          onCollect={openGoodieScanner}
           t={t}
         />
 
         {scanTarget && (
           <Scanner
-            scanTarget={
-              scanTarget
-            }
-            status={
-              scannerStatus
-            }
-            scannerSectionRef={
-              scannerSectionRef
-            }
-            onClose={
-              closeScanner
-            }
+            scanTarget={scanTarget}
+            status={scannerStatus}
+            scannerSectionRef={scannerSectionRef}
+            onClose={closeScanner}
             t={t}
           />
         )}
 
-        <section
-          style={
-            styles.recoveryInfo
-          }
-        >
-          <div
-            style={
-              styles.recoveryInfoLabel
-            }
-          >
+        <section style={styles.recoveryInfo}>
+          <div style={styles.recoveryInfoLabel}>
             {t.recoveryCodeLabel}
           </div>
 
-          <div
-            style={
-              styles.recoveryCode
-            }
-          >
+          <div style={styles.recoveryCode}>
             {user.recoveryCode}
           </div>
 
-          <div
-            style={
-              styles.recoveryInfoText
-            }
-          >
+          <div style={styles.recoveryInfoText}>
             {t.recoveryCodeText}
           </div>
         </section>
@@ -3550,21 +3331,11 @@ export default function App() {
       {goodieApproved && (
         <GoodieApprovedScreen
           user={user}
-          visited={
-            visited.length
-          }
-          total={
-            booths.length
-          }
-          onReceived={
-            confirmGoodieReceived
-          }
-          working={
-            goodieReceiving
-          }
-          error={
-            goodieApprovalError
-          }
+          visited={visited.length}
+          total={booths.length}
+          onReceived={confirmGoodieReceived}
+          working={goodieReceiving}
+          error={goodieApprovalError}
           t={t}
         />
       )}
@@ -3572,9 +3343,7 @@ export default function App() {
       {showGoodieSuccess && (
         <GoodieSuccessScreen
           onDone={() =>
-            setShowGoodieSuccess(
-              false
-            )
+            setShowGoodieSuccess(false)
           }
           t={t}
         />
@@ -3589,16 +3358,8 @@ export default function App() {
 
 function Page({ children }) {
   return (
-    <div
-      style={
-        styles.page
-      }
-    >
-      <div
-        style={
-          styles.app
-        }
-      >
+    <div style={styles.page}>
+      <div style={styles.app}>
         {children}
       </div>
     </div>
@@ -3607,11 +3368,7 @@ function Page({ children }) {
 
 function Header({ t }) {
   return (
-    <header
-      style={
-        styles.header
-      }
-    >
+    <header style={styles.header}>
       <img
         src="/impo_logo.png"
         alt={t.logoAlt}
@@ -3623,11 +3380,7 @@ function Header({ t }) {
 
 function Splash({ t }) {
   return (
-    <div
-      style={
-        styles.splash
-      }
-    >
+    <div style={styles.splash}>
       <img
         src="/LogoJubi.png"
         alt={t.anniversaryAlt}
@@ -3643,73 +3396,44 @@ function LanguageSelector({
   t,
 }) {
   const options = [
-    {
-      code: "de",
-      label: "DE",
-    },
-    {
-      code: "fr",
-      label: "FR",
-    },
-    {
-      code: "it",
-      label: "IT",
-    },
-    {
-      code: "en",
-      label: "EN",
-    },
+    { code: "de", label: "DE" },
+    { code: "fr", label: "FR" },
+    { code: "it", label: "IT" },
+    { code: "en", label: "EN" },
   ];
 
   return (
-    <div
-      style={
-        styles.languageSection
-      }
-    >
-      <div
-        style={
-          styles.languageLabel
-        }
-      >
+    <div style={styles.languageSection}>
+      <div style={styles.languageLabel}>
         {t.chooseLanguage}
       </div>
 
-      <div
-        style={
-          styles.languageButtons
-        }
-      >
-        {options.map(
-          (option) => {
-            const active =
-              language ===
-              option.code;
+      <div style={styles.languageButtons}>
+        {options.map((option) => {
+          const active =
+            language === option.code;
 
-            return (
-              <button
-                key={
+          return (
+            <button
+              key={option.code}
+              type="button"
+              onClick={() =>
+                setLanguage(
                   option.code
-                }
-                type="button"
-                onClick={() =>
-                  setLanguage(
-                    option.code
-                  )
-                }
-                style={{
-                  ...styles.languageButton,
+                )
+              }
+              style={{
+                ...styles.languageButton,
 
-                  ...(active
-                    ? styles.languageButtonActive
-                    : styles.languageButtonInactive),
-                }}
-              >
-                {option.label}
-              </button>
-            );
-          }
-        )}
+                ...(active
+                  ? styles.languageButtonActive
+                  : styles.languageButtonInactive),
+              }}
+            >
+              {option.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -3722,53 +3446,28 @@ function Progress({
   t,
 }) {
   return (
-    <div
-      style={
-        styles.progressCard
-      }
-    >
-      <div
-        style={
-          styles.progressTop
-        }
-      >
+    <div style={styles.progressCard}>
+      <div style={styles.progressTop}>
         <div>
-          <div
-            style={
-              styles.progressNumber
-            }
-          >
+          <div style={styles.progressNumber}>
             {visited} / {total}
           </div>
 
-          <div
-            style={
-              styles.progressLabel
-            }
-          >
+          <div style={styles.progressLabel}>
             {t.boothsVisited}
           </div>
         </div>
 
-        <div
-          style={
-            styles.percent
-          }
-        >
+        <div style={styles.percent}>
           {progress}%
         </div>
       </div>
 
-      <div
-        style={
-          styles.progressBackground
-        }
-      >
+      <div style={styles.progressBackground}>
         <div
           style={{
             ...styles.progressBar,
-            width:
-              `${progress}%`,
+            width: `${progress}%`,
           }}
         />
       </div>
@@ -3779,26 +3478,21 @@ function Progress({
 function Legend({
   color,
   border,
+  borderWidth = 1,
   label,
 }) {
   return (
-    <div
-      style={
-        styles.legendItem
-      }
-    >
+    <div style={styles.legendItem}>
       <span
         style={{
           ...styles.legendBox,
           background: color,
           border:
-            `1px solid ${border}`,
+            `${borderWidth}px solid ${border}`,
         }}
       />
 
-      <span>
-        {label}
-      </span>
+      <span>{label}</span>
     </div>
   );
 }
@@ -3814,16 +3508,10 @@ function RecoveryPanel({
   t,
 }) {
   return (
-    <section
-      style={
-        styles.recoveryPanel
-      }
-    >
+    <section style={styles.recoveryPanel}>
       <button
         type="button"
-        style={
-          styles.recoveryToggle
-        }
+        style={styles.recoveryToggle}
         onClick={() =>
           setOpen(!open)
         }
@@ -3832,24 +3520,12 @@ function RecoveryPanel({
       </button>
 
       {open && (
-        <div
-          style={
-            styles.recoveryBody
-          }
-        >
-          <div
-            style={
-              styles.recoveryTitle
-            }
-          >
+        <div style={styles.recoveryBody}>
+          <div style={styles.recoveryTitle}>
             {t.recoveryTitle}
           </div>
 
-          <p
-            style={
-              styles.recoveryText
-            }
-          >
+          <p style={styles.recoveryText}>
             {t.recoveryText}
           </p>
 
@@ -3861,9 +3537,7 @@ function RecoveryPanel({
             autoComplete="off"
             maxLength={12}
             disabled={restoring}
-            style={
-              styles.recoveryInput
-            }
+            style={styles.recoveryInput}
             onChange={(event) =>
               setValue(
                 event.target.value.toUpperCase()
@@ -3872,11 +3546,7 @@ function RecoveryPanel({
           />
 
           {message && (
-            <div
-              style={
-                styles.recoveryMessage
-              }
-            >
+            <div style={styles.recoveryMessage}>
               {message}
             </div>
           )}
@@ -3891,9 +3561,7 @@ function RecoveryPanel({
                   ? 0.65
                   : 1,
             }}
-            onClick={
-              onRestore
-            }
+            onClick={onRestore}
           >
             {restoring
               ? t.restoring
@@ -3919,63 +3587,37 @@ function GoodieBag({
 
   const remaining =
     Math.max(
-      required -
-        visited,
+      required - visited,
       0
     );
 
   const goodieProgress =
     Math.min(
-      visited /
-        required,
+      visited / required,
       1
     ) * 100;
 
   return (
-    <section
-      style={
-        styles.goodieCard
-      }
-    >
-      <div
-        style={
-          styles.goodieIcon
-        }
-      >
+    <section style={styles.goodieCard}>
+      <div style={styles.goodieIcon}>
         🎁
       </div>
 
-      <div
-        style={
-          styles.goodieTitle
-        }
-      >
+      <div style={styles.goodieTitle}>
         {t.goodieBag}
       </div>
 
       {collected ? (
-        <div
-          style={
-            styles.goodieCollected
-          }
-        >
+        <div style={styles.goodieCollected}>
           {t.goodieCollected}
         </div>
       ) : eligible ? (
         <>
-          <div
-            style={
-              styles.goodieUnlocked
-            }
-          >
+          <div style={styles.goodieUnlocked}>
             {t.goodieReady}
           </div>
 
-          <div
-            style={
-              styles.goodieText
-            }
-          >
+          <div style={styles.goodieText}>
             {TEST_MODE
               ? t.testGoodieReady
               : t.goodieLiveReady(
@@ -3986,11 +3628,7 @@ function GoodieBag({
         </>
       ) : (
         <>
-          <div
-            style={
-              styles.goodieText
-            }
-          >
+          <div style={styles.goodieText}>
             {TEST_MODE
               ? t.testGoodieInstruction
               : t.liveGoodieInstruction(
@@ -3999,11 +3637,7 @@ function GoodieBag({
                 )}
           </div>
 
-          <div
-            style={
-              styles.goodieCount
-            }
-          >
+          <div style={styles.goodieCount}>
             {visited} / {required}
           </div>
 
@@ -4021,11 +3655,7 @@ function GoodieBag({
             />
           </div>
 
-          <div
-            style={
-              styles.goodieRemaining
-            }
-          >
+          <div style={styles.goodieRemaining}>
             {remaining === 1
               ? t.remainingOne
               : t.remainingMany(
@@ -4063,72 +3693,43 @@ function Scanner({
   t,
 }) {
   const label =
-    scanTarget.type ===
-    "goodie"
+    scanTarget.type === "goodie"
       ? t.goodieBag
       : scanTarget.booth.name;
 
   return (
     <div
-      ref={
-        scannerSectionRef
-      }
-      style={
-        styles.scannerCard
-      }
+      ref={scannerSectionRef}
+      style={styles.scannerCard}
     >
-      <div
-        style={
-          styles.scannerHeader
-        }
-      >
+      <div style={styles.scannerHeader}>
         <div>
-          <div
-            style={
-              styles.scannerTitle
-            }
-          >
+          <div style={styles.scannerTitle}>
             {t.scanQr}
           </div>
 
-          <div
-            style={
-              styles.scannerSubtitle
-            }
-          >
+          <div style={styles.scannerSubtitle}>
             {label}
           </div>
         </div>
 
-        <div
-          style={
-            styles.scannerBadge
-          }
-        >
+        <div style={styles.scannerBadge}>
           QR
         </div>
       </div>
 
-      <div
-        style={
-          styles.scannerStatus
-        }
-      >
+      <div style={styles.scannerStatus}>
         {status}
       </div>
 
       <div
         id="qr-reader-region"
-        style={
-          styles.scannerRegion
-        }
+        style={styles.scannerRegion}
       />
 
       <button
         type="button"
-        style={
-          styles.secondaryButton
-        }
+        style={styles.secondaryButton}
         onClick={onClose}
       >
         {t.close}
@@ -4147,54 +3748,25 @@ function GoodieApprovedScreen({
   t,
 }) {
   return (
-    <div
-      style={
-        styles.goodieApprovedScreen
-      }
-    >
-      <div
-        style={
-          styles.goodieApprovedContent
-        }
-      >
-        <div
-          style={
-            styles.goodieApprovedCheck
-          }
-        >
+    <div style={styles.goodieApprovedScreen}>
+      <div style={styles.goodieApprovedContent}>
+        <div style={styles.goodieApprovedCheck}>
           ✓
         </div>
 
-        <div
-          style={
-            styles.goodieApprovedEyebrow
-          }
-        >
+        <div style={styles.goodieApprovedEyebrow}>
           {t.goodieApprovedEyebrow}
         </div>
 
-        <h1
-          style={
-            styles.goodieApprovedTitle
-          }
-        >
+        <h1 style={styles.goodieApprovedTitle}>
           {t.approved}
         </h1>
 
-        <div
-          style={
-            styles.goodieApprovedName
-          }
-        >
-          {user.firstname}{" "}
-          {user.lastname}
+        <div style={styles.goodieApprovedName}>
+          {user.firstname} {user.lastname}
         </div>
 
-        <div
-          style={
-            styles.goodieApprovedProgress
-          }
-        >
+        <div style={styles.goodieApprovedProgress}>
           {TEST_MODE
             ? t.testApproval
             : t.boothsVisitedApproval(
@@ -4203,20 +3775,12 @@ function GoodieApprovedScreen({
               )}
         </div>
 
-        <div
-          style={
-            styles.goodieApprovedInstruction
-          }
-        >
+        <div style={styles.goodieApprovedInstruction}>
           {t.mayHandOver}
         </div>
 
         {error && (
-          <div
-            style={
-              styles.goodieApprovalError
-            }
-          >
+          <div style={styles.goodieApprovalError}>
             {error}
           </div>
         )}
@@ -4247,11 +3811,7 @@ function GoodieSuccessScreen({
   t,
 }) {
   return (
-    <div
-      style={
-        styles.goodieSuccessScreen
-      }
-    >
+    <div style={styles.goodieSuccessScreen}>
       <style>
         {`
           @keyframes goodiePan {
@@ -4273,43 +3833,27 @@ function GoodieSuccessScreen({
         `}
       </style>
 
-      <div
-        style={
-          styles.goodieSuccessContent
-        }
-      >
+      <div style={styles.goodieSuccessContent}>
         <img
           src="/impo_logo.png"
           alt={t.logoAlt}
-          style={
-            styles.goodieFinalLogo
-          }
+          style={styles.goodieFinalLogo}
         />
 
-        <h1
-          style={
-            styles.goodieThankYou
-          }
-        >
+        <h1 style={styles.goodieThankYou}>
           {t.thankYou}
         </h1>
 
         <div
           className="goodie-panorama"
-          style={
-            styles.goodiePanorama
-          }
+          style={styles.goodiePanorama}
           role="img"
-          aria-label={
-            t.panoramaAlt
-          }
+          aria-label={t.panoramaAlt}
         />
 
         <button
           type="button"
-          style={
-            styles.goodieDoneButton
-          }
+          style={styles.goodieDoneButton}
           onClick={onDone}
         >
           {t.done}
@@ -4465,8 +4009,7 @@ const styles = {
     border:
       `1px solid ${BORDER}`,
     borderRadius: 8,
-    background:
-      "#FFFFFF",
+    background: "#FFFFFF",
     fontSize: 16,
     outline: "none",
   },
@@ -4626,11 +4169,13 @@ const styles = {
     padding: 0,
     margin: 0,
     outline: "none",
+    appearance: "none",
+    WebkitAppearance: "none",
     cursor: "pointer",
     WebkitTapHighlightColor:
       "transparent",
     transition:
-      "background 0.2s ease, border 0.2s ease",
+      "background 0.18s ease, border-color 0.18s ease, border-width 0.18s ease",
   },
 
   mapError: {
@@ -4669,6 +4214,8 @@ const styles = {
   legendBox: {
     width: 16,
     height: 16,
+    boxSizing:
+      "border-box",
     borderRadius: 3,
   },
 
