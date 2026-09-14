@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Html5Qrcode } from "html5-qrcode";
 
 // ==================================================
@@ -18,7 +23,6 @@ const SUPABASE_PUBLISHABLE_KEY =
 const TEST_MODE = true;
 const TEST_QR_VALUE = "GISADA";
 
-const TOTAL_BOOTHS = 19;
 const TEST_UNLOCK_AT = 2;
 const GOODIE_UNLOCK_AT = 18;
 
@@ -34,8 +38,8 @@ const BORDER = "#E7E7E7";
 const GREEN = "#209447";
 const GREEN_BG = "rgba(32, 148, 71, 0.16)";
 
-const UNVISITED_BG = "rgba(90, 90, 90, 0.065)";
-const UNVISITED_BORDER = "rgba(90, 90, 90, 0.32)";
+const UNVISITED_BG = "rgba(90, 90, 90, 0.07)";
+const UNVISITED_BORDER = "rgba(90, 90, 90, 0.34)";
 
 // ==================================================
 // STORAGE
@@ -94,7 +98,8 @@ const translations = {
     mapUploadBefore: "Upload the original image to the",
     mapUploadAfter: "folder as:",
     alreadyVisited: (name) => `✓ ${name} already visited.`,
-    boothCollected: (name) => `✓ ${name} successfully collected.`,
+    boothCollected: (name) =>
+      `✓ ${name} successfully collected.`,
     boothSavedOffline: (name) =>
       `✓ ${name} saved on this device. It will be synchronized automatically when the connection is available.`,
     wrongBoothQr: (name) =>
@@ -102,14 +107,18 @@ const translations = {
     scanQr: "Scan QR code",
     startingCamera: "Starting camera...",
     scannerCouldNotLoad: "Scanner could not be loaded.",
-    cameraReady: "Camera ready – point it at the QR code.",
+    cameraReady:
+      "Camera ready – point it at the QR code.",
     savingVisit: "Saving visit...",
-    testScanBooth: "TEST MODE – scan the GISADA QR code.",
+    testScanBooth:
+      "TEST MODE – scan the GISADA QR code.",
     testScanGoodie:
       "TEST MODE – scan the GISADA QR code to approve the Goodie Bag.",
-    wrongTestQr: (value) => `Wrong test QR. Detected: ${value}`,
+    wrongTestQr: (value) =>
+      `Wrong test QR. Detected: ${value}`,
     wrongGoodieQr: "Wrong Goodie Bag QR code.",
-    cameraCouldNotStart: "Camera could not be started.",
+    cameraCouldNotStart:
+      "Camera could not be started.",
     cameraPermission:
       "Please allow camera access and try again.",
     unsupportedBrowser:
@@ -129,7 +138,8 @@ const translations = {
     liveGoodieInstruction: (required, total) =>
       `Visit at least ${required} of ${total} booths to unlock your Goodie Bag.`,
     remainingOne: "1 more booth to go",
-    remainingMany: (count) => `${count} more booths to go`,
+    remainingMany: (count) =>
+      `${count} more booths to go`,
     collectGoodie: "COLLECT GOODIE BAG",
     checkingGoodie: "Checking eligibility...",
     goodieConnection:
@@ -147,17 +157,20 @@ const translations = {
     testApproval: "Test approval successful",
     boothsVisitedApproval: (visited, total) =>
       `${visited} / ${total} booths visited`,
-    mayHandOver: "You may hand over the Goodie Bag.",
+    mayHandOver:
+      "You may hand over the Goodie Bag.",
     goodieReceived: "GOODIE BAG RECEIVED",
     confirmingGoodie: "CONFIRMING...",
     goodieConfirmError:
       "The handover could not be saved in the database. Please keep this screen open, check the connection and try again.",
     recoveryLost: "Lost your session?",
     recoveryTitle: "Restore your session",
-    recoveryText: "Enter your personal recovery code.",
+    recoveryText:
+      "Enter your personal recovery code.",
     recoveryButton: "RESTORE SESSION",
     restoring: "RESTORING...",
-    recoveryRequired: "Please enter your recovery code.",
+    recoveryRequired:
+      "Please enter your recovery code.",
     recoveryNotFound:
       "No session was found for this recovery code.",
     recoveryConnectionError:
@@ -170,7 +183,8 @@ const translations = {
     done: "DONE",
     mapAlt: "Brand fair map",
     logoAlt: "Import Parfumerie",
-    anniversaryAlt: "50 Years Import Parfumerie",
+    anniversaryAlt:
+      "50 Years Import Parfumerie",
     panoramaAlt:
       "Import Parfumerie anniversary team illustration",
   },
@@ -184,16 +198,19 @@ const translations = {
     lastName: "Nachname",
     start: "START",
     starting: "WIRD GESTARTET...",
-    nameRequired: "Bitte Vorname und Nachname eingeben.",
+    nameRequired:
+      "Bitte Vorname und Nachname eingeben.",
     registrationError:
       "Die Verbindung zur Event-Datenbank konnte nicht hergestellt werden. Bitte prüfe deine Internetverbindung und versuche es erneut.",
     registrationClosed:
       "Die Registrierung ist momentan geschlossen.",
     registrationLimit:
       "Die maximale Anzahl Teilnehmender wurde erreicht.",
-    anniversaryLabel: "50 JAHRE IMPORT PARFUMERIE",
+    anniversaryLabel:
+      "50 JAHRE IMPORT PARFUMERIE",
     hello: (name) => `Hallo ${name}!`,
-    welcomeEvent: "Willkommen an unserem Jubiläumsevent.",
+    welcomeEvent:
+      "Willkommen an unserem Jubiläumsevent.",
     boothsVisited: "Besuchte Stände",
     brandPass: "Dein Brand Pass",
     tapBooth:
@@ -215,12 +232,14 @@ const translations = {
     wrongBoothQr: (name) =>
       `Dieser QR-Code gehört nicht zu ${name}. Bitte scanne den QR-Code an diesem Stand.`,
     scanQr: "QR-Code scannen",
-    startingCamera: "Kamera wird gestartet...",
+    startingCamera:
+      "Kamera wird gestartet...",
     scannerCouldNotLoad:
       "Der Scanner konnte nicht geladen werden.",
     cameraReady:
       "Kamera bereit – richte sie auf den QR-Code.",
-    savingVisit: "Besuch wird gespeichert...",
+    savingVisit:
+      "Besuch wird gespeichert...",
     testScanBooth:
       "TESTMODUS – scanne den GISADA QR-Code.",
     testScanGoodie:
@@ -239,7 +258,8 @@ const translations = {
     sessionProblem:
       "Deine Session wurde in der Datenbank nicht gefunden. Bitte stelle sie mit deinem Recovery-Code wieder her.",
     goodieBag: "Goodie Bag",
-    goodieCollected: "✓ Goodie Bag abgeholt",
+    goodieCollected:
+      "✓ Goodie Bag abgeholt",
     goodieReady: "Du bist bereit!",
     testGoodieReady:
       "Test abgeschlossen. Das Goodie Bag kann jetzt abgeholt werden.",
@@ -252,7 +272,8 @@ const translations = {
     remainingOne: "Noch 1 Stand",
     remainingMany: (count) =>
       `Noch ${count} Stände`,
-    collectGoodie: "GOODIE BAG ABHOLEN",
+    collectGoodie:
+      "GOODIE BAG ABHOLEN",
     checkingGoodie:
       "Berechtigung wird geprüft...",
     goodieConnection:
@@ -267,7 +288,8 @@ const translations = {
       "Die Goodie-Bag-Freigabe ist nicht mehr gültig. Bitte scanne den Goodie-Bag-QR-Code erneut.",
     goodieApprovedEyebrow: "GOODIE BAG",
     approved: "FREIGEGEBEN",
-    testApproval: "Testfreigabe erfolgreich",
+    testApproval:
+      "Testfreigabe erfolgreich",
     boothsVisitedApproval: (visited, total) =>
       `${visited} / ${total} Stände besucht`,
     mayHandOver:
@@ -300,7 +322,8 @@ const translations = {
     thankYou:
       "Vielen Dank, dass du heute mit uns unser 50-jähriges Jubiläum gefeiert hast. Komm gut nach Hause!",
     done: "FERTIG",
-    mapAlt: "Übersichtsplan der Brandmesse",
+    mapAlt:
+      "Übersichtsplan der Brandmesse",
     logoAlt: "Import Parfumerie",
     anniversaryAlt:
       "50 Jahre Import Parfumerie",
@@ -327,7 +350,8 @@ const translations = {
       "Le nombre maximum de participants a été atteint.",
     anniversaryLabel:
       "50 ANS IMPORT PARFUMERIE",
-    hello: (name) => `Bonjour ${name} !`,
+    hello: (name) =>
+      `Bonjour ${name} !`,
     welcomeEvent:
       "Bienvenue à notre événement anniversaire.",
     boothsVisited: "Stands visités",
@@ -350,7 +374,8 @@ const translations = {
       `✓ ${name} a été enregistré sur cet appareil. La visite sera synchronisée automatiquement dès que la connexion sera disponible.`,
     wrongBoothQr: (name) =>
       `Ce code QR n'appartient pas à ${name}. Veuillez scanner le code QR de ce stand.`,
-    scanQr: "Scanner le code QR",
+    scanQr:
+      "Scanner le code QR",
     startingCamera:
       "Démarrage de la caméra...",
     scannerCouldNotLoad:
@@ -388,7 +413,8 @@ const translations = {
       "MODE TEST – scannez 2 stands différents pour débloquer le Goodie Bag.",
     liveGoodieInstruction: (required, total) =>
       `Visitez au moins ${required} des ${total} stands pour débloquer votre Goodie Bag.`,
-    remainingOne: "Encore 1 stand",
+    remainingOne:
+      "Encore 1 stand",
     remainingMany: (count) =>
       `Encore ${count} stands`,
     collectGoodie:
@@ -405,7 +431,8 @@ const translations = {
       `Les ${required} visites requises ne sont pas encore confirmées.`,
     goodieApprovalExpired:
       "La validation du Goodie Bag n'est plus valable. Veuillez scanner à nouveau le code QR du Goodie Bag.",
-    goodieApprovedEyebrow: "GOODIE BAG",
+    goodieApprovedEyebrow:
+      "GOODIE BAG",
     approved: "VALIDÉ",
     testApproval:
       "Validation test réussie",
@@ -442,8 +469,10 @@ const translations = {
     thankYou:
       "Merci d'avoir célébré avec nous aujourd'hui notre 50e anniversaire. Nous vous souhaitons un bon retour !",
     done: "TERMINER",
-    mapAlt: "Plan de l'événement",
-    logoAlt: "Import Parfumerie",
+    mapAlt:
+      "Plan de l'événement",
+    logoAlt:
+      "Import Parfumerie",
     anniversaryAlt:
       "50 ans Import Parfumerie",
     panoramaAlt:
@@ -472,8 +501,10 @@ const translations = {
     hello: (name) => `Ciao ${name}!`,
     welcomeEvent:
       "Benvenuto al nostro evento anniversario.",
-    boothsVisited: "Stand visitati",
-    brandPass: "Il tuo Brand Pass",
+    boothsVisited:
+      "Stand visitati",
+    brandPass:
+      "Il tuo Brand Pass",
     tapBooth:
       "Tocca uno stand per scansionare il suo codice QR.",
     visited: "Visitato",
@@ -519,10 +550,12 @@ const translations = {
     close: "CHIUDI",
     sessionProblem:
       "La tua sessione non è stata trovata nel database. Ripristinala con il tuo codice di recupero.",
-    goodieBag: "Goodie Bag",
+    goodieBag:
+      "Goodie Bag",
     goodieCollected:
       "✓ Goodie Bag ritirato",
-    goodieReady: "Ci siamo!",
+    goodieReady:
+      "Ci siamo!",
     testGoodieReady:
       "Test completato. Ora puoi ritirare il Goodie Bag.",
     goodieLiveReady: (visited, total) =>
@@ -602,15 +635,14 @@ const translations = {
 // BOOTHS
 // ==================================================
 //
-// Aktive IDs:
-// 1–8
-// 11–21
+// Aktive Stände: 19
 //
-// IDs 9 und 10 sind historisch:
-// 9 = Clarins
+// Historische IDs:
+// 9  = Clarins
 // 10 = Bvlgari
 //
-// Diese beiden Stände sind NICHT mehr aktiv.
+// Diese beiden IDs werden nicht mehr verwendet.
+// Import Parfumerie Game = ID 21.
 // ==================================================
 
 const booths = [
@@ -826,9 +858,7 @@ const booths = [
   },
 ];
 
-// ==================================================
-// ACTIVE BOOTHS
-// ==================================================
+const TOTAL_BOOTHS = booths.length;
 
 const ACTIVE_BOOTH_IDS = new Set(
   booths.map((booth) => booth.id)
@@ -840,7 +870,8 @@ const ACTIVE_BOOTH_IDS = new Set(
 
 function loadJSON(key, fallback) {
   try {
-    const value = localStorage.getItem(key);
+    const value =
+      localStorage.getItem(key);
 
     return value
       ? JSON.parse(value)
@@ -857,7 +888,7 @@ function saveJSON(key, value) {
       JSON.stringify(value)
     );
   } catch {
-    // Ignore storage errors.
+    // Storage can be unavailable in restrictive privacy modes.
   }
 }
 
@@ -896,7 +927,8 @@ function normalizeRecoveryCode(value) {
 function createLocalId() {
   if (
     window.crypto &&
-    typeof window.crypto.randomUUID === "function"
+    typeof window.crypto.randomUUID ===
+      "function"
   ) {
     return window.crypto.randomUUID();
   }
@@ -933,7 +965,10 @@ function getOrCreateLocalId(key) {
 
 function wait(ms) {
   return new Promise((resolve) => {
-    window.setTimeout(resolve, ms);
+    window.setTimeout(
+      resolve,
+      ms
+    );
   });
 }
 
@@ -970,7 +1005,9 @@ function loadInitialVisited() {
     );
 
   if (Array.isArray(current)) {
-    return uniqueNumbers(current);
+    return uniqueNumbers(
+      current
+    );
   }
 
   if (TEST_MODE) {
@@ -1045,7 +1082,8 @@ function detectInitialLanguage() {
 
   const browserLanguage =
     String(
-      navigator.language || "en"
+      navigator.language ||
+        "en"
     )
       .slice(0, 2)
       .toLowerCase();
@@ -1385,13 +1423,14 @@ function serverErrorContains(
 }
 
 // ==================================================
-// CAMERA
+// CAMERA / SCANNER
 // ==================================================
 
 function hasCameraSupport() {
   return Boolean(
     navigator.mediaDevices &&
-      typeof navigator.mediaDevices
+      typeof navigator
+        .mediaDevices
         .getUserMedia ===
         "function"
   );
@@ -1411,13 +1450,13 @@ async function stopScannerInstance(
       await scanner.stop();
     }
   } catch {
-    // Ignore.
+    // Scanner may already have been stopped.
   }
 
   try {
     scanner.clear();
   } catch {
-    // Ignore.
+    // Ignore cleanup errors.
   }
 }
 
@@ -1439,7 +1478,8 @@ function scannerConfig() {
         Math.max(
           180,
           Math.floor(
-            minimum * 0.82
+            minimum *
+              0.82
           )
         );
 
@@ -1661,13 +1701,23 @@ export default function App() {
   const legacyRetryTimerRef =
     useRef(null);
 
-  const scannerId =
-    "qr-reader-region";
+  const deviceIdRef =
+    useRef(null);
+
+  if (
+    !deviceIdRef.current
+  ) {
+    deviceIdRef.current =
+      getOrCreateLocalId(
+        DEVICE_ID_STORAGE_KEY
+      );
+  }
 
   const deviceId =
-    getOrCreateLocalId(
-      DEVICE_ID_STORAGE_KEY
-    );
+    deviceIdRef.current;
+
+  const scannerId =
+    "qr-reader-region";
 
   const testCompleted =
     TEST_MODE &&
@@ -1720,10 +1770,11 @@ export default function App() {
         2200
       );
 
-    return () =>
+    return () => {
       window.clearTimeout(
         timer
       );
+    };
   }, []);
 
   useEffect(() => {
@@ -1763,9 +1814,9 @@ export default function App() {
       visited,
       goodieData,
       language,
-
       savedAt:
-        new Date().toISOString(),
+        new Date()
+          .toISOString(),
     };
 
     saveJSON(
@@ -1783,162 +1834,134 @@ export default function App() {
   // SERVER STATE
   // ==================================================
 
-  const applyServerState = (
-    state,
-    options = {}
-  ) => {
-    if (!state) {
-      return;
-    }
+  const applyServerState =
+    useCallback(
+      (
+        state,
+        options = {}
+      ) => {
+        if (!state) {
+          return;
+        }
 
-    const {
-      mergeLocalProofs =
-        true,
+        const {
+          mergeLocalProofs =
+            true,
 
-      clientRegistrationId =
+          clientRegistrationId =
+            user
+              ?.clientRegistrationId ||
+            null,
+        } = options;
+
+        const serverVisited =
+          uniqueNumbers(
+            state.visited ||
+              []
+          );
+
+        const localProofIds =
+          mergeLocalProofs
+            ? getVisitProofIds()
+            : [];
+
+        const nextVisited =
+          mergeLocalProofs
+            ? uniqueNumbers([
+                ...serverVisited,
+                ...localProofIds,
+              ])
+            : serverVisited;
+
+        const nextLanguage =
+          SUPPORTED_LANGUAGES.includes(
+            state.language
+          )
+            ? state.language
+            : language;
+
+        const nextUser = {
+          id:
+            state.id,
+
+          firstname:
+            state.firstname,
+
+          lastname:
+            state.lastname,
+
+          language:
+            nextLanguage,
+
+          recoveryCode:
+            state.recoveryCode,
+
+          clientRegistrationId,
+
+          dbSynced:
+            true,
+        };
+
+        const nextGoodie = {
+          collectedAt:
+            state.goodieCollectedAt ||
+            null,
+        };
+
+        saveJSON(
+          USER_STORAGE_KEY,
+          nextUser
+        );
+
+        saveJSON(
+          VISITED_STORAGE_KEY,
+          nextVisited
+        );
+
+        saveJSON(
+          GOODIE_STORAGE_KEY,
+          nextGoodie
+        );
+
+        setUser(
+          nextUser
+        );
+
+        setVisited(
+          nextVisited
+        );
+
+        setGoodieData(
+          nextGoodie
+        );
+
+        if (
+          nextLanguage !==
+          language
+        ) {
+          setLanguage(
+            nextLanguage
+          );
+        }
+      },
+      [
+        language,
         user
-          ?.clientRegistrationId ||
-        null,
-    } = options;
-
-    const serverVisited =
-      uniqueNumbers(
-        state.visited ||
-          []
-      );
-
-    const localProofIds =
-      mergeLocalProofs
-        ? getVisitProofIds()
-        : [];
-
-    const nextVisited =
-      mergeLocalProofs
-        ? uniqueNumbers([
-            ...serverVisited,
-            ...localProofIds,
-          ])
-        : serverVisited;
-
-    const nextLanguage =
-      SUPPORTED_LANGUAGES.includes(
-        state.language
-      )
-        ? state.language
-        : language;
-
-    const nextUser = {
-      id:
-        state.id,
-
-      firstname:
-        state.firstname,
-
-      lastname:
-        state.lastname,
-
-      language:
-        nextLanguage,
-
-      recoveryCode:
-        state.recoveryCode,
-
-      clientRegistrationId,
-
-      dbSynced:
-        true,
-    };
-
-    const nextGoodie = {
-      collectedAt:
-        state.goodieCollectedAt ||
-        null,
-    };
-
-    saveJSON(
-      USER_STORAGE_KEY,
-      nextUser
+          ?.clientRegistrationId,
+      ]
     );
-
-    saveJSON(
-      VISITED_STORAGE_KEY,
-      nextVisited
-    );
-
-    saveJSON(
-      GOODIE_STORAGE_KEY,
-      nextGoodie
-    );
-
-    setUser(
-      nextUser
-    );
-
-    setVisited(
-      nextVisited
-    );
-
-    setGoodieData(
-      nextGoodie
-    );
-
-    if (
-      nextLanguage !==
-      language
-    ) {
-      setLanguage(
-        nextLanguage
-      );
-    }
-  };
 
   // ==================================================
   // VISIT SYNC
   // ==================================================
 
   const syncAllVisitProofs =
-    async (
-      recoveryCode,
-      options = {}
-    ) => {
-      if (!recoveryCode) {
-        return {
-          ok: false,
-          sessionNotFound:
-            true,
-        };
-      }
-
-      const {
-        retries = 1,
-        timeoutMs = 7000,
-      } = options;
-
-      const scans =
-        getVisitScanPayload();
-
-      try {
-        const result =
-          await supabaseRpc(
-            "sync_visits",
-            {
-              p_recovery_code:
-                recoveryCode,
-
-              p_scans:
-                scans,
-            },
-            {
-              retries,
-              timeoutMs,
-            }
-          );
-
-        if (
-          !result ||
-          result.status ===
-            "session_not_found"
-        ) {
+    useCallback(
+      async (
+        recoveryCode,
+        options = {}
+      ) => {
+        if (!recoveryCode) {
           return {
             ok: false,
             sessionNotFound:
@@ -1946,63 +1969,102 @@ export default function App() {
           };
         }
 
-        if (
-          result.status !==
-          "ok"
-        ) {
+        const {
+          retries = 1,
+          timeoutMs = 7000,
+        } = options;
+
+        const scans =
+          getVisitScanPayload();
+
+        try {
+          const result =
+            await supabaseRpc(
+              "sync_visits",
+              {
+                p_recovery_code:
+                  recoveryCode,
+
+                p_scans:
+                  scans,
+              },
+              {
+                retries,
+                timeoutMs,
+              }
+            );
+
+          if (
+            !result ||
+            result.status ===
+              "session_not_found"
+          ) {
+            return {
+              ok: false,
+              sessionNotFound:
+                true,
+            };
+          }
+
+          if (
+            result.status !==
+            "ok"
+          ) {
+            return {
+              ok: false,
+            };
+          }
+
+          const invalidBooths =
+            uniqueNumbers(
+              result.invalidBooths ||
+                []
+            );
+
+          if (
+            invalidBooths.length >
+            0
+          ) {
+            removeVisitProofs(
+              invalidBooths
+            );
+          }
+
+          applyServerState(
+            result.state,
+            {
+              mergeLocalProofs:
+                true,
+            }
+          );
+
+          return {
+            ok:
+              true,
+
+            invalidBooths,
+
+            state:
+              result.state,
+          };
+        } catch (error) {
+          console.error(
+            "Visit sync failed:",
+            error
+          );
+
           return {
             ok: false,
+
+            networkError:
+              true,
+
+            error,
           };
         }
-
-        const invalidBooths =
-          uniqueNumbers(
-            result.invalidBooths ||
-              []
-          );
-
-        if (
-          invalidBooths.length >
-          0
-        ) {
-          removeVisitProofs(
-            invalidBooths
-          );
-        }
-
-        applyServerState(
-          result.state,
-          {
-            mergeLocalProofs:
-              true,
-          }
-        );
-
-        return {
-          ok:
-            true,
-
-          invalidBooths,
-
-          state:
-            result.state,
-        };
-      } catch (error) {
-        console.error(
-          "Visit sync failed:",
-          error
-        );
-
-        return {
-          ok: false,
-
-          networkError:
-            true,
-
-          error,
-        };
-      }
-    };
+      },
+      [applyServerState]
+    );
 
   // ==================================================
   // BACKGROUND SYNC
@@ -2093,6 +2155,7 @@ export default function App() {
   }, [
     user?.dbSynced,
     user?.recoveryCode,
+    syncAllVisitProofs,
   ]);
 
   // ==================================================
@@ -2176,7 +2239,7 @@ export default function App() {
                 return;
               }
             } catch {
-              // Continue.
+              // Continue with migration.
             }
           }
 
@@ -2306,6 +2369,8 @@ export default function App() {
     language,
     legacyRetryTick,
     visited,
+    applyServerState,
+    syncAllVisitProofs,
   ]);
 
   // ==================================================
@@ -3376,7 +3441,7 @@ export default function App() {
 
         const handleFailure =
           () => {
-            // Normal while looking for a QR.
+            // Normal while scanner is looking for a QR code.
           };
 
         try {
@@ -3523,6 +3588,10 @@ export default function App() {
     scannerRestartKey,
     language,
     user?.recoveryCode,
+    deviceId,
+    applyServerState,
+    syncAllVisitProofs,
+    t,
   ]);
 
   // ==================================================
@@ -3772,6 +3841,10 @@ export default function App() {
               style={
                 styles.jubiLogo
               }
+
+              draggable={
+                false
+              }
             />
           </div>
 
@@ -3966,9 +4039,24 @@ export default function App() {
     <Page>
       <style>
         {`
-          @keyframes boothSweep {
+          /*
+           * SHIMMER
+           *
+           * Real DOM element instead of ::after.
+           * This is more reliable for:
+           * - circular L'Oréal area
+           * - rotated booth areas
+           * - Safari / iOS
+           * - Chrome / Android
+           *
+           * transform instead of left = less layout work.
+           */
+
+          @keyframes boothShimmerSweep {
             0% {
-              left: -65%;
+              transform:
+                translate3d(-260%, 0, 0)
+                skewX(-16deg);
               opacity: 0;
             }
 
@@ -3976,22 +4064,32 @@ export default function App() {
               opacity: 0;
             }
 
-            22% {
-              opacity: 0.70;
+            20% {
+              opacity: 0.28;
             }
 
-            44% {
-              left: 125%;
-              opacity: 0.18;
+            34% {
+              opacity: 0.95;
             }
 
-            52% {
-              left: 135%;
+            55% {
+              transform:
+                translate3d(500%, 0, 0)
+                skewX(-16deg);
+              opacity: 0.30;
+            }
+
+            64% {
+              transform:
+                translate3d(520%, 0, 0)
+                skewX(-16deg);
               opacity: 0;
             }
 
             100% {
-              left: 135%;
+              transform:
+                translate3d(520%, 0, 0)
+                skewX(-16deg);
               opacity: 0;
             }
           }
@@ -4000,49 +4098,52 @@ export default function App() {
             overflow: hidden !important;
           }
 
-          .booth-unvisited::after {
-            content: "";
+          .booth-shimmer {
             position: absolute;
 
+            z-index: 2;
+
             top: -40%;
-            bottom: -40%;
+            left: 0;
 
-            left: -65%;
+            width: 30%;
+            height: 180%;
 
-            width: 35%;
+            pointer-events: none;
 
             background:
               linear-gradient(
                 105deg,
                 rgba(255,255,255,0) 0%,
-                rgba(255,255,255,0.10) 25%,
-                rgba(255,255,255,0.78) 50%,
-                rgba(255,255,255,0.10) 75%,
+                rgba(255,255,255,0.08) 18%,
+                rgba(255,255,255,0.30) 35%,
+                rgba(255,255,255,0.95) 50%,
+                rgba(255,255,255,0.30) 65%,
+                rgba(255,255,255,0.08) 82%,
                 rgba(255,255,255,0) 100%
               );
 
-            transform: skewX(-15deg);
-
-            pointer-events: none;
-
-            opacity: 0;
-
             animation:
-              boothSweep 5.8s ease-in-out infinite;
+              boothShimmerSweep
+              5.8s
+              ease-in-out
+              infinite;
 
             animation-delay:
               var(--shimmer-delay, 0s);
 
-            will-change: left, opacity;
+            will-change:
+              transform,
+              opacity;
           }
 
           .booth-unvisited:active {
             background:
-              rgba(90,90,90,0.15) !important;
+              rgba(90,90,90,0.16) !important;
           }
 
           @media (prefers-reduced-motion: reduce) {
-            .booth-unvisited::after {
+            .booth-shimmer {
               display: none !important;
               animation: none !important;
             }
@@ -4051,17 +4152,22 @@ export default function App() {
           @supports (min-height: 100dvh) {
             .impo-page,
             .impo-app {
-              min-height: 100dvh !important;
+              min-height:
+                100dvh !important;
             }
           }
 
           html {
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
+            -webkit-text-size-adjust:
+              100%;
+
+            text-size-adjust:
+              100%;
           }
 
           body {
-            overscroll-behavior-y: none;
+            overscroll-behavior-y:
+              none;
           }
 
           button,
@@ -4198,7 +4304,7 @@ export default function App() {
                       `${-(
                         (booth.id %
                           7) *
-                        0.55
+                        0.52
                       )}s`;
 
                     return (
@@ -4220,6 +4326,10 @@ export default function App() {
                             ? t.visited
                             : t.notVisited
                         }`}
+
+                        aria-pressed={
+                          isVisited
+                        }
 
                         title={
                           booth.name
@@ -4270,7 +4380,14 @@ export default function App() {
                               ? `2px solid ${GREEN}`
                               : `1px solid ${UNVISITED_BORDER}`,
                         }}
-                      />
+                      >
+                        {!isVisited && (
+                          <span
+                            className="booth-shimmer"
+                            aria-hidden="true"
+                          />
+                        )}
+                      </button>
                     );
                   }
                 )}
@@ -5293,18 +5410,23 @@ function GoodieSuccessScreen({
         {`
           @keyframes goodiePan {
             0% {
-              background-position: left center;
+              background-position:
+                left center;
             }
 
             100% {
-              background-position: right center;
+              background-position:
+                right center;
             }
           }
 
           @media (prefers-reduced-motion: reduce) {
             .goodie-panorama {
-              animation: none !important;
-              background-position: center center !important;
+              animation:
+                none !important;
+
+              background-position:
+                center center !important;
             }
           }
         `}
