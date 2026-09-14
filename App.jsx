@@ -18,7 +18,7 @@ const SUPABASE_PUBLISHABLE_KEY =
 const TEST_MODE = true;
 const TEST_QR_VALUE = "GISADA";
 
-const TOTAL_BOOTHS = 20;
+const TOTAL_BOOTHS = 19;
 const TEST_UNLOCK_AT = 2;
 const GOODIE_UNLOCK_AT = 18;
 
@@ -34,8 +34,8 @@ const BORDER = "#E7E7E7";
 const GREEN = "#209447";
 const GREEN_BG = "rgba(32, 148, 71, 0.16)";
 
-const UNVISITED_BG = "rgba(90, 90, 90, 0.05)";
-const UNVISITED_BORDER = "rgba(90, 90, 90, 0.28)";
+const UNVISITED_BG = "rgba(90, 90, 90, 0.065)";
+const UNVISITED_BORDER = "rgba(90, 90, 90, 0.32)";
 
 // ==================================================
 // STORAGE
@@ -112,6 +112,8 @@ const translations = {
     cameraCouldNotStart: "Camera could not be started.",
     cameraPermission:
       "Please allow camera access and try again.",
+    unsupportedBrowser:
+      "Camera scanning is not supported in this browser. Please open the page in Safari, Chrome, Firefox or Edge.",
     close: "CLOSE",
     sessionProblem:
       "Your session could not be found in the database. Please restore it with your recovery code.",
@@ -191,8 +193,7 @@ const translations = {
       "Die maximale Anzahl Teilnehmender wurde erreicht.",
     anniversaryLabel: "50 JAHRE IMPORT PARFUMERIE",
     hello: (name) => `Hallo ${name}!`,
-    welcomeEvent:
-      "Willkommen an unserem Jubiläumsevent.",
+    welcomeEvent: "Willkommen an unserem Jubiläumsevent.",
     boothsVisited: "Besuchte Stände",
     brandPass: "Dein Brand Pass",
     tapBooth:
@@ -214,14 +215,12 @@ const translations = {
     wrongBoothQr: (name) =>
       `Dieser QR-Code gehört nicht zu ${name}. Bitte scanne den QR-Code an diesem Stand.`,
     scanQr: "QR-Code scannen",
-    startingCamera:
-      "Kamera wird gestartet...",
+    startingCamera: "Kamera wird gestartet...",
     scannerCouldNotLoad:
       "Der Scanner konnte nicht geladen werden.",
     cameraReady:
       "Kamera bereit – richte sie auf den QR-Code.",
-    savingVisit:
-      "Besuch wird gespeichert...",
+    savingVisit: "Besuch wird gespeichert...",
     testScanBooth:
       "TESTMODUS – scanne den GISADA QR-Code.",
     testScanGoodie:
@@ -234,12 +233,13 @@ const translations = {
       "Die Kamera konnte nicht gestartet werden.",
     cameraPermission:
       "Bitte erlaube den Kamerazugriff und versuche es erneut.",
+    unsupportedBrowser:
+      "Der Kamera-Scanner wird in diesem Browser nicht unterstützt. Bitte öffne die Seite in Safari, Chrome, Firefox oder Edge.",
     close: "SCHLIESSEN",
     sessionProblem:
       "Deine Session wurde in der Datenbank nicht gefunden. Bitte stelle sie mit deinem Recovery-Code wieder her.",
     goodieBag: "Goodie Bag",
-    goodieCollected:
-      "✓ Goodie Bag abgeholt",
+    goodieCollected: "✓ Goodie Bag abgeholt",
     goodieReady: "Du bist bereit!",
     testGoodieReady:
       "Test abgeschlossen. Das Goodie Bag kann jetzt abgeholt werden.",
@@ -252,8 +252,7 @@ const translations = {
     remainingOne: "Noch 1 Stand",
     remainingMany: (count) =>
       `Noch ${count} Stände`,
-    collectGoodie:
-      "GOODIE BAG ABHOLEN",
+    collectGoodie: "GOODIE BAG ABHOLEN",
     checkingGoodie:
       "Berechtigung wird geprüft...",
     goodieConnection:
@@ -268,8 +267,7 @@ const translations = {
       "Die Goodie-Bag-Freigabe ist nicht mehr gültig. Bitte scanne den Goodie-Bag-QR-Code erneut.",
     goodieApprovedEyebrow: "GOODIE BAG",
     approved: "FREIGEGEBEN",
-    testApproval:
-      "Testfreigabe erfolgreich",
+    testApproval: "Testfreigabe erfolgreich",
     boothsVisitedApproval: (visited, total) =>
       `${visited} / ${total} Stände besucht`,
     mayHandOver:
@@ -302,8 +300,7 @@ const translations = {
     thankYou:
       "Vielen Dank, dass du heute mit uns unser 50-jähriges Jubiläum gefeiert hast. Komm gut nach Hause!",
     done: "FERTIG",
-    mapAlt:
-      "Übersichtsplan der Brandmesse",
+    mapAlt: "Übersichtsplan der Brandmesse",
     logoAlt: "Import Parfumerie",
     anniversaryAlt:
       "50 Jahre Import Parfumerie",
@@ -333,10 +330,8 @@ const translations = {
     hello: (name) => `Bonjour ${name} !`,
     welcomeEvent:
       "Bienvenue à notre événement anniversaire.",
-    boothsVisited:
-      "Stands visités",
-    brandPass:
-      "Votre Brand Pass",
+    boothsVisited: "Stands visités",
+    brandPass: "Votre Brand Pass",
     tapBooth:
       "Touchez un stand pour scanner son code QR.",
     visited: "Visité",
@@ -355,8 +350,7 @@ const translations = {
       `✓ ${name} a été enregistré sur cet appareil. La visite sera synchronisée automatiquement dès que la connexion sera disponible.`,
     wrongBoothQr: (name) =>
       `Ce code QR n'appartient pas à ${name}. Veuillez scanner le code QR de ce stand.`,
-    scanQr:
-      "Scanner le code QR",
+    scanQr: "Scanner le code QR",
     startingCamera:
       "Démarrage de la caméra...",
     scannerCouldNotLoad:
@@ -377,15 +371,15 @@ const translations = {
       "La caméra n'a pas pu démarrer.",
     cameraPermission:
       "Veuillez autoriser l'accès à la caméra et réessayer.",
+    unsupportedBrowser:
+      "Le scanner de caméra n'est pas pris en charge dans ce navigateur. Ouvrez la page dans Safari, Chrome, Firefox ou Edge.",
     close: "FERMER",
     sessionProblem:
       "Votre session n'a pas été trouvée dans la base de données. Veuillez la restaurer avec votre code de récupération.",
-    goodieBag:
-      "Goodie Bag",
+    goodieBag: "Goodie Bag",
     goodieCollected:
       "✓ Goodie Bag récupéré",
-    goodieReady:
-      "C'est bon !",
+    goodieReady: "C'est bon !",
     testGoodieReady:
       "Test terminé. Le Goodie Bag peut maintenant être récupéré.",
     goodieLiveReady: (visited, total) =>
@@ -394,8 +388,7 @@ const translations = {
       "MODE TEST – scannez 2 stands différents pour débloquer le Goodie Bag.",
     liveGoodieInstruction: (required, total) =>
       `Visitez au moins ${required} des ${total} stands pour débloquer votre Goodie Bag.`,
-    remainingOne:
-      "Encore 1 stand",
+    remainingOne: "Encore 1 stand",
     remainingMany: (count) =>
       `Encore ${count} stands`,
     collectGoodie:
@@ -412,10 +405,8 @@ const translations = {
       `Les ${required} visites requises ne sont pas encore confirmées.`,
     goodieApprovalExpired:
       "La validation du Goodie Bag n'est plus valable. Veuillez scanner à nouveau le code QR du Goodie Bag.",
-    goodieApprovedEyebrow:
-      "GOODIE BAG",
-    approved:
-      "VALIDÉ",
+    goodieApprovedEyebrow: "GOODIE BAG",
+    approved: "VALIDÉ",
     testApproval:
       "Validation test réussie",
     boothsVisitedApproval: (visited, total) =>
@@ -451,10 +442,8 @@ const translations = {
     thankYou:
       "Merci d'avoir célébré avec nous aujourd'hui notre 50e anniversaire. Nous vous souhaitons un bon retour !",
     done: "TERMINER",
-    mapAlt:
-      "Plan de l'événement",
-    logoAlt:
-      "Import Parfumerie",
+    mapAlt: "Plan de l'événement",
+    logoAlt: "Import Parfumerie",
     anniversaryAlt:
       "50 ans Import Parfumerie",
     panoramaAlt:
@@ -483,16 +472,12 @@ const translations = {
     hello: (name) => `Ciao ${name}!`,
     welcomeEvent:
       "Benvenuto al nostro evento anniversario.",
-    boothsVisited:
-      "Stand visitati",
-    brandPass:
-      "Il tuo Brand Pass",
+    boothsVisited: "Stand visitati",
+    brandPass: "Il tuo Brand Pass",
     tapBooth:
       "Tocca uno stand per scansionare il suo codice QR.",
-    visited:
-      "Visitato",
-    notVisited:
-      "Non visitato",
+    visited: "Visitato",
+    notVisited: "Non visitato",
     mapNotFound:
       "La mappa non è stata trovata.",
     mapUploadBefore:
@@ -529,15 +514,15 @@ const translations = {
       "Impossibile avviare la fotocamera.",
     cameraPermission:
       "Consenti l'accesso alla fotocamera e riprova.",
+    unsupportedBrowser:
+      "Lo scanner della fotocamera non è supportato in questo browser. Apri la pagina in Safari, Chrome, Firefox o Edge.",
     close: "CHIUDI",
     sessionProblem:
       "La tua sessione non è stata trovata nel database. Ripristinala con il tuo codice di recupero.",
-    goodieBag:
-      "Goodie Bag",
+    goodieBag: "Goodie Bag",
     goodieCollected:
       "✓ Goodie Bag ritirato",
-    goodieReady:
-      "Ci siamo!",
+    goodieReady: "Ci siamo!",
     testGoodieReady:
       "Test completato. Ora puoi ritirare il Goodie Bag.",
     goodieLiveReady: (visited, total) =>
@@ -566,8 +551,7 @@ const translations = {
       "L'approvazione del Goodie Bag non è più valida. Scansiona nuovamente il codice QR del Goodie Bag.",
     goodieApprovedEyebrow:
       "GOODIE BAG",
-    approved:
-      "APPROVATO",
+    approved: "APPROVATO",
     testApproval:
       "Approvazione test riuscita",
     boothsVisitedApproval: (visited, total) =>
@@ -617,212 +601,238 @@ const translations = {
 // ==================================================
 // BOOTHS
 // ==================================================
+//
+// Aktive IDs:
+// 1–8
+// 11–21
+//
+// IDs 9 und 10 sind historisch:
+// 9 = Clarins
+// 10 = Bvlgari
+//
+// Diese beiden Stände sind NICHT mehr aktiv.
+// ==================================================
 
 const booths = [
   {
     id: 1,
     name: "Gisada",
     area: {
-      left: 15.9,
-      top: 4.8,
-      width: 25.1,
-      height: 7.0,
+      left: 13.81,
+      top: 4.63,
+      width: 26.29,
+      height: 6.88,
     },
   },
+
   {
     id: 2,
     name: "P&I Parfums",
     area: {
-      left: 49.4,
-      top: 4.8,
-      width: 14.4,
+      left: 48.74,
+      top: 4.51,
+      width: 15.01,
       height: 7.0,
     },
   },
+
   {
     id: 3,
     name: "Karikaturist",
     area: {
       left: 66.8,
-      top: 4.8,
-      width: 11.3,
-      height: 7.0,
+      top: 4.51,
+      width: 11.42,
+      height: 5.22,
     },
   },
+
   {
     id: 4,
     name: "Jean-Pierre Rossellet",
     area: {
-      left: 44.1,
-      top: 16.1,
-      width: 4.8,
-      height: 7.0,
+      left: 43.16,
+      top: 15.66,
+      width: 5.18,
+      height: 7.12,
     },
   },
+
   {
     id: 5,
     name: "Nobilis Group",
     area: {
-      left: 49.5,
-      top: 16.1,
-      width: 14.3,
-      height: 7.0,
+      left: 49.14,
+      top: 15.66,
+      width: 14.61,
+      height: 7.12,
     },
   },
+
   {
     id: 6,
     name: "Flariel",
     area: {
-      left: 44.1,
-      top: 23.7,
-      width: 4.8,
-      height: 8.5,
+      left: 43.16,
+      top: 23.37,
+      width: 5.18,
+      height: 8.78,
     },
   },
+
   {
     id: 7,
     name: "Bode Studios",
     area: {
-      left: 49.7,
-      top: 23.7,
-      width: 14.1,
-      height: 8.5,
+      left: 49.14,
+      top: 23.49,
+      width: 14.61,
+      height: 8.66,
     },
   },
+
   {
     id: 8,
     name: "L'Oréal Luxe",
     shape: "circle",
     area: {
-      left: 41.6,
-      top: 38.1,
-      width: 25.4,
-      height: 23.6,
+      left: 40.64,
+      top: 37.84,
+      width: 26.16,
+      height: 23.49,
     },
   },
-  {
-    id: 9,
-    name: "Clarins",
-    area: {
-      left: 48.8,
-      top: 68.6,
-      width: 14.3,
-      height: 7.0,
-    },
-  },
-  {
-    id: 10,
-    name: "Bvlgari",
-    area: {
-      left: 48.8,
-      top: 76.3,
-      width: 14.3,
-      height: 7.0,
-    },
-  },
+
   {
     id: 11,
     name: "Shiseido",
     area: {
-      left: 48.8,
-      top: 88.8,
-      width: 14.3,
-      height: 7.1,
+      left: 48.21,
+      top: 88.49,
+      width: 14.48,
+      height: 7.35,
     },
   },
+
   {
     id: 12,
     name: "Deurocos Cosmetic",
-    rotate: -45,
     area: {
-      left: 22.1,
-      top: 68.5,
-      width: 13.8,
-      height: 6.8,
+      left: 48.21,
+      top: 68.21,
+      width: 14.48,
+      height: 7.12,
     },
   },
+
   {
     id: 13,
     name: "Give Back Beauty",
-    rotate: -45,
     area: {
-      left: 27.1,
-      top: 74.9,
-      width: 10.6,
-      height: 4.8,
+      left: 48.21,
+      top: 75.92,
+      width: 14.48,
+      height: 7.12,
     },
   },
+
   {
     id: 14,
     name: "Coty",
     area: {
-      left: 14.7,
-      top: 88.8,
-      width: 25.1,
-      height: 7.1,
+      left: 12.62,
+      top: 88.49,
+      width: 26.29,
+      height: 7.35,
     },
   },
+
   {
     id: 15,
     name: "Puig",
     area: {
-      left: 28.2,
-      top: 16.1,
-      width: 6.5,
-      height: 22.1,
+      left: 26.56,
+      top: 15.66,
+      width: 6.77,
+      height: 22.18,
     },
   },
+
   {
     id: 16,
     name: "Clinique",
     area: {
-      left: 5.1,
-      top: 16.6,
-      width: 8.3,
-      height: 16.6,
+      left: 1.99,
+      top: 18.15,
+      width: 7.7,
+      height: 15.42,
     },
   },
+
   {
     id: 17,
     name: "Dr.Jart+",
     area: {
-      left: 5.1,
-      top: 33.4,
-      width: 12.8,
-      height: 11.0,
+      left: 1.99,
+      top: 34.16,
+      width: 10.23,
+      height: 10.2,
     },
   },
+
   {
     id: 18,
     name: "Tom Ford",
     area: {
-      left: 5.1,
-      top: 44.7,
-      width: 12.8,
-      height: 11.0,
+      left: 1.99,
+      top: 44.84,
+      width: 10.23,
+      height: 10.2,
     },
   },
+
   {
     id: 19,
     name: "Estée Lauder",
     area: {
-      left: 5.1,
-      top: 56.1,
-      width: 12.8,
-      height: 11.0,
+      left: 1.99,
+      top: 55.63,
+      width: 10.23,
+      height: 10.2,
     },
   },
+
   {
     id: 20,
     name: "Jo Malone London",
     area: {
-      left: 5.1,
-      top: 67.6,
-      width: 8.3,
-      height: 16.2,
+      left: 1.99,
+      top: 66.43,
+      width: 7.7,
+      height: 15.42,
+    },
+  },
+
+  {
+    id: 21,
+    name: "Import Parfumerie Game",
+    rotate: 44.4,
+    area: {
+      left: 18.75,
+      top: 74.65,
+      width: 15.97,
+      height: 3.86,
     },
   },
 ];
+
+// ==================================================
+// ACTIVE BOOTHS
+// ==================================================
+
+const ACTIVE_BOOTH_IDS = new Set(
+  booths.map((booth) => booth.id)
+);
 
 // ==================================================
 // BASIC HELPERS
@@ -831,7 +841,10 @@ const booths = [
 function loadJSON(key, fallback) {
   try {
     const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
+
+    return value
+      ? JSON.parse(value)
+      : fallback;
   } catch {
     return fallback;
   }
@@ -839,9 +852,12 @@ function loadJSON(key, fallback) {
 
 function saveJSON(key, value) {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
   } catch {
-    // Ignore.
+    // Ignore storage errors.
   }
 }
 
@@ -857,8 +873,7 @@ function uniqueNumbers(values) {
         .filter(
           (value) =>
             Number.isInteger(value) &&
-            value >= 1 &&
-            value <= TOTAL_BOOTHS
+            ACTIVE_BOOTH_IDS.has(value)
         )
     ),
   ].sort((a, b) => a - b);
@@ -895,15 +910,20 @@ function createLocalId() {
 
 function getOrCreateLocalId(key) {
   try {
-    const existing = localStorage.getItem(key);
+    const existing =
+      localStorage.getItem(key);
 
     if (existing) {
       return existing;
     }
 
-    const value = createLocalId();
+    const value =
+      createLocalId();
 
-    localStorage.setItem(key, value);
+    localStorage.setItem(
+      key,
+      value
+    );
 
     return value;
   } catch {
@@ -912,9 +932,9 @@ function getOrCreateLocalId(key) {
 }
 
 function wait(ms) {
-  return new Promise((resolve) =>
-    window.setTimeout(resolve, ms)
-  );
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 }
 
 // ==================================================
@@ -922,21 +942,32 @@ function wait(ms) {
 // ==================================================
 
 function loadInitialUser() {
-  const current = loadJSON(USER_STORAGE_KEY, null);
+  const current =
+    loadJSON(
+      USER_STORAGE_KEY,
+      null
+    );
 
   if (current) {
     return current;
   }
 
   if (TEST_MODE) {
-    return loadJSON(LEGACY_USER_STORAGE_KEY, null);
+    return loadJSON(
+      LEGACY_USER_STORAGE_KEY,
+      null
+    );
   }
 
   return null;
 }
 
 function loadInitialVisited() {
-  const current = loadJSON(VISITED_STORAGE_KEY, null);
+  const current =
+    loadJSON(
+      VISITED_STORAGE_KEY,
+      null
+    );
 
   if (Array.isArray(current)) {
     return uniqueNumbers(current);
@@ -944,7 +975,10 @@ function loadInitialVisited() {
 
   if (TEST_MODE) {
     return uniqueNumbers(
-      loadJSON(LEGACY_VISITED_STORAGE_KEY, [])
+      loadJSON(
+        LEGACY_VISITED_STORAGE_KEY,
+        []
+      )
     );
   }
 
@@ -952,16 +986,23 @@ function loadInitialVisited() {
 }
 
 function loadInitialGoodie() {
-  const current = loadJSON(GOODIE_STORAGE_KEY, null);
+  const current =
+    loadJSON(
+      GOODIE_STORAGE_KEY,
+      null
+    );
 
   if (current) {
     return current;
   }
 
   if (TEST_MODE) {
-    return loadJSON(LEGACY_GOODIE_STORAGE_KEY, {
-      collectedAt: null,
-    });
+    return loadJSON(
+      LEGACY_GOODIE_STORAGE_KEY,
+      {
+        collectedAt: null,
+      }
+    );
   }
 
   return {
@@ -971,18 +1012,30 @@ function loadInitialGoodie() {
 
 function detectInitialLanguage() {
   try {
-    const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    const saved =
+      localStorage.getItem(
+        LANGUAGE_STORAGE_KEY
+      );
 
-    if (SUPPORTED_LANGUAGES.includes(saved)) {
+    if (
+      SUPPORTED_LANGUAGES.includes(
+        saved
+      )
+    ) {
       return saved;
     }
 
     if (TEST_MODE) {
-      const legacy = localStorage.getItem(
-        LEGACY_LANGUAGE_STORAGE_KEY
-      );
+      const legacy =
+        localStorage.getItem(
+          LEGACY_LANGUAGE_STORAGE_KEY
+        );
 
-      if (SUPPORTED_LANGUAGES.includes(legacy)) {
+      if (
+        SUPPORTED_LANGUAGES.includes(
+          legacy
+        )
+      ) {
         return legacy;
       }
     }
@@ -990,13 +1043,16 @@ function detectInitialLanguage() {
     // Ignore.
   }
 
-  const browserLanguage = String(
-    navigator.language || "en"
-  )
-    .slice(0, 2)
-    .toLowerCase();
+  const browserLanguage =
+    String(
+      navigator.language || "en"
+    )
+      .slice(0, 2)
+      .toLowerCase();
 
-  return SUPPORTED_LANGUAGES.includes(browserLanguage)
+  return SUPPORTED_LANGUAGES.includes(
+    browserLanguage
+  )
     ? browserLanguage
     : "en";
 }
@@ -1006,7 +1062,11 @@ function detectInitialLanguage() {
 // ==================================================
 
 function loadVisitProofs() {
-  const raw = loadJSON(VISIT_PROOFS_STORAGE_KEY, {});
+  const raw =
+    loadJSON(
+      VISIT_PROOFS_STORAGE_KEY,
+      {}
+    );
 
   if (
     !raw ||
@@ -1018,70 +1078,128 @@ function loadVisitProofs() {
 
   const result = {};
 
-  Object.entries(raw).forEach(([key, value]) => {
-    const boothId = Number(key);
+  Object.entries(raw).forEach(
+    ([key, value]) => {
+      const boothId =
+        Number(key);
 
-    if (
-      Number.isInteger(boothId) &&
-      boothId >= 1 &&
-      boothId <= TOTAL_BOOTHS &&
-      typeof value === "string" &&
-      value.length > 0
-    ) {
-      result[boothId] = value.slice(0, 500);
+      if (
+        Number.isInteger(
+          boothId
+        ) &&
+        ACTIVE_BOOTH_IDS.has(
+          boothId
+        ) &&
+        typeof value ===
+          "string" &&
+        value.length > 0
+      ) {
+        result[boothId] =
+          value.slice(
+            0,
+            500
+          );
+      }
     }
-  });
+  );
 
   return result;
 }
 
-function saveVisitProof(boothId, qrToken) {
-  const proofs = loadVisitProofs();
+function saveVisitProof(
+  boothId,
+  qrToken
+) {
+  const proofs =
+    loadVisitProofs();
 
-  proofs[boothId] = String(qrToken || "")
-    .trim()
-    .slice(0, 500);
+  proofs[boothId] =
+    String(
+      qrToken || ""
+    )
+      .trim()
+      .slice(
+        0,
+        500
+      );
 
-  saveJSON(VISIT_PROOFS_STORAGE_KEY, proofs);
+  saveJSON(
+    VISIT_PROOFS_STORAGE_KEY,
+    proofs
+  );
 }
 
-function removeVisitProofs(boothIds) {
-  if (!Array.isArray(boothIds) || boothIds.length === 0) {
+function removeVisitProofs(
+  boothIds
+) {
+  if (
+    !Array.isArray(boothIds) ||
+    boothIds.length === 0
+  ) {
     return;
   }
 
-  const proofs = loadVisitProofs();
+  const proofs =
+    loadVisitProofs();
 
-  boothIds.forEach((boothId) => {
-    delete proofs[Number(boothId)];
-  });
+  boothIds.forEach(
+    (boothId) => {
+      delete proofs[
+        Number(boothId)
+      ];
+    }
+  );
 
-  saveJSON(VISIT_PROOFS_STORAGE_KEY, proofs);
+  saveJSON(
+    VISIT_PROOFS_STORAGE_KEY,
+    proofs
+  );
 }
 
 function clearVisitProofs() {
-  saveJSON(VISIT_PROOFS_STORAGE_KEY, {});
+  saveJSON(
+    VISIT_PROOFS_STORAGE_KEY,
+    {}
+  );
 }
 
 function getVisitProofIds() {
-  return uniqueNumbers(Object.keys(loadVisitProofs()));
+  return uniqueNumbers(
+    Object.keys(
+      loadVisitProofs()
+    )
+  );
 }
 
 function getVisitScanPayload() {
-  const proofs = loadVisitProofs();
+  const proofs =
+    loadVisitProofs();
 
-  return Object.entries(proofs)
-    .map(([boothId, qrToken]) => ({
-      boothId: Number(boothId),
-      qrToken,
-    }))
+  return Object.entries(
+    proofs
+  )
+    .map(
+      ([boothId, qrToken]) => ({
+        boothId:
+          Number(boothId),
+
+        qrToken,
+      })
+    )
     .filter(
       (entry) =>
-        Number.isInteger(entry.boothId) &&
-        entry.boothId >= 1 &&
-        entry.boothId <= TOTAL_BOOTHS
+        Number.isInteger(
+          entry.boothId
+        ) &&
+        ACTIVE_BOOTH_IDS.has(
+          entry.boothId
+        )
     )
-    .sort((a, b) => a.boothId - b.boothId);
+    .sort(
+      (a, b) =>
+        a.boothId -
+        b.boothId
+    );
 }
 
 // ==================================================
@@ -1089,28 +1207,48 @@ function getVisitScanPayload() {
 // ==================================================
 
 class RpcError extends Error {
-  constructor(message, status, body) {
+  constructor(
+    message,
+    status,
+    body
+  ) {
     super(message);
 
-    this.name = "RpcError";
-    this.status = status;
-    this.body = body;
+    this.name =
+      "RpcError";
+
+    this.status =
+      status;
+
+    this.body =
+      body;
   }
 }
 
-function isRetryableError(error) {
-  if (error?.name === "AbortError") {
+function isRetryableError(
+  error
+) {
+  if (
+    error?.name ===
+    "AbortError"
+  ) {
     return true;
   }
 
-  if (error instanceof TypeError) {
+  if (
+    error instanceof TypeError
+  ) {
     return true;
   }
 
-  if (error instanceof RpcError) {
+  if (
+    error instanceof RpcError
+  ) {
     return (
-      error.status === 429 ||
-      error.status >= 500
+      error.status ===
+        429 ||
+      error.status >=
+        500
     );
   }
 
@@ -1127,40 +1265,60 @@ async function supabaseRpc(
     timeoutMs = 8000,
   } = options;
 
-  let lastError = null;
+  let lastError =
+    null;
 
   for (
     let attempt = 0;
     attempt <= retries;
     attempt += 1
   ) {
-    const controller = new AbortController();
+    const controller =
+      new AbortController();
 
-    const timeout = window.setTimeout(() => {
-      controller.abort();
-    }, timeoutMs);
-
-    try {
-      const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/rpc/${functionName}`,
-        {
-          method: "POST",
-
-          headers: {
-            apikey: SUPABASE_PUBLISHABLE_KEY,
-            "Content-Type": "application/json",
-            "Cache-Control": "no-store",
-          },
-
-          body: JSON.stringify(payload),
-
-          signal: controller.signal,
-        }
+    const timeout =
+      window.setTimeout(
+        () => {
+          controller.abort();
+        },
+        timeoutMs
       );
 
-      window.clearTimeout(timeout);
+    try {
+      const response =
+        await fetch(
+          `${SUPABASE_URL}/rest/v1/rpc/${functionName}`,
+          {
+            method:
+              "POST",
 
-      const text = await response.text();
+            headers: {
+              apikey:
+                SUPABASE_PUBLISHABLE_KEY,
+
+              "Content-Type":
+                "application/json",
+
+              "Cache-Control":
+                "no-store",
+            },
+
+            body:
+              JSON.stringify(
+                payload
+              ),
+
+            signal:
+              controller.signal,
+          }
+        );
+
+      window.clearTimeout(
+        timeout
+      );
+
+      const text =
+        await response.text();
 
       if (!response.ok) {
         throw new RpcError(
@@ -1174,32 +1332,51 @@ async function supabaseRpc(
         return null;
       }
 
-      return JSON.parse(text);
+      return JSON.parse(
+        text
+      );
     } catch (error) {
-      window.clearTimeout(timeout);
+      window.clearTimeout(
+        timeout
+      );
 
-      lastError = error;
+      lastError =
+        error;
 
       const canRetry =
         attempt < retries &&
-        isRetryableError(error);
+        isRetryableError(
+          error
+        );
 
       if (!canRetry) {
         throw error;
       }
 
       const delay =
-        350 * Math.pow(2, attempt) +
-        Math.floor(Math.random() * 250);
+        350 *
+          Math.pow(
+            2,
+            attempt
+          ) +
+        Math.floor(
+          Math.random() *
+            250
+        );
 
-      await wait(delay);
+      await wait(
+        delay
+      );
     }
   }
 
   throw lastError;
 }
 
-function serverErrorContains(error, value) {
+function serverErrorContains(
+  error,
+  value
+) {
   return String(
     error?.body ||
       error?.message ||
@@ -1208,16 +1385,29 @@ function serverErrorContains(error, value) {
 }
 
 // ==================================================
-// SCANNER HELPERS
+// CAMERA
 // ==================================================
 
-async function stopScannerInstance(scanner) {
+function hasCameraSupport() {
+  return Boolean(
+    navigator.mediaDevices &&
+      typeof navigator.mediaDevices
+        .getUserMedia ===
+        "function"
+  );
+}
+
+async function stopScannerInstance(
+  scanner
+) {
   if (!scanner) {
     return;
   }
 
   try {
-    if (scanner.isScanning) {
+    if (
+      scanner.isScanning
+    ) {
       await scanner.stop();
     }
   } catch {
@@ -1235,22 +1425,47 @@ function scannerConfig() {
   return {
     fps: 10,
 
-    qrbox: (width, height) => {
-      const size = Math.floor(
-        Math.min(width, height) * 0.9
-      );
+    qrbox: (
+      width,
+      height
+    ) => {
+      const minimum =
+        Math.min(
+          width,
+          height
+        );
+
+      const size =
+        Math.max(
+          180,
+          Math.floor(
+            minimum * 0.82
+          )
+        );
 
       return {
-        width: size,
-        height: size,
+        width:
+          Math.min(
+            size,
+            minimum
+          ),
+
+        height:
+          Math.min(
+            size,
+            minimum
+          ),
       };
     },
 
-    disableFlip: false,
+    disableFlip:
+      false,
   };
 }
 
-function chooseRearCamera(cameras) {
+function chooseRearCamera(
+  cameras
+) {
   if (
     !Array.isArray(cameras) ||
     cameras.length === 0
@@ -1266,19 +1481,34 @@ function chooseRearCamera(cameras) {
     "arrière",
     "posteriore",
     "trasera",
+    "world",
   ];
 
-  const match = cameras.find((camera) => {
-    const label = String(
-      camera.label || ""
-    ).toLowerCase();
+  const match =
+    cameras.find(
+      (camera) => {
+        const label =
+          String(
+            camera.label ||
+              ""
+          ).toLowerCase();
 
-    return keywords.some((keyword) =>
-      label.includes(keyword)
+        return keywords.some(
+          (keyword) =>
+            label.includes(
+              keyword
+            )
+        );
+      }
     );
-  });
 
-  return match || cameras[cameras.length - 1];
+  return (
+    match ||
+    cameras[
+      cameras.length -
+        1
+    ]
+  );
 }
 
 // ==================================================
@@ -1286,82 +1516,183 @@ function chooseRearCamera(cameras) {
 // ==================================================
 
 export default function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [
+    showSplash,
+    setShowSplash,
+  ] = useState(true);
 
-  const [language, setLanguage] = useState(
+  const [
+    language,
+    setLanguage,
+  ] = useState(
     detectInitialLanguage
   );
 
   const t =
-    translations[language] ||
+    translations[
+      language
+    ] ||
     translations.en;
 
-  const [user, setUser] = useState(loadInitialUser);
+  const [
+    user,
+    setUser,
+  ] = useState(
+    loadInitialUser
+  );
 
-  const [form, setForm] = useState({
+  const [
+    form,
+    setForm,
+  ] = useState({
     firstname: "",
     lastname: "",
   });
 
-  const [visited, setVisited] = useState(
+  const [
+    visited,
+    setVisited,
+  ] = useState(
     loadInitialVisited
   );
 
-  const [goodieData, setGoodieData] = useState(
+  const [
+    goodieData,
+    setGoodieData,
+  ] = useState(
     loadInitialGoodie
   );
 
-  const [scanTarget, setScanTarget] = useState(null);
-  const [scannerStatus, setScannerStatus] = useState("");
-  const [scannerRestartKey, setScannerRestartKey] = useState(0);
+  const [
+    scanTarget,
+    setScanTarget,
+  ] = useState(null);
 
-  const [message, setMessage] = useState("");
-  const [mapError, setMapError] = useState(false);
+  const [
+    scannerStatus,
+    setScannerStatus,
+  ] = useState("");
 
-  const [goodieApproved, setGoodieApproved] = useState(false);
-  const [goodieApprovalError, setGoodieApprovalError] = useState("");
-  const [goodieReceiving, setGoodieReceiving] = useState(false);
-  const [showGoodieSuccess, setShowGoodieSuccess] = useState(false);
+  const [
+    scannerRestartKey,
+    setScannerRestartKey,
+  ] = useState(0);
 
-  const [recoveryOpen, setRecoveryOpen] = useState(false);
-  const [recoveryInput, setRecoveryInput] = useState("");
-  const [recoveryMessage, setRecoveryMessage] = useState("");
-  const [restoring, setRestoring] = useState(false);
+  const [
+    message,
+    setMessage,
+  ] = useState("");
 
-  const [registering, setRegistering] = useState(false);
-  const [registrationError, setRegistrationError] = useState("");
+  const [
+    mapError,
+    setMapError,
+  ] = useState(false);
 
-  const [legacyRetryTick, setLegacyRetryTick] = useState(0);
+  const [
+    goodieApproved,
+    setGoodieApproved,
+  ] = useState(false);
 
-  const scannerRef = useRef(null);
-  const scanLockedRef = useRef(false);
-  const scannerSectionRef = useRef(null);
-  const mapSectionRef = useRef(null);
-  const legacyMigrationRef = useRef(false);
-  const legacyRetryTimerRef = useRef(null);
+  const [
+    goodieApprovalError,
+    setGoodieApprovalError,
+  ] = useState("");
 
-  const scannerId = "qr-reader-region";
+  const [
+    goodieReceiving,
+    setGoodieReceiving,
+  ] = useState(false);
 
-  const deviceId = getOrCreateLocalId(
-    DEVICE_ID_STORAGE_KEY
-  );
+  const [
+    showGoodieSuccess,
+    setShowGoodieSuccess,
+  ] = useState(false);
+
+  const [
+    recoveryOpen,
+    setRecoveryOpen,
+  ] = useState(false);
+
+  const [
+    recoveryInput,
+    setRecoveryInput,
+  ] = useState("");
+
+  const [
+    recoveryMessage,
+    setRecoveryMessage,
+  ] = useState("");
+
+  const [
+    restoring,
+    setRestoring,
+  ] = useState(false);
+
+  const [
+    registering,
+    setRegistering,
+  ] = useState(false);
+
+  const [
+    registrationError,
+    setRegistrationError,
+  ] = useState("");
+
+  const [
+    legacyRetryTick,
+    setLegacyRetryTick,
+  ] = useState(0);
+
+  const scannerRef =
+    useRef(null);
+
+  const scanLockedRef =
+    useRef(false);
+
+  const scannerSectionRef =
+    useRef(null);
+
+  const mapSectionRef =
+    useRef(null);
+
+  const legacyMigrationRef =
+    useRef(false);
+
+  const legacyRetryTimerRef =
+    useRef(null);
+
+  const scannerId =
+    "qr-reader-region";
+
+  const deviceId =
+    getOrCreateLocalId(
+      DEVICE_ID_STORAGE_KEY
+    );
 
   const testCompleted =
     TEST_MODE &&
-    visited.length >= TEST_UNLOCK_AT;
+    visited.length >=
+      TEST_UNLOCK_AT;
 
   const goodieEligible =
     TEST_MODE
-      ? visited.length >= TEST_UNLOCK_AT
-      : visited.length >= GOODIE_UNLOCK_AT;
+      ? visited.length >=
+        TEST_UNLOCK_AT
+      : visited.length >=
+        GOODIE_UNLOCK_AT;
 
-  const goodieCollected = Boolean(
-    goodieData?.collectedAt
-  );
+  const goodieCollected =
+    Boolean(
+      goodieData
+        ?.collectedAt
+    );
 
-  const progress = Math.round(
-    (visited.length / booths.length) * 100
-  );
+  const progress =
+    Math.round(
+      (visited.length /
+        TOTAL_BOOTHS) *
+        100
+    );
 
   // ==================================================
   // STORAGE
@@ -1379,13 +1710,20 @@ export default function App() {
   }, [language]);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setShowSplash(false);
-    }, 2200);
+    const timer =
+      window.setTimeout(
+        () => {
+          setShowSplash(
+            false
+          );
+        },
+        2200
+      );
 
-    return () => {
-      window.clearTimeout(timer);
-    };
+    return () =>
+      window.clearTimeout(
+        timer
+      );
   }, []);
 
   useEffect(() => {
@@ -1403,25 +1741,31 @@ export default function App() {
   }, [goodieData]);
 
   useEffect(() => {
-    if (!user?.recoveryCode) {
+    if (
+      !user?.recoveryCode
+    ) {
       return;
     }
 
-    const sessions = loadJSON(
-      SESSIONS_STORAGE_KEY,
-      {}
-    );
+    const sessions =
+      loadJSON(
+        SESSIONS_STORAGE_KEY,
+        {}
+      );
 
-    const key = normalizeRecoveryCode(
-      user.recoveryCode
-    );
+    const key =
+      normalizeRecoveryCode(
+        user.recoveryCode
+      );
 
     sessions[key] = {
       user,
       visited,
       goodieData,
       language,
-      savedAt: new Date().toISOString(),
+
+      savedAt:
+        new Date().toISOString(),
     };
 
     saveJSON(
@@ -1436,7 +1780,7 @@ export default function App() {
   ]);
 
   // ==================================================
-  // APPLY SERVER STATE
+  // SERVER STATE
   // ==================================================
 
   const applyServerState = (
@@ -1448,26 +1792,33 @@ export default function App() {
     }
 
     const {
-      mergeLocalProofs = true,
+      mergeLocalProofs =
+        true,
+
       clientRegistrationId =
-        user?.clientRegistrationId ||
+        user
+          ?.clientRegistrationId ||
         null,
     } = options;
 
-    const serverVisited = uniqueNumbers(
-      state.visited || []
-    );
+    const serverVisited =
+      uniqueNumbers(
+        state.visited ||
+          []
+      );
 
-    const localProofIds = mergeLocalProofs
-      ? getVisitProofIds()
-      : [];
+    const localProofIds =
+      mergeLocalProofs
+        ? getVisitProofIds()
+        : [];
 
-    const nextVisited = mergeLocalProofs
-      ? uniqueNumbers([
-          ...serverVisited,
-          ...localProofIds,
-        ])
-      : serverVisited;
+    const nextVisited =
+      mergeLocalProofs
+        ? uniqueNumbers([
+            ...serverVisited,
+            ...localProofIds,
+          ])
+        : serverVisited;
 
     const nextLanguage =
       SUPPORTED_LANGUAGES.includes(
@@ -1477,13 +1828,25 @@ export default function App() {
         : language;
 
     const nextUser = {
-      id: state.id,
-      firstname: state.firstname,
-      lastname: state.lastname,
-      language: nextLanguage,
-      recoveryCode: state.recoveryCode,
+      id:
+        state.id,
+
+      firstname:
+        state.firstname,
+
+      lastname:
+        state.lastname,
+
+      language:
+        nextLanguage,
+
+      recoveryCode:
+        state.recoveryCode,
+
       clientRegistrationId,
-      dbSynced: true,
+
+      dbSynced:
+        true,
     };
 
     const nextGoodie = {
@@ -1507,101 +1870,139 @@ export default function App() {
       nextGoodie
     );
 
-    setUser(nextUser);
-    setVisited(nextVisited);
-    setGoodieData(nextGoodie);
+    setUser(
+      nextUser
+    );
 
-    if (nextLanguage !== language) {
-      setLanguage(nextLanguage);
+    setVisited(
+      nextVisited
+    );
+
+    setGoodieData(
+      nextGoodie
+    );
+
+    if (
+      nextLanguage !==
+      language
+    ) {
+      setLanguage(
+        nextLanguage
+      );
     }
   };
 
   // ==================================================
-  // FULL STATE SYNC
+  // VISIT SYNC
   // ==================================================
 
-  const syncAllVisitProofs = async (
-    recoveryCode,
-    options = {}
-  ) => {
-    if (!recoveryCode) {
-      return {
-        ok: false,
-        sessionNotFound: true,
-      };
-    }
+  const syncAllVisitProofs =
+    async (
+      recoveryCode,
+      options = {}
+    ) => {
+      if (!recoveryCode) {
+        return {
+          ok: false,
+          sessionNotFound:
+            true,
+        };
+      }
 
-    const {
-      retries = 1,
-      timeoutMs = 7000,
-    } = options;
+      const {
+        retries = 1,
+        timeoutMs = 7000,
+      } = options;
 
-    const scans = getVisitScanPayload();
+      const scans =
+        getVisitScanPayload();
 
-    try {
-      const result = await supabaseRpc(
-        "sync_visits",
-        {
-          p_recovery_code: recoveryCode,
-          p_scans: scans,
-        },
-        {
-          retries,
-          timeoutMs,
+      try {
+        const result =
+          await supabaseRpc(
+            "sync_visits",
+            {
+              p_recovery_code:
+                recoveryCode,
+
+              p_scans:
+                scans,
+            },
+            {
+              retries,
+              timeoutMs,
+            }
+          );
+
+        if (
+          !result ||
+          result.status ===
+            "session_not_found"
+        ) {
+          return {
+            ok: false,
+            sessionNotFound:
+              true,
+          };
         }
-      );
 
-      if (
-        !result ||
-        result.status === "session_not_found"
-      ) {
-        return {
-          ok: false,
-          sessionNotFound: true,
-        };
-      }
+        if (
+          result.status !==
+          "ok"
+        ) {
+          return {
+            ok: false,
+          };
+        }
 
-      if (result.status !== "ok") {
-        return {
-          ok: false,
-        };
-      }
+        const invalidBooths =
+          uniqueNumbers(
+            result.invalidBooths ||
+              []
+          );
 
-      const invalidBooths = uniqueNumbers(
-        result.invalidBooths || []
-      );
+        if (
+          invalidBooths.length >
+          0
+        ) {
+          removeVisitProofs(
+            invalidBooths
+          );
+        }
 
-      if (invalidBooths.length > 0) {
-        removeVisitProofs(
-          invalidBooths
+        applyServerState(
+          result.state,
+          {
+            mergeLocalProofs:
+              true,
+          }
         );
+
+        return {
+          ok:
+            true,
+
+          invalidBooths,
+
+          state:
+            result.state,
+        };
+      } catch (error) {
+        console.error(
+          "Visit sync failed:",
+          error
+        );
+
+        return {
+          ok: false,
+
+          networkError:
+            true,
+
+          error,
+        };
       }
-
-      applyServerState(
-        result.state,
-        {
-          mergeLocalProofs: true,
-        }
-      );
-
-      return {
-        ok: true,
-        invalidBooths,
-        state: result.state,
-      };
-    } catch (error) {
-      console.error(
-        "Visit sync failed:",
-        error
-      );
-
-      return {
-        ok: false,
-        networkError: true,
-        error,
-      };
-    }
-  };
+    };
 
   // ==================================================
   // BACKGROUND SYNC
@@ -1615,40 +2016,45 @@ export default function App() {
       return undefined;
     }
 
-    let cancelled = false;
+    let cancelled =
+      false;
 
-    const syncNow = async () => {
-      if (cancelled) {
-        return;
-      }
-
-      await syncAllVisitProofs(
-        user.recoveryCode,
-        {
-          retries: 1,
-          timeoutMs: 6000,
+    const syncNow =
+      async () => {
+        if (cancelled) {
+          return;
         }
-      );
-    };
 
-    const handleOnline = () => {
-      syncNow();
-    };
+        await syncAllVisitProofs(
+          user.recoveryCode,
+          {
+            retries: 1,
+            timeoutMs: 6000,
+          }
+        );
+      };
 
-    const handleFocus = () => {
-      syncNow();
-    };
+    const handleOnline =
+      () => {
+        void syncNow();
+      };
 
-    const handleVisibility = () => {
-      if (
-        document.visibilityState ===
-        "visible"
-      ) {
-        syncNow();
-      }
-    };
+    const handleFocus =
+      () => {
+        void syncNow();
+      };
 
-    syncNow();
+    const handleVisibility =
+      () => {
+        if (
+          document.visibilityState ===
+          "visible"
+        ) {
+          void syncNow();
+        }
+      };
+
+    void syncNow();
 
     window.addEventListener(
       "online",
@@ -1666,7 +2072,8 @@ export default function App() {
     );
 
     return () => {
-      cancelled = true;
+      cancelled =
+        true;
 
       window.removeEventListener(
         "online",
@@ -1701,152 +2108,190 @@ export default function App() {
       return;
     }
 
-    legacyMigrationRef.current = true;
-    let cancelled = false;
+    legacyMigrationRef.current =
+      true;
 
-    const migrate = async () => {
-      try {
-        if (user.recoveryCode) {
-          try {
-            const existing = await supabaseRpc(
-              "get_participant_state",
+    let cancelled =
+      false;
+
+    const migrate =
+      async () => {
+        try {
+          if (
+            user.recoveryCode
+          ) {
+            try {
+              const existing =
+                await supabaseRpc(
+                  "get_participant_state",
+                  {
+                    p_recovery_code:
+                      user.recoveryCode,
+                  },
+                  {
+                    retries:
+                      0,
+
+                    timeoutMs:
+                      5000,
+                  }
+                );
+
+              if (
+                existing &&
+                !cancelled
+              ) {
+                if (
+                  TEST_MODE
+                ) {
+                  visited.forEach(
+                    (boothId) => {
+                      saveVisitProof(
+                        boothId,
+                        TEST_QR_VALUE
+                      );
+                    }
+                  );
+                }
+
+                applyServerState(
+                  existing,
+                  {
+                    mergeLocalProofs:
+                      true,
+                  }
+                );
+
+                await syncAllVisitProofs(
+                  existing.recoveryCode,
+                  {
+                    retries:
+                      1,
+
+                    timeoutMs:
+                      6000,
+                  }
+                );
+
+                return;
+              }
+            } catch {
+              // Continue.
+            }
+          }
+
+          const legacyBase =
+            String(
+              user.id ||
+                getOrCreateLocalId(
+                  REGISTRATION_ID_STORAGE_KEY
+                )
+            );
+
+          const legacyClientId =
+            `legacy-${legacyBase}`
+              .slice(
+                0,
+                95
+              );
+
+          const state =
+            await supabaseRpc(
+              "register_participant",
               {
-                p_recovery_code:
-                  user.recoveryCode,
+                p_first_name:
+                  user.firstname,
+
+                p_last_name:
+                  user.lastname,
+
+                p_language:
+                  user.language ||
+                  language,
+
+                p_client_registration_id:
+                  legacyClientId,
               },
               {
-                retries: 0,
-                timeoutMs: 5000,
+                retries:
+                  2,
+
+                timeoutMs:
+                  8000,
               }
             );
 
-            if (
-              existing &&
-              !cancelled
-            ) {
-              if (TEST_MODE) {
-                visited.forEach(
-                  (boothId) => {
-                    saveVisitProof(
-                      boothId,
-                      TEST_QR_VALUE
-                    );
-                  }
+          if (
+            !state ||
+            cancelled
+          ) {
+            return;
+          }
+
+          if (TEST_MODE) {
+            visited.forEach(
+              (boothId) => {
+                saveVisitProof(
+                  boothId,
+                  TEST_QR_VALUE
                 );
               }
-
-              applyServerState(
-                existing,
-                {
-                  mergeLocalProofs: true,
-                }
-              );
-
-              await syncAllVisitProofs(
-                existing.recoveryCode,
-                {
-                  retries: 1,
-                  timeoutMs: 6000,
-                }
-              );
-
-              return;
-            }
-          } catch {
-            // Continue.
+            );
           }
-        }
 
-        const legacyBase = String(
-          user.id ||
-            getOrCreateLocalId(
-              REGISTRATION_ID_STORAGE_KEY
-            )
-        );
+          applyServerState(
+            state,
+            {
+              mergeLocalProofs:
+                true,
 
-        const legacyClientId =
-          `legacy-${legacyBase}`.slice(
-            0,
-            95
-          );
-
-        const state = await supabaseRpc(
-          "register_participant",
-          {
-            p_first_name:
-              user.firstname,
-            p_last_name:
-              user.lastname,
-            p_language:
-              user.language ||
-              language,
-            p_client_registration_id:
-              legacyClientId,
-          },
-          {
-            retries: 2,
-            timeoutMs: 8000,
-          }
-        );
-
-        if (
-          !state ||
-          cancelled
-        ) {
-          return;
-        }
-
-        if (TEST_MODE) {
-          visited.forEach(
-            (boothId) => {
-              saveVisitProof(
-                boothId,
-                TEST_QR_VALUE
-              );
+              clientRegistrationId:
+                legacyClientId,
             }
           );
-        }
 
-        applyServerState(
-          state,
-          {
-            mergeLocalProofs: true,
-            clientRegistrationId:
-              legacyClientId,
-          }
-        );
+          await syncAllVisitProofs(
+            state.recoveryCode,
+            {
+              retries:
+                1,
 
-        await syncAllVisitProofs(
-          state.recoveryCode,
-          {
-            retries: 1,
-            timeoutMs: 6000,
-          }
-        );
-      } catch (error) {
-        console.error(
-          "Legacy migration failed:",
-          error
-        );
+              timeoutMs:
+                6000,
+            }
+          );
+        } catch (error) {
+          console.error(
+            "Legacy migration failed:",
+            error
+          );
 
-        legacyMigrationRef.current = false;
+          legacyMigrationRef.current =
+            false;
 
-        if (!cancelled) {
-          legacyRetryTimerRef.current =
-            window.setTimeout(() => {
-              setLegacyRetryTick(
-                (value) =>
-                  value + 1
+          if (
+            !cancelled
+          ) {
+            legacyRetryTimerRef.current =
+              window.setTimeout(
+                () => {
+                  setLegacyRetryTick(
+                    (value) =>
+                      value +
+                      1
+                  );
+                },
+                5000
               );
-            }, 5000);
+          }
         }
-      }
-    };
+      };
 
-    migrate();
+    void migrate();
 
     return () => {
-      cancelled = true;
+      cancelled =
+        true;
 
       if (
         legacyRetryTimerRef.current
@@ -1864,374 +2309,496 @@ export default function App() {
   ]);
 
   // ==================================================
-  // REGISTER
+  // REGISTRATION
   // ==================================================
 
-  const register = async () => {
-    if (registering) {
-      return;
-    }
-
-    const firstname =
-      form.firstname.trim();
-
-    const lastname =
-      form.lastname.trim();
-
-    setRegistrationError("");
-
-    if (
-      !firstname ||
-      !lastname
-    ) {
-      setRegistrationError(
-        t.nameRequired
-      );
-
-      return;
-    }
-
-    setRegistering(true);
-
-    const clientRegistrationId =
-      getOrCreateLocalId(
-        REGISTRATION_ID_STORAGE_KEY
-      );
-
-    try {
-      const state = await supabaseRpc(
-        "register_participant",
-        {
-          p_first_name: firstname,
-          p_last_name: lastname,
-          p_language: language,
-          p_client_registration_id:
-            clientRegistrationId,
-        },
-        {
-          retries: 2,
-          timeoutMs: 8000,
-        }
-      );
-
-      if (!state) {
-        throw new Error(
-          "Empty registration response"
-        );
+  const register =
+    async () => {
+      if (registering) {
+        return;
       }
 
-      clearVisitProofs();
+      const firstname =
+        form.firstname.trim();
 
-      setVisited([]);
+      const lastname =
+        form.lastname.trim();
 
-      setGoodieData({
-        collectedAt: null,
-      });
-
-      applyServerState(
-        state,
-        {
-          mergeLocalProofs: false,
-          clientRegistrationId,
-        }
-      );
-    } catch (error) {
-      console.error(
-        "Registration failed:",
-        error
+      setRegistrationError(
+        ""
       );
 
       if (
-        serverErrorContains(
-          error,
-          "REGISTRATION_CLOSED"
-        )
+        !firstname ||
+        !lastname
       ) {
         setRegistrationError(
-          t.registrationClosed
-        );
-      } else if (
-        serverErrorContains(
-          error,
-          "REGISTRATION_LIMIT_REACHED"
-        )
-      ) {
-        setRegistrationError(
-          t.registrationLimit
-        );
-      } else {
-        setRegistrationError(
-          t.registrationError
-        );
-      }
-    } finally {
-      setRegistering(false);
-    }
-  };
-
-  // ==================================================
-  // LOCAL RECOVERY
-  // ==================================================
-
-  const restoreLocalSession = (
-    recoveryCode
-  ) => {
-    const normalized =
-      normalizeRecoveryCode(
-        recoveryCode
-      );
-
-    const currentSessions = loadJSON(
-      SESSIONS_STORAGE_KEY,
-      {}
-    );
-
-    let session =
-      currentSessions[normalized];
-
-    if (
-      !session &&
-      TEST_MODE
-    ) {
-      const legacySessions = loadJSON(
-        LEGACY_SESSIONS_STORAGE_KEY,
-        {}
-      );
-
-      session =
-        legacySessions[normalized];
-    }
-
-    if (!session?.user) {
-      return false;
-    }
-
-    const restoredVisited =
-      uniqueNumbers(
-        session.visited || []
-      );
-
-    const restoredGoodie =
-      session.goodieData || {
-        collectedAt: null,
-      };
-
-    const restoredLanguage =
-      SUPPORTED_LANGUAGES.includes(
-        session.user.language
-      )
-        ? session.user.language
-        : language;
-
-    const restoredUser = {
-      ...session.user,
-      language:
-        restoredLanguage,
-    };
-
-    saveJSON(
-      USER_STORAGE_KEY,
-      restoredUser
-    );
-
-    saveJSON(
-      VISITED_STORAGE_KEY,
-      restoredVisited
-    );
-
-    saveJSON(
-      GOODIE_STORAGE_KEY,
-      restoredGoodie
-    );
-
-    setUser(restoredUser);
-    setVisited(restoredVisited);
-    setGoodieData(restoredGoodie);
-    setLanguage(restoredLanguage);
-
-    return true;
-  };
-
-  // ==================================================
-  // RECOVERY DATABASE
-  // ==================================================
-
-  const restoreSession = async () => {
-    if (restoring) {
-      return;
-    }
-
-    const code = recoveryInput.trim();
-
-    setRecoveryMessage("");
-
-    if (
-      normalizeRecoveryCode(
-        code
-      ).length !== 8
-    ) {
-      setRecoveryMessage(
-        t.recoveryRequired
-      );
-
-      return;
-    }
-
-    setRestoring(true);
-
-    try {
-      const state = await supabaseRpc(
-        "get_participant_state",
-        {
-          p_recovery_code:
-            code,
-        },
-        {
-          retries: 1,
-          timeoutMs: 8000,
-        }
-      );
-
-      if (!state) {
-        setRecoveryMessage(
-          t.recoveryNotFound
+          t.nameRequired
         );
 
         return;
       }
 
-      clearVisitProofs();
-
-      applyServerState(
-        state,
-        {
-          mergeLocalProofs: false,
-          clientRegistrationId:
-            null,
-        }
+      setRegistering(
+        true
       );
 
-      setRecoveryMessage("");
-      setRecoveryInput("");
-      setRecoveryOpen(false);
-      setGoodieApproved(false);
-      setShowGoodieSuccess(false);
-    } catch (error) {
-      console.error(
-        "Recovery failed:",
-        error
-      );
-
-      const localRestored =
-        restoreLocalSession(
-          code
+      const clientRegistrationId =
+        getOrCreateLocalId(
+          REGISTRATION_ID_STORAGE_KEY
         );
 
-      if (!localRestored) {
-        setRecoveryMessage(
-          t.recoveryConnectionError
+      try {
+        const state =
+          await supabaseRpc(
+            "register_participant",
+            {
+              p_first_name:
+                firstname,
+
+              p_last_name:
+                lastname,
+
+              p_language:
+                language,
+
+              p_client_registration_id:
+                clientRegistrationId,
+            },
+            {
+              retries:
+                2,
+
+              timeoutMs:
+                8000,
+            }
+          );
+
+        if (!state) {
+          throw new Error(
+            "Empty registration response"
+          );
+        }
+
+        clearVisitProofs();
+
+        setVisited(
+          []
+        );
+
+        setGoodieData({
+          collectedAt:
+            null,
+        });
+
+        applyServerState(
+          state,
+          {
+            mergeLocalProofs:
+              false,
+
+            clientRegistrationId,
+          }
+        );
+      } catch (error) {
+        console.error(
+          "Registration failed:",
+          error
+        );
+
+        if (
+          serverErrorContains(
+            error,
+            "REGISTRATION_CLOSED"
+          )
+        ) {
+          setRegistrationError(
+            t.registrationClosed
+          );
+        } else if (
+          serverErrorContains(
+            error,
+            "REGISTRATION_LIMIT_REACHED"
+          )
+        ) {
+          setRegistrationError(
+            t.registrationLimit
+          );
+        } else {
+          setRegistrationError(
+            t.registrationError
+          );
+        }
+      } finally {
+        setRegistering(
+          false
         );
       }
-    } finally {
-      setRestoring(false);
-    }
-  };
+    };
+
+  // ==================================================
+  // LOCAL RECOVERY
+  // ==================================================
+
+  const restoreLocalSession =
+    (
+      recoveryCode
+    ) => {
+      const normalized =
+        normalizeRecoveryCode(
+          recoveryCode
+        );
+
+      const currentSessions =
+        loadJSON(
+          SESSIONS_STORAGE_KEY,
+          {}
+        );
+
+      let session =
+        currentSessions[
+          normalized
+        ];
+
+      if (
+        !session &&
+        TEST_MODE
+      ) {
+        const legacySessions =
+          loadJSON(
+            LEGACY_SESSIONS_STORAGE_KEY,
+            {}
+          );
+
+        session =
+          legacySessions[
+            normalized
+          ];
+      }
+
+      if (
+        !session?.user
+      ) {
+        return false;
+      }
+
+      const restoredVisited =
+        uniqueNumbers(
+          session.visited ||
+            []
+        );
+
+      const restoredGoodie =
+        session.goodieData || {
+          collectedAt:
+            null,
+        };
+
+      const restoredLanguage =
+        SUPPORTED_LANGUAGES.includes(
+          session.user
+            .language
+        )
+          ? session.user
+              .language
+          : language;
+
+      const restoredUser = {
+        ...session.user,
+
+        language:
+          restoredLanguage,
+      };
+
+      saveJSON(
+        USER_STORAGE_KEY,
+        restoredUser
+      );
+
+      saveJSON(
+        VISITED_STORAGE_KEY,
+        restoredVisited
+      );
+
+      saveJSON(
+        GOODIE_STORAGE_KEY,
+        restoredGoodie
+      );
+
+      setUser(
+        restoredUser
+      );
+
+      setVisited(
+        restoredVisited
+      );
+
+      setGoodieData(
+        restoredGoodie
+      );
+
+      setLanguage(
+        restoredLanguage
+      );
+
+      return true;
+    };
+
+  // ==================================================
+  // DATABASE RECOVERY
+  // ==================================================
+
+  const restoreSession =
+    async () => {
+      if (restoring) {
+        return;
+      }
+
+      const code =
+        recoveryInput.trim();
+
+      setRecoveryMessage(
+        ""
+      );
+
+      if (
+        normalizeRecoveryCode(
+          code
+        ).length !== 8
+      ) {
+        setRecoveryMessage(
+          t.recoveryRequired
+        );
+
+        return;
+      }
+
+      setRestoring(
+        true
+      );
+
+      try {
+        const state =
+          await supabaseRpc(
+            "get_participant_state",
+            {
+              p_recovery_code:
+                code,
+            },
+            {
+              retries:
+                1,
+
+              timeoutMs:
+                8000,
+            }
+          );
+
+        if (!state) {
+          setRecoveryMessage(
+            t.recoveryNotFound
+          );
+
+          return;
+        }
+
+        clearVisitProofs();
+
+        applyServerState(
+          state,
+          {
+            mergeLocalProofs:
+              false,
+
+            clientRegistrationId:
+              null,
+          }
+        );
+
+        setRecoveryMessage(
+          ""
+        );
+
+        setRecoveryInput(
+          ""
+        );
+
+        setRecoveryOpen(
+          false
+        );
+
+        setGoodieApproved(
+          false
+        );
+
+        setShowGoodieSuccess(
+          false
+        );
+      } catch (error) {
+        console.error(
+          "Recovery failed:",
+          error
+        );
+
+        const localRestored =
+          restoreLocalSession(
+            code
+          );
+
+        if (
+          !localRestored
+        ) {
+          setRecoveryMessage(
+            t.recoveryConnectionError
+          );
+        }
+      } finally {
+        setRestoring(
+          false
+        );
+      }
+    };
 
   // ==================================================
   // SCROLL
   // ==================================================
 
-  const scrollToScanner = () => {
-    window.setTimeout(() => {
-      scannerSectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 250);
-  };
+  const scrollToScanner =
+    () => {
+      window.setTimeout(
+        () => {
+          scannerSectionRef.current
+            ?.scrollIntoView({
+              behavior:
+                "smooth",
 
-  const scrollToMap = () => {
-    window.setTimeout(() => {
-      mapSectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 250);
-  };
+              block:
+                "start",
+            });
+        },
+        250
+      );
+    };
+
+  const scrollToMap =
+    () => {
+      window.setTimeout(
+        () => {
+          mapSectionRef.current
+            ?.scrollIntoView({
+              behavior:
+                "smooth",
+
+              block:
+                "start",
+            });
+        },
+        250
+      );
+    };
 
   // ==================================================
   // SCANNER CONTROL
   // ==================================================
 
-  const stopScanner = async () => {
-    const scanner =
-      scannerRef.current;
+  const stopScanner =
+    async () => {
+      const scanner =
+        scannerRef.current;
 
-    if (!scanner) {
-      return;
-    }
+      if (!scanner) {
+        return;
+      }
 
-    scannerRef.current = null;
+      scannerRef.current =
+        null;
 
-    await stopScannerInstance(scanner);
-  };
+      await stopScannerInstance(
+        scanner
+      );
+    };
 
-  const closeScanner = async () => {
-    scanLockedRef.current = true;
+  const closeScanner =
+    async () => {
+      scanLockedRef.current =
+        true;
 
-    await stopScanner();
+      await stopScanner();
 
-    setScanTarget(null);
-    setScannerStatus("");
-
-    scanLockedRef.current = false;
-
-    scrollToMap();
-  };
-
-  const openBoothScanner = async (
-    booth
-  ) => {
-    if (
-      visited.includes(booth.id)
-    ) {
-      setMessage(
-        t.alreadyVisited(
-          booth.name
-        )
+      setScanTarget(
+        null
       );
 
-      return;
-    }
+      setScannerStatus(
+        ""
+      );
 
-    await stopScanner();
+      scanLockedRef.current =
+        false;
 
-    setMessage("");
-    setScannerStatus("");
+      scrollToMap();
+    };
 
-    setScanTarget({
-      type: "booth",
-      booth,
-    });
-  };
+  const openBoothScanner =
+    async (
+      booth
+    ) => {
+      if (
+        visited.includes(
+          booth.id
+        )
+      ) {
+        setMessage(
+          t.alreadyVisited(
+            booth.name
+          )
+        );
 
-  const openGoodieScanner = async () => {
-    if (
-      !goodieEligible ||
-      goodieCollected
-    ) {
-      return;
-    }
+        return;
+      }
 
-    await stopScanner();
+      await stopScanner();
 
-    setMessage("");
-    setScannerStatus("");
+      setMessage(
+        ""
+      );
 
-    setScanTarget({
-      type: "goodie",
-    });
-  };
+      setScannerStatus(
+        ""
+      );
+
+      setScanTarget({
+        type:
+          "booth",
+
+        booth,
+      });
+    };
+
+  const openGoodieScanner =
+    async () => {
+      if (
+        !goodieEligible ||
+        goodieCollected
+      ) {
+        return;
+      }
+
+      await stopScanner();
+
+      setMessage(
+        ""
+      );
+
+      setScannerStatus(
+        ""
+      );
+
+      setScanTarget({
+        type:
+          "goodie",
+      });
+    };
 
   useEffect(() => {
     if (!scanTarget) {
@@ -2259,7 +2826,8 @@ export default function App() {
         } else {
           setScannerRestartKey(
             (value) =>
-              value + 1
+              value +
+              1
           );
         }
       };
@@ -2286,8 +2854,11 @@ export default function App() {
       return undefined;
     }
 
-    let cancelled = false;
-    let ownedScanner = null;
+    let cancelled =
+      false;
+
+    let ownedScanner =
+      null;
 
     const cleanupOwnedScanner =
       async () => {
@@ -2298,7 +2869,8 @@ export default function App() {
         const scanner =
           ownedScanner;
 
-        ownedScanner = null;
+        ownedScanner =
+          null;
 
         if (
           scannerRef.current ===
@@ -2313,433 +2885,501 @@ export default function App() {
         );
       };
 
-    const startScanner = async () => {
-      scanLockedRef.current = false;
-
-      setScannerStatus(
-        t.startingCamera
-      );
-
-      await wait(350);
-
-      if (cancelled) {
-        return;
-      }
-
-      const scannerElement =
-        document.getElementById(
-          scannerId
-        );
-
-      if (!scannerElement) {
-        setScannerStatus(
-          t.scannerCouldNotLoad
-        );
-
-        return;
-      }
-
-      const handleSuccess = async (
-        decodedText
-      ) => {
-        if (
-          cancelled ||
-          scanLockedRef.current
-        ) {
-          return;
-        }
-
-        scanLockedRef.current = true;
-
-        const rawQr = String(
-          decodedText || ""
-        )
-          .trim()
-          .slice(0, 500);
-
-        const normalized =
-          normalizeQR(rawQr);
+    const startScanner =
+      async () => {
+        scanLockedRef.current =
+          false;
 
         if (
-          TEST_MODE &&
-          normalized !==
-            normalizeQR(
-              TEST_QR_VALUE
-            )
-        ) {
-          setMessage(
-            t.wrongTestQr(rawQr)
-          );
-
-          scanLockedRef.current = false;
-
-          return;
-        }
-
-        // ========================================
-        // GOODIE
-        // ========================================
-
-        if (
-          scanTarget.type ===
-          "goodie"
+          !hasCameraSupport()
         ) {
           setScannerStatus(
-            t.checkingGoodie
+            t.cameraCouldNotStart
           );
 
-          const syncResult =
-            await syncAllVisitProofs(
-              user?.recoveryCode,
-              {
-                retries: 1,
-                timeoutMs: 7000,
-              }
-            );
+          setMessage(
+            t.unsupportedBrowser
+          );
 
-          if (!syncResult.ok) {
-            if (
-              syncResult.sessionNotFound
-            ) {
-              setMessage(
-                t.sessionProblem
-              );
-            } else {
-              setMessage(
-                t.goodieConnection
-              );
-            }
-
-            scanLockedRef.current = false;
-
-            return;
-          }
-
-          try {
-            const approval =
-              await supabaseRpc(
-                "approve_goodie_bag",
-                {
-                  p_recovery_code:
-                    user?.recoveryCode,
-                  p_qr_token:
-                    rawQr,
-                  p_device_id:
-                    deviceId,
-                },
-                {
-                  retries: 2,
-                  timeoutMs: 8000,
-                }
-              );
-
-            if (!approval) {
-              throw new Error(
-                "Empty Goodie approval response"
-              );
-            }
-
-            if (approval.state) {
-              applyServerState(
-                approval.state,
-                {
-                  mergeLocalProofs: true,
-                }
-              );
-            }
-
-            if (
-              approval.status ===
-              "approved"
-            ) {
-              await cleanupOwnedScanner();
-
-              setScanTarget(null);
-              setScannerStatus("");
-              setGoodieApprovalError("");
-              setGoodieApproved(true);
-
-              scanLockedRef.current = false;
-
-              return;
-            }
-
-            if (
-              approval.status ===
-              "invalid_qr"
-            ) {
-              setMessage(
-                t.wrongGoodieQr
-              );
-
-              scanLockedRef.current = false;
-
-              return;
-            }
-
-            if (
-              approval.status ===
-              "already_collected"
-            ) {
-              if (
-                approval.collectedAt
-              ) {
-                setGoodieData({
-                  collectedAt:
-                    approval.collectedAt,
-                });
-              }
-
-              await cleanupOwnedScanner();
-
-              setScanTarget(null);
-              setScannerStatus("");
-
-              setMessage(
-                t.goodieAlreadyCollected
-              );
-
-              scanLockedRef.current = false;
-
-              scrollToMap();
-
-              return;
-            }
-
-            if (
-              approval.status ===
-              "already_approved"
-            ) {
-              await cleanupOwnedScanner();
-
-              setScanTarget(null);
-              setScannerStatus("");
-
-              setMessage(
-                t.goodieAlreadyProcessing
-              );
-
-              scanLockedRef.current = false;
-
-              scrollToMap();
-
-              return;
-            }
-
-            if (
-              approval.status ===
-              "not_eligible"
-            ) {
-              await cleanupOwnedScanner();
-
-              setScanTarget(null);
-              setScannerStatus("");
-
-              setMessage(
-                t.goodieNotEligible(
-                  approval.required ||
-                    (TEST_MODE
-                      ? TEST_UNLOCK_AT
-                      : GOODIE_UNLOCK_AT)
-                )
-              );
-
-              scanLockedRef.current = false;
-
-              scrollToMap();
-
-              return;
-            }
-
-            if (
-              approval.status ===
-              "session_not_found"
-            ) {
-              await cleanupOwnedScanner();
-
-              setScanTarget(null);
-
-              setMessage(
-                t.sessionProblem
-              );
-
-              scanLockedRef.current = false;
-
-              scrollToMap();
-
-              return;
-            }
-
-            throw new Error(
-              `Unexpected Goodie status: ${approval.status}`
-            );
-          } catch (error) {
-            console.error(
-              "Goodie approval failed:",
-              error
-            );
-
-            setMessage(
-              t.goodieConnection
-            );
-
-            scanLockedRef.current = false;
-
-            return;
-          }
+          return;
         }
-
-        // ========================================
-        // BOOTH
-        // ========================================
-
-        const booth =
-          scanTarget.booth;
 
         setScannerStatus(
-          t.savingVisit
+          t.startingCamera
         );
 
-        saveVisitProof(
-          booth.id,
-          rawQr
+        await wait(
+          300
         );
-
-        setVisited(
-          (current) =>
-            uniqueNumbers([
-              ...current,
-              booth.id,
-            ])
-        );
-
-        const syncResult =
-          await syncAllVisitProofs(
-            user?.recoveryCode,
-            {
-              retries: 0,
-              timeoutMs: 5000,
-            }
-          );
-
-        if (
-          syncResult.ok &&
-          syncResult.invalidBooths?.includes(
-            booth.id
-          )
-        ) {
-          setMessage(
-            TEST_MODE
-              ? t.wrongTestQr(
-                  rawQr
-                )
-              : t.wrongBoothQr(
-                  booth.name
-                )
-          );
-
-          setScannerStatus(
-            TEST_MODE
-              ? t.testScanBooth
-              : t.cameraReady
-          );
-
-          scanLockedRef.current = false;
-
-          return;
-        }
-
-        if (
-          syncResult.sessionNotFound
-        ) {
-          setMessage(
-            t.sessionProblem
-          );
-
-          await cleanupOwnedScanner();
-
-          setScanTarget(null);
-          setScannerStatus("");
-
-          scanLockedRef.current = false;
-
-          scrollToMap();
-
-          return;
-        }
-
-        if (syncResult.ok) {
-          setMessage(
-            t.boothCollected(
-              booth.name
-            )
-          );
-        } else {
-          setMessage(
-            t.boothSavedOffline(
-              booth.name
-            )
-          );
-        }
-
-        await cleanupOwnedScanner();
-
-        setScanTarget(null);
-        setScannerStatus("");
-
-        scanLockedRef.current = false;
-
-        scrollToMap();
-      };
-
-      const handleFailure = () => {
-        // Normal while looking for QR.
-      };
-
-      try {
-        ownedScanner =
-          new Html5Qrcode(
-            scannerId
-          );
-
-        scannerRef.current =
-          ownedScanner;
-
-        await ownedScanner.start(
-          {
-            facingMode: {
-              ideal: "environment",
-            },
-          },
-          scannerConfig(),
-          handleSuccess,
-          handleFailure
-        );
-      } catch (firstError) {
-        console.warn(
-          "Environment camera start failed:",
-          firstError
-        );
-
-        await cleanupOwnedScanner();
 
         if (cancelled) {
           return;
         }
 
-        try {
-          const cameras =
-            await Html5Qrcode.getCameras();
+        const scannerElement =
+          document.getElementById(
+            scannerId
+          );
 
-          const camera =
-            chooseRearCamera(
-              cameras
+        if (
+          !scannerElement
+        ) {
+          setScannerStatus(
+            t.scannerCouldNotLoad
+          );
+
+          return;
+        }
+
+        const handleSuccess =
+          async (
+            decodedText
+          ) => {
+            if (
+              cancelled ||
+              scanLockedRef.current
+            ) {
+              return;
+            }
+
+            scanLockedRef.current =
+              true;
+
+            const rawQr =
+              String(
+                decodedText ||
+                  ""
+              )
+                .trim()
+                .slice(
+                  0,
+                  500
+                );
+
+            const normalized =
+              normalizeQR(
+                rawQr
+              );
+
+            if (
+              TEST_MODE &&
+              normalized !==
+                normalizeQR(
+                  TEST_QR_VALUE
+                )
+            ) {
+              setMessage(
+                t.wrongTestQr(
+                  rawQr
+                )
+              );
+
+              scanLockedRef.current =
+                false;
+
+              return;
+            }
+
+            // ========================================
+            // GOODIE
+            // ========================================
+
+            if (
+              scanTarget.type ===
+              "goodie"
+            ) {
+              setScannerStatus(
+                t.checkingGoodie
+              );
+
+              const syncResult =
+                await syncAllVisitProofs(
+                  user
+                    ?.recoveryCode,
+                  {
+                    retries:
+                      1,
+
+                    timeoutMs:
+                      7000,
+                  }
+                );
+
+              if (
+                !syncResult.ok
+              ) {
+                if (
+                  syncResult
+                    .sessionNotFound
+                ) {
+                  setMessage(
+                    t.sessionProblem
+                  );
+                } else {
+                  setMessage(
+                    t.goodieConnection
+                  );
+                }
+
+                scanLockedRef.current =
+                  false;
+
+                return;
+              }
+
+              try {
+                const approval =
+                  await supabaseRpc(
+                    "approve_goodie_bag",
+                    {
+                      p_recovery_code:
+                        user
+                          ?.recoveryCode,
+
+                      p_qr_token:
+                        rawQr,
+
+                      p_device_id:
+                        deviceId,
+                    },
+                    {
+                      retries:
+                        2,
+
+                      timeoutMs:
+                        8000,
+                    }
+                  );
+
+                if (
+                  !approval
+                ) {
+                  throw new Error(
+                    "Empty Goodie approval response"
+                  );
+                }
+
+                if (
+                  approval.state
+                ) {
+                  applyServerState(
+                    approval.state,
+                    {
+                      mergeLocalProofs:
+                        true,
+                    }
+                  );
+                }
+
+                if (
+                  approval.status ===
+                  "approved"
+                ) {
+                  await cleanupOwnedScanner();
+
+                  setScanTarget(
+                    null
+                  );
+
+                  setScannerStatus(
+                    ""
+                  );
+
+                  setGoodieApprovalError(
+                    ""
+                  );
+
+                  setGoodieApproved(
+                    true
+                  );
+
+                  scanLockedRef.current =
+                    false;
+
+                  return;
+                }
+
+                if (
+                  approval.status ===
+                  "invalid_qr"
+                ) {
+                  setMessage(
+                    t.wrongGoodieQr
+                  );
+
+                  scanLockedRef.current =
+                    false;
+
+                  return;
+                }
+
+                if (
+                  approval.status ===
+                  "already_collected"
+                ) {
+                  if (
+                    approval
+                      .collectedAt
+                  ) {
+                    setGoodieData({
+                      collectedAt:
+                        approval
+                          .collectedAt,
+                    });
+                  }
+
+                  await cleanupOwnedScanner();
+
+                  setScanTarget(
+                    null
+                  );
+
+                  setScannerStatus(
+                    ""
+                  );
+
+                  setMessage(
+                    t.goodieAlreadyCollected
+                  );
+
+                  scanLockedRef.current =
+                    false;
+
+                  scrollToMap();
+
+                  return;
+                }
+
+                if (
+                  approval.status ===
+                  "already_approved"
+                ) {
+                  await cleanupOwnedScanner();
+
+                  setScanTarget(
+                    null
+                  );
+
+                  setScannerStatus(
+                    ""
+                  );
+
+                  setMessage(
+                    t.goodieAlreadyProcessing
+                  );
+
+                  scanLockedRef.current =
+                    false;
+
+                  scrollToMap();
+
+                  return;
+                }
+
+                if (
+                  approval.status ===
+                  "not_eligible"
+                ) {
+                  await cleanupOwnedScanner();
+
+                  setScanTarget(
+                    null
+                  );
+
+                  setScannerStatus(
+                    ""
+                  );
+
+                  setMessage(
+                    t.goodieNotEligible(
+                      approval.required ||
+                        (
+                          TEST_MODE
+                            ? TEST_UNLOCK_AT
+                            : GOODIE_UNLOCK_AT
+                        )
+                    )
+                  );
+
+                  scanLockedRef.current =
+                    false;
+
+                  scrollToMap();
+
+                  return;
+                }
+
+                if (
+                  approval.status ===
+                  "session_not_found"
+                ) {
+                  await cleanupOwnedScanner();
+
+                  setScanTarget(
+                    null
+                  );
+
+                  setMessage(
+                    t.sessionProblem
+                  );
+
+                  scanLockedRef.current =
+                    false;
+
+                  scrollToMap();
+
+                  return;
+                }
+
+                throw new Error(
+                  `Unexpected Goodie status: ${approval.status}`
+                );
+              } catch (error) {
+                console.error(
+                  "Goodie approval failed:",
+                  error
+                );
+
+                setMessage(
+                  t.goodieConnection
+                );
+
+                scanLockedRef.current =
+                  false;
+
+                return;
+              }
+            }
+
+            // ========================================
+            // BOOTH
+            // ========================================
+
+            const booth =
+              scanTarget.booth;
+
+            setScannerStatus(
+              t.savingVisit
             );
 
-          if (!camera) {
-            throw firstError;
-          }
+            saveVisitProof(
+              booth.id,
+              rawQr
+            );
 
+            setVisited(
+              (current) =>
+                uniqueNumbers([
+                  ...current,
+                  booth.id,
+                ])
+            );
+
+            const syncResult =
+              await syncAllVisitProofs(
+                user
+                  ?.recoveryCode,
+                {
+                  retries:
+                    0,
+
+                  timeoutMs:
+                    5000,
+                }
+              );
+
+            if (
+              syncResult.ok &&
+              syncResult.invalidBooths?.includes(
+                booth.id
+              )
+            ) {
+              setMessage(
+                TEST_MODE
+                  ? t.wrongTestQr(
+                      rawQr
+                    )
+                  : t.wrongBoothQr(
+                      booth.name
+                    )
+              );
+
+              setScannerStatus(
+                TEST_MODE
+                  ? t.testScanBooth
+                  : t.cameraReady
+              );
+
+              scanLockedRef.current =
+                false;
+
+              return;
+            }
+
+            if (
+              syncResult
+                .sessionNotFound
+            ) {
+              setMessage(
+                t.sessionProblem
+              );
+
+              await cleanupOwnedScanner();
+
+              setScanTarget(
+                null
+              );
+
+              setScannerStatus(
+                ""
+              );
+
+              scanLockedRef.current =
+                false;
+
+              scrollToMap();
+
+              return;
+            }
+
+            if (
+              syncResult.ok
+            ) {
+              setMessage(
+                t.boothCollected(
+                  booth.name
+                )
+              );
+            } else {
+              setMessage(
+                t.boothSavedOffline(
+                  booth.name
+                )
+              );
+            }
+
+            await cleanupOwnedScanner();
+
+            setScanTarget(
+              null
+            );
+
+            setScannerStatus(
+              ""
+            );
+
+            scanLockedRef.current =
+              false;
+
+            scrollToMap();
+          };
+
+        const handleFailure =
+          () => {
+            // Normal while looking for a QR.
+          };
+
+        try {
           ownedScanner =
             new Html5Qrcode(
               scannerId
@@ -2749,62 +3389,121 @@ export default function App() {
             ownedScanner;
 
           await ownedScanner.start(
-            camera.id,
+            {
+              facingMode:
+                "environment",
+            },
+
             scannerConfig(),
+
             handleSuccess,
+
             handleFailure
           );
-        } catch (secondError) {
-          console.error(
-            "Camera fallback failed:",
-            secondError
+        } catch (
+          firstError
+        ) {
+          console.warn(
+            "Rear camera request failed:",
+            firstError
           );
 
           await cleanupOwnedScanner();
 
-          if (!cancelled) {
-            setScannerStatus(
-              t.cameraCouldNotStart
+          if (cancelled) {
+            return;
+          }
+
+          try {
+            const cameras =
+              await Html5Qrcode.getCameras();
+
+            const camera =
+              chooseRearCamera(
+                cameras
+              );
+
+            if (!camera) {
+              throw firstError;
+            }
+
+            ownedScanner =
+              new Html5Qrcode(
+                scannerId
+              );
+
+            scannerRef.current =
+              ownedScanner;
+
+            await ownedScanner.start(
+              camera.id,
+
+              scannerConfig(),
+
+              handleSuccess,
+
+              handleFailure
+            );
+          } catch (
+            secondError
+          ) {
+            console.error(
+              "Camera fallback failed:",
+              secondError
             );
 
-            setMessage(
-              t.cameraPermission
-            );
+            await cleanupOwnedScanner();
+
+            if (
+              !cancelled
+            ) {
+              setScannerStatus(
+                t.cameraCouldNotStart
+              );
+
+              setMessage(
+                t.cameraPermission
+              );
+            }
+
+            return;
           }
+        }
+
+        if (cancelled) {
+          await cleanupOwnedScanner();
 
           return;
         }
-      }
 
-      if (cancelled) {
-        await cleanupOwnedScanner();
-        return;
-      }
+        if (TEST_MODE) {
+          setScannerStatus(
+            scanTarget.type ===
+              "goodie"
+              ? t.testScanGoodie
+              : t.testScanBooth
+          );
+        } else {
+          setScannerStatus(
+            t.cameraReady
+          );
+        }
+      };
 
-      if (TEST_MODE) {
-        setScannerStatus(
-          scanTarget.type ===
-            "goodie"
-            ? t.testScanGoodie
-            : t.testScanBooth
-        );
-      } else {
-        setScannerStatus(
-          t.cameraReady
-        );
-      }
-    };
-
-    startScanner();
+    void startScanner();
 
     return () => {
-      cancelled = true;
+      cancelled =
+        true;
 
-      if (ownedScanner) {
+      if (
+        ownedScanner
+      ) {
         const scanner =
           ownedScanner;
 
-        ownedScanner = null;
+        ownedScanner =
+          null;
 
         if (
           scannerRef.current ===
@@ -2830,160 +3529,204 @@ export default function App() {
   // GOODIE CONFIRM
   // ==================================================
 
-  const confirmGoodieReceived = async () => {
-    if (goodieReceiving) {
-      return;
-    }
-
-    setGoodieApprovalError("");
-
-    setGoodieReceiving(true);
-
-    try {
-      const syncResult =
-        await syncAllVisitProofs(
-          user?.recoveryCode,
-          {
-            retries: 2,
-            timeoutMs: 8000,
-          }
-        );
-
-      if (!syncResult.ok) {
-        throw new Error(
-          "Visit sync failed before Goodie handover"
-        );
-      }
-
-      const result =
-        await supabaseRpc(
-          "collect_goodie_bag",
-          {
-            p_recovery_code:
-              user?.recoveryCode,
-            p_device_id:
-              deviceId,
-          },
-          {
-            retries: 2,
-            timeoutMs: 8000,
-          }
-        );
-
-      if (!result) {
-        throw new Error(
-          "Empty Goodie collection response"
-        );
-      }
-
-      if (result.state) {
-        applyServerState(
-          result.state,
-          {
-            mergeLocalProofs: true,
-          }
-        );
-      }
-
+  const confirmGoodieReceived =
+    async () => {
       if (
-        result.status === "collected" ||
-        result.status === "already_collected"
+        goodieReceiving
       ) {
-        const collectedAt =
-          result.collectedAt ||
-          result.state?.goodieCollectedAt ||
-          new Date().toISOString();
-
-        setGoodieData({
-          collectedAt,
-        });
-
-        saveJSON(
-          GOODIE_STORAGE_KEY,
-          {
-            collectedAt,
-          }
-        );
-
-        setGoodieApproved(false);
-        setShowGoodieSuccess(true);
-
         return;
       }
-
-      if (
-        result.status ===
-        "approval_required"
-      ) {
-        setGoodieApproved(false);
-
-        setMessage(
-          t.goodieApprovalExpired
-        );
-
-        scrollToMap();
-
-        return;
-      }
-
-      if (
-        result.status ===
-        "not_eligible"
-      ) {
-        setGoodieApproved(false);
-
-        setMessage(
-          t.goodieNotEligible(
-            result.required ||
-              (TEST_MODE
-                ? TEST_UNLOCK_AT
-                : GOODIE_UNLOCK_AT)
-          )
-        );
-
-        scrollToMap();
-
-        return;
-      }
-
-      if (
-        result.status ===
-        "session_not_found"
-      ) {
-        setGoodieApproved(false);
-
-        setMessage(
-          t.sessionProblem
-        );
-
-        scrollToMap();
-
-        return;
-      }
-
-      throw new Error(
-        `Unexpected collect status: ${result.status}`
-      );
-    } catch (error) {
-      console.error(
-        "Goodie confirmation failed:",
-        error
-      );
 
       setGoodieApprovalError(
-        t.goodieConfirmError
+        ""
       );
-    } finally {
-      setGoodieReceiving(false);
-    }
-  };
+
+      setGoodieReceiving(
+        true
+      );
+
+      try {
+        const syncResult =
+          await syncAllVisitProofs(
+            user
+              ?.recoveryCode,
+            {
+              retries:
+                2,
+
+              timeoutMs:
+                8000,
+            }
+          );
+
+        if (
+          !syncResult.ok
+        ) {
+          throw new Error(
+            "Visit sync failed before Goodie handover"
+          );
+        }
+
+        const result =
+          await supabaseRpc(
+            "collect_goodie_bag",
+            {
+              p_recovery_code:
+                user
+                  ?.recoveryCode,
+
+              p_device_id:
+                deviceId,
+            },
+            {
+              retries:
+                2,
+
+              timeoutMs:
+                8000,
+            }
+          );
+
+        if (!result) {
+          throw new Error(
+            "Empty Goodie collection response"
+          );
+        }
+
+        if (
+          result.state
+        ) {
+          applyServerState(
+            result.state,
+            {
+              mergeLocalProofs:
+                true,
+            }
+          );
+        }
+
+        if (
+          result.status ===
+            "collected" ||
+          result.status ===
+            "already_collected"
+        ) {
+          const collectedAt =
+            result.collectedAt ||
+            result.state
+              ?.goodieCollectedAt ||
+            new Date()
+              .toISOString();
+
+          setGoodieData({
+            collectedAt,
+          });
+
+          saveJSON(
+            GOODIE_STORAGE_KEY,
+            {
+              collectedAt,
+            }
+          );
+
+          setGoodieApproved(
+            false
+          );
+
+          setShowGoodieSuccess(
+            true
+          );
+
+          return;
+        }
+
+        if (
+          result.status ===
+          "approval_required"
+        ) {
+          setGoodieApproved(
+            false
+          );
+
+          setMessage(
+            t.goodieApprovalExpired
+          );
+
+          scrollToMap();
+
+          return;
+        }
+
+        if (
+          result.status ===
+          "not_eligible"
+        ) {
+          setGoodieApproved(
+            false
+          );
+
+          setMessage(
+            t.goodieNotEligible(
+              result.required ||
+                (
+                  TEST_MODE
+                    ? TEST_UNLOCK_AT
+                    : GOODIE_UNLOCK_AT
+                )
+            )
+          );
+
+          scrollToMap();
+
+          return;
+        }
+
+        if (
+          result.status ===
+          "session_not_found"
+        ) {
+          setGoodieApproved(
+            false
+          );
+
+          setMessage(
+            t.sessionProblem
+          );
+
+          scrollToMap();
+
+          return;
+        }
+
+        throw new Error(
+          `Unexpected collect status: ${result.status}`
+        );
+      } catch (error) {
+        console.error(
+          "Goodie confirmation failed:",
+          error
+        );
+
+        setGoodieApprovalError(
+          t.goodieConfirmError
+        );
+      } finally {
+        setGoodieReceiving(
+          false
+        );
+      }
+    };
 
   // ==================================================
   // SPLASH
   // ==================================================
 
   if (showSplash) {
-    return <Splash t={t} />;
+    return (
+      <Splash
+        t={t}
+      />
+    );
   }
 
   // ==================================================
@@ -2993,82 +3736,172 @@ export default function App() {
   if (!user) {
     return (
       <Page>
-        <Header t={t} />
+        <Header
+          t={t}
+        />
 
-        <main style={styles.registrationContent}>
+        <main
+          style={
+            styles.registrationContent
+          }
+        >
           <LanguageSelector
-            language={language}
-            setLanguage={setLanguage}
+            language={
+              language
+            }
+
+            setLanguage={
+              setLanguage
+            }
+
             t={t}
           />
 
-          <div style={styles.jubiLogoWrapper}>
+          <div
+            style={
+              styles.jubiLogoWrapper
+            }
+          >
             <img
               src="/LogoJubi.png"
-              alt={t.anniversaryAlt}
-              style={styles.jubiLogo}
+
+              alt={
+                t.anniversaryAlt
+              }
+
+              style={
+                styles.jubiLogo
+              }
             />
           </div>
 
-          <h1 style={styles.registrationTitle}>
+          <h1
+            style={
+              styles.registrationTitle
+            }
+          >
             {t.welcome}
           </h1>
 
-          <p style={styles.registrationIntro}>
+          <p
+            style={
+              styles.registrationIntro
+            }
+          >
             {t.intro}
           </p>
 
-          <label style={styles.label}>
+          <label
+            style={
+              styles.label
+            }
+          >
             {t.firstName}
           </label>
 
           <input
-            style={styles.input}
-            value={form.firstname}
-            placeholder={t.firstName}
+            style={
+              styles.input
+            }
+
+            value={
+              form.firstname
+            }
+
+            placeholder={
+              t.firstName
+            }
+
             autoComplete="given-name"
-            maxLength={80}
-            disabled={registering}
-            onChange={(event) =>
-              setForm((current) => ({
-                ...current,
-                firstname:
-                  event.target.value,
-              }))
+
+            maxLength={
+              80
+            }
+
+            disabled={
+              registering
+            }
+
+            onChange={(
+              event
+            ) =>
+              setForm(
+                (current) => ({
+                  ...current,
+
+                  firstname:
+                    event.target
+                      .value,
+                })
+              )
             }
           />
 
-          <label style={styles.label}>
+          <label
+            style={
+              styles.label
+            }
+          >
             {t.lastName}
           </label>
 
           <input
-            style={styles.input}
-            value={form.lastname}
-            placeholder={t.lastName}
+            style={
+              styles.input
+            }
+
+            value={
+              form.lastname
+            }
+
+            placeholder={
+              t.lastName
+            }
+
             autoComplete="family-name"
-            maxLength={80}
-            disabled={registering}
-            onChange={(event) =>
-              setForm((current) => ({
-                ...current,
-                lastname:
-                  event.target.value,
-              }))
+
+            maxLength={
+              80
+            }
+
+            disabled={
+              registering
+            }
+
+            onChange={(
+              event
+            ) =>
+              setForm(
+                (current) => ({
+                  ...current,
+
+                  lastname:
+                    event.target
+                      .value,
+                })
+              )
             }
           />
 
           <button
             type="button"
+
             style={{
               ...styles.primaryButton,
+
               opacity:
                 registering
                   ? 0.65
                   : 1,
             }}
-            disabled={registering}
-            onClick={register}
+
+            disabled={
+              registering
+            }
+
+            onClick={
+              register
+            }
           >
             {registering
               ? t.starting
@@ -3076,19 +3909,48 @@ export default function App() {
           </button>
 
           {registrationError && (
-            <div style={styles.errorBox}>
-              {registrationError}
+            <div
+              style={
+                styles.errorBox
+              }
+
+              role="alert"
+            >
+              {
+                registrationError
+              }
             </div>
           )}
 
           <RecoveryPanel
-            open={recoveryOpen}
-            setOpen={setRecoveryOpen}
-            value={recoveryInput}
-            setValue={setRecoveryInput}
-            message={recoveryMessage}
-            onRestore={restoreSession}
-            restoring={restoring}
+            open={
+              recoveryOpen
+            }
+
+            setOpen={
+              setRecoveryOpen
+            }
+
+            value={
+              recoveryInput
+            }
+
+            setValue={
+              setRecoveryInput
+            }
+
+            message={
+              recoveryMessage
+            }
+
+            onRestore={
+              restoreSession
+            }
+
+            restoring={
+              restoring
+            }
+
             t={t}
           />
         </main>
@@ -3104,238 +3966,517 @@ export default function App() {
     <Page>
       <style>
         {`
-          @keyframes boothShimmer {
+          @keyframes boothSweep {
             0% {
-              background-color: rgba(90, 90, 90, 0.045);
-              border-color: rgba(90, 90, 90, 0.22);
+              left: -65%;
+              opacity: 0;
             }
 
-            50% {
-              background-color: rgba(90, 90, 90, 0.12);
-              border-color: rgba(90, 90, 90, 0.42);
+            10% {
+              opacity: 0;
+            }
+
+            22% {
+              opacity: 0.70;
+            }
+
+            44% {
+              left: 125%;
+              opacity: 0.18;
+            }
+
+            52% {
+              left: 135%;
+              opacity: 0;
             }
 
             100% {
-              background-color: rgba(90, 90, 90, 0.045);
-              border-color: rgba(90, 90, 90, 0.22);
+              left: 135%;
+              opacity: 0;
             }
           }
 
+          .booth-unvisited {
+            overflow: hidden !important;
+          }
+
+          .booth-unvisited::after {
+            content: "";
+            position: absolute;
+
+            top: -40%;
+            bottom: -40%;
+
+            left: -65%;
+
+            width: 35%;
+
+            background:
+              linear-gradient(
+                105deg,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.10) 25%,
+                rgba(255,255,255,0.78) 50%,
+                rgba(255,255,255,0.10) 75%,
+                rgba(255,255,255,0) 100%
+              );
+
+            transform: skewX(-15deg);
+
+            pointer-events: none;
+
+            opacity: 0;
+
+            animation:
+              boothSweep 5.8s ease-in-out infinite;
+
+            animation-delay:
+              var(--shimmer-delay, 0s);
+
+            will-change: left, opacity;
+          }
+
+          .booth-unvisited:active {
+            background:
+              rgba(90,90,90,0.15) !important;
+          }
+
           @media (prefers-reduced-motion: reduce) {
-            .booth-unvisited {
+            .booth-unvisited::after {
+              display: none !important;
               animation: none !important;
             }
+          }
+
+          @supports (min-height: 100dvh) {
+            .impo-page,
+            .impo-app {
+              min-height: 100dvh !important;
+            }
+          }
+
+          html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+          }
+
+          body {
+            overscroll-behavior-y: none;
+          }
+
+          button,
+          input {
+            font-family:
+              "Helvetica Neue",
+              Helvetica,
+              Arial,
+              sans-serif;
           }
         `}
       </style>
 
-      <Header t={t} />
+      <Header
+        t={t}
+      />
 
-      <main style={styles.content}>
-        <p style={styles.eyebrow}>
-          {t.anniversaryLabel}
+      <main
+        style={
+          styles.content
+        }
+      >
+        <p
+          style={
+            styles.eyebrow
+          }
+        >
+          {
+            t.anniversaryLabel
+          }
         </p>
 
-        <h1 style={styles.passTitle}>
-          {t.hello(user.firstname)}
+        <h1
+          style={
+            styles.passTitle
+          }
+        >
+          {t.hello(
+            user.firstname
+          )}
         </h1>
 
-        <p style={styles.intro}>
+        <p
+          style={
+            styles.intro
+          }
+        >
           {t.welcomeEvent}
         </p>
 
         <Progress
-          visited={visited.length}
-          total={booths.length}
-          progress={progress}
+          visited={
+            visited.length
+          }
+
+          total={
+            TOTAL_BOOTHS
+          }
+
+          progress={
+            progress
+          }
+
           t={t}
         />
 
         <section
-          ref={mapSectionRef}
-          style={styles.mapSection}
+          ref={
+            mapSectionRef
+          }
+
+          style={
+            styles.mapSection
+          }
         >
-          <h2 style={styles.sectionTitle}>
+          <h2
+            style={
+              styles.sectionTitle
+            }
+          >
             {t.brandPass}
           </h2>
 
-          <p style={styles.mapIntro}>
+          <p
+            style={
+              styles.mapIntro
+            }
+          >
             {t.tapBooth}
           </p>
 
-          <div style={styles.mapCard}>
+          <div
+            style={
+              styles.mapCard
+            }
+          >
             {!mapError ? (
-              <div style={styles.mapWrapper}>
+              <div
+                style={
+                  styles.mapWrapper
+                }
+              >
                 <img
                   src="/brand-map2.png"
-                  alt={t.mapAlt}
-                  style={styles.mapImage}
+
+                  alt={
+                    t.mapAlt
+                  }
+
+                  style={
+                    styles.mapImage
+                  }
+
+                  draggable={
+                    false
+                  }
+
                   onError={() =>
-                    setMapError(true)
+                    setMapError(
+                      true
+                    )
                   }
                 />
 
-                {booths.map((booth) => {
-                  const isVisited =
-                    testCompleted ||
-                    visited.includes(
-                      booth.id
+                {booths.map(
+                  (booth) => {
+                    const isVisited =
+                      testCompleted ||
+                      visited.includes(
+                        booth.id
+                      );
+
+                    const shimmerDelay =
+                      `${-(
+                        (booth.id %
+                          7) *
+                        0.55
+                      )}s`;
+
+                    return (
+                      <button
+                        key={
+                          booth.id
+                        }
+
+                        type="button"
+
+                        className={
+                          isVisited
+                            ? "booth-visited"
+                            : "booth-unvisited"
+                        }
+
+                        aria-label={`${booth.name} – ${
+                          isVisited
+                            ? t.visited
+                            : t.notVisited
+                        }`}
+
+                        title={
+                          booth.name
+                        }
+
+                        onClick={() =>
+                          openBoothScanner(
+                            booth
+                          )
+                        }
+
+                        style={{
+                          ...styles.boothOverlay,
+
+                          "--shimmer-delay":
+                            shimmerDelay,
+
+                          left:
+                            `${booth.area.left}%`,
+
+                          top:
+                            `${booth.area.top}%`,
+
+                          width:
+                            `${booth.area.width}%`,
+
+                          height:
+                            `${booth.area.height}%`,
+
+                          transform:
+                            booth.rotate
+                              ? `rotate(${booth.rotate}deg)`
+                              : undefined,
+
+                          borderRadius:
+                            booth.shape ===
+                            "circle"
+                              ? "50%"
+                              : 1,
+
+                          background:
+                            isVisited
+                              ? GREEN_BG
+                              : UNVISITED_BG,
+
+                          border:
+                            isVisited
+                              ? `2px solid ${GREEN}`
+                              : `1px solid ${UNVISITED_BORDER}`,
+                        }}
+                      />
                     );
-
-                  return (
-                    <button
-                      key={booth.id}
-                      type="button"
-                      className={
-                        isVisited
-                          ? ""
-                          : "booth-unvisited"
-                      }
-                      aria-label={`${booth.name} – ${
-                        isVisited
-                          ? t.visited
-                          : t.notVisited
-                      }`}
-                      title={booth.name}
-                      onClick={() =>
-                        openBoothScanner(
-                          booth
-                        )
-                      }
-                      style={{
-                        ...styles.boothOverlay,
-
-                        left:
-                          `${booth.area.left}%`,
-
-                        top:
-                          `${booth.area.top}%`,
-
-                        width:
-                          `${booth.area.width}%`,
-
-                        height:
-                          `${booth.area.height}%`,
-
-                        transform:
-                          booth.rotate
-                            ? `rotate(${booth.rotate}deg)`
-                            : undefined,
-
-                        borderRadius:
-                          booth.shape ===
-                          "circle"
-                            ? "50%"
-                            : 1,
-
-                        background:
-                          isVisited
-                            ? GREEN_BG
-                            : UNVISITED_BG,
-
-                        border:
-                          isVisited
-                            ? `2px solid ${GREEN}`
-                            : `1px solid ${UNVISITED_BORDER}`,
-
-                        animation:
-                          isVisited
-                            ? "none"
-                            : "boothShimmer 3.8s ease-in-out infinite",
-                      }}
-                    />
-                  );
-                })}
+                  }
+                )}
               </div>
             ) : (
-              <div style={styles.mapError}>
+              <div
+                style={
+                  styles.mapError
+                }
+              >
                 <strong>
-                  {t.mapNotFound}
+                  {
+                    t.mapNotFound
+                  }
                 </strong>
 
                 <div
                   style={{
-                    marginTop: 8,
+                    marginTop:
+                      8,
                   }}
                 >
-                  {t.mapUploadBefore}{" "}
+                  {
+                    t.mapUploadBefore
+                  }{" "}
                   <strong>
                     public
                   </strong>{" "}
-                  {t.mapUploadAfter}
+                  {
+                    t.mapUploadAfter
+                  }
                 </div>
 
-                <code style={styles.code}>
+                <code
+                  style={
+                    styles.code
+                  }
+                >
                   brand-map2.png
                 </code>
               </div>
             )}
           </div>
 
-          <div style={styles.legend}>
+          <div
+            style={
+              styles.legend
+            }
+          >
             <Legend
-              color={GREEN_BG}
-              border={GREEN}
-              borderWidth={2}
-              label={t.visited}
+              color={
+                GREEN_BG
+              }
+
+              border={
+                GREEN
+              }
+
+              borderWidth={
+                2
+              }
+
+              label={
+                t.visited
+              }
             />
 
             <Legend
-              color={UNVISITED_BG}
-              border={UNVISITED_BORDER}
-              borderWidth={1}
-              label={t.notVisited}
+              color={
+                UNVISITED_BG
+              }
+
+              border={
+                UNVISITED_BORDER
+              }
+
+              borderWidth={
+                1
+              }
+
+              label={
+                t.notVisited
+              }
             />
           </div>
 
           {message && (
-            <div style={styles.message}>
+            <div
+              style={
+                styles.message
+              }
+
+              role="status"
+
+              aria-live="polite"
+            >
               {message}
             </div>
           )}
         </section>
 
         <GoodieBag
-          visited={visited.length}
-          eligible={goodieEligible}
-          collected={goodieCollected}
-          onCollect={openGoodieScanner}
+          visited={
+            visited.length
+          }
+
+          eligible={
+            goodieEligible
+          }
+
+          collected={
+            goodieCollected
+          }
+
+          onCollect={
+            openGoodieScanner
+          }
+
           t={t}
         />
 
         {scanTarget && (
           <Scanner
-            scanTarget={scanTarget}
-            status={scannerStatus}
-            scannerSectionRef={scannerSectionRef}
-            onClose={closeScanner}
+            scanTarget={
+              scanTarget
+            }
+
+            status={
+              scannerStatus
+            }
+
+            scannerSectionRef={
+              scannerSectionRef
+            }
+
+            onClose={
+              closeScanner
+            }
+
             t={t}
           />
         )}
 
-        <section style={styles.recoveryInfo}>
-          <div style={styles.recoveryInfoLabel}>
-            {t.recoveryCodeLabel}
+        <section
+          style={
+            styles.recoveryInfo
+          }
+        >
+          <div
+            style={
+              styles.recoveryInfoLabel
+            }
+          >
+            {
+              t.recoveryCodeLabel
+            }
           </div>
 
-          <div style={styles.recoveryCode}>
-            {user.recoveryCode}
+          <div
+            style={
+              styles.recoveryCode
+            }
+          >
+            {
+              user.recoveryCode
+            }
           </div>
 
-          <div style={styles.recoveryInfoText}>
-            {t.recoveryCodeText}
+          <div
+            style={
+              styles.recoveryInfoText
+            }
+          >
+            {
+              t.recoveryCodeText
+            }
           </div>
         </section>
       </main>
 
       {goodieApproved && (
         <GoodieApprovedScreen
-          user={user}
-          visited={visited.length}
-          total={booths.length}
-          onReceived={confirmGoodieReceived}
-          working={goodieReceiving}
-          error={goodieApprovalError}
+          user={
+            user
+          }
+
+          visited={
+            visited.length
+          }
+
+          total={
+            TOTAL_BOOTHS
+          }
+
+          onReceived={
+            confirmGoodieReceived
+          }
+
+          working={
+            goodieReceiving
+          }
+
+          error={
+            goodieApprovalError
+          }
+
           t={t}
         />
       )}
@@ -3343,8 +4484,11 @@ export default function App() {
       {showGoodieSuccess && (
         <GoodieSuccessScreen
           onDone={() =>
-            setShowGoodieSuccess(false)
+            setShowGoodieSuccess(
+              false
+            )
           }
+
           t={t}
         />
       )}
@@ -3356,35 +4500,81 @@ export default function App() {
 // COMPONENTS
 // ==================================================
 
-function Page({ children }) {
+function Page({
+  children,
+}) {
   return (
-    <div style={styles.page}>
-      <div style={styles.app}>
+    <div
+      className="impo-page"
+
+      style={
+        styles.page
+      }
+    >
+      <div
+        className="impo-app"
+
+        style={
+          styles.app
+        }
+      >
         {children}
       </div>
     </div>
   );
 }
 
-function Header({ t }) {
+function Header({
+  t,
+}) {
   return (
-    <header style={styles.header}>
+    <header
+      style={
+        styles.header
+      }
+    >
       <img
         src="/impo_logo.png"
-        alt={t.logoAlt}
-        style={styles.logo}
+
+        alt={
+          t.logoAlt
+        }
+
+        style={
+          styles.logo
+        }
+
+        draggable={
+          false
+        }
       />
     </header>
   );
 }
 
-function Splash({ t }) {
+function Splash({
+  t,
+}) {
   return (
-    <div style={styles.splash}>
+    <div
+      style={
+        styles.splash
+      }
+    >
       <img
         src="/LogoJubi.png"
-        alt={t.anniversaryAlt}
-        style={styles.splashLogo}
+
+        alt={
+          t.anniversaryAlt
+        }
+
+        style={
+          styles.splashLogo
+        }
+
+        draggable={
+          false
+        }
       />
     </div>
   );
@@ -3396,44 +4586,80 @@ function LanguageSelector({
   t,
 }) {
   const options = [
-    { code: "de", label: "DE" },
-    { code: "fr", label: "FR" },
-    { code: "it", label: "IT" },
-    { code: "en", label: "EN" },
+    {
+      code: "de",
+      label: "DE",
+    },
+    {
+      code: "fr",
+      label: "FR",
+    },
+    {
+      code: "it",
+      label: "IT",
+    },
+    {
+      code: "en",
+      label: "EN",
+    },
   ];
 
   return (
-    <div style={styles.languageSection}>
-      <div style={styles.languageLabel}>
-        {t.chooseLanguage}
+    <div
+      style={
+        styles.languageSection
+      }
+    >
+      <div
+        style={
+          styles.languageLabel
+        }
+      >
+        {
+          t.chooseLanguage
+        }
       </div>
 
-      <div style={styles.languageButtons}>
-        {options.map((option) => {
-          const active =
-            language === option.code;
+      <div
+        style={
+          styles.languageButtons
+        }
+      >
+        {options.map(
+          (option) => {
+            const active =
+              language ===
+              option.code;
 
-          return (
-            <button
-              key={option.code}
-              type="button"
-              onClick={() =>
-                setLanguage(
+            return (
+              <button
+                key={
                   option.code
-                )
-              }
-              style={{
-                ...styles.languageButton,
+                }
 
-                ...(active
-                  ? styles.languageButtonActive
-                  : styles.languageButtonInactive),
-              }}
-            >
-              {option.label}
-            </button>
-          );
-        })}
+                type="button"
+
+                onClick={() =>
+                  setLanguage(
+                    option.code
+                  )
+                }
+
+                style={{
+                  ...styles.languageButton,
+
+                  ...(active
+                    ? styles.languageButtonActive
+                    : styles.languageButtonInactive),
+                }}
+              >
+                {
+                  option.label
+                }
+              </button>
+            );
+          }
+        )}
       </div>
     </div>
   );
@@ -3446,28 +4672,56 @@ function Progress({
   t,
 }) {
   return (
-    <div style={styles.progressCard}>
-      <div style={styles.progressTop}>
+    <div
+      style={
+        styles.progressCard
+      }
+    >
+      <div
+        style={
+          styles.progressTop
+        }
+      >
         <div>
-          <div style={styles.progressNumber}>
+          <div
+            style={
+              styles.progressNumber
+            }
+          >
             {visited} / {total}
           </div>
 
-          <div style={styles.progressLabel}>
-            {t.boothsVisited}
+          <div
+            style={
+              styles.progressLabel
+            }
+          >
+            {
+              t.boothsVisited
+            }
           </div>
         </div>
 
-        <div style={styles.percent}>
+        <div
+          style={
+            styles.percent
+          }
+        >
           {progress}%
         </div>
       </div>
 
-      <div style={styles.progressBackground}>
+      <div
+        style={
+          styles.progressBackground
+        }
+      >
         <div
           style={{
             ...styles.progressBar,
-            width: `${progress}%`,
+
+            width:
+              `${progress}%`,
           }}
         />
       </div>
@@ -3482,17 +4736,26 @@ function Legend({
   label,
 }) {
   return (
-    <div style={styles.legendItem}>
+    <div
+      style={
+        styles.legendItem
+      }
+    >
       <span
         style={{
           ...styles.legendBox,
-          background: color,
+
+          background:
+            color,
+
           border:
             `${borderWidth}px solid ${border}`,
         }}
       />
 
-      <span>{label}</span>
+      <span>
+        {label}
+      </span>
     </div>
   );
 }
@@ -3508,60 +4771,121 @@ function RecoveryPanel({
   t,
 }) {
   return (
-    <section style={styles.recoveryPanel}>
+    <section
+      style={
+        styles.recoveryPanel
+      }
+    >
       <button
         type="button"
-        style={styles.recoveryToggle}
+
+        style={
+          styles.recoveryToggle
+        }
+
         onClick={() =>
-          setOpen(!open)
+          setOpen(
+            !open
+          )
         }
       >
-        {t.recoveryLost}
+        {
+          t.recoveryLost
+        }
       </button>
 
       {open && (
-        <div style={styles.recoveryBody}>
-          <div style={styles.recoveryTitle}>
-            {t.recoveryTitle}
+        <div
+          style={
+            styles.recoveryBody
+          }
+        >
+          <div
+            style={
+              styles.recoveryTitle
+            }
+          >
+            {
+              t.recoveryTitle
+            }
           </div>
 
-          <p style={styles.recoveryText}>
-            {t.recoveryText}
+          <p
+            style={
+              styles.recoveryText
+            }
+          >
+            {
+              t.recoveryText
+            }
           </p>
 
           <input
             type="text"
-            value={value}
+
+            value={
+              value
+            }
+
             placeholder="ABCD-1234"
+
             autoCapitalize="characters"
+
             autoComplete="off"
-            maxLength={12}
-            disabled={restoring}
-            style={styles.recoveryInput}
-            onChange={(event) =>
+
+            maxLength={
+              12
+            }
+
+            disabled={
+              restoring
+            }
+
+            style={
+              styles.recoveryInput
+            }
+
+            onChange={(
+              event
+            ) =>
               setValue(
-                event.target.value.toUpperCase()
+                event.target.value
+                  .toUpperCase()
               )
             }
           />
 
           {message && (
-            <div style={styles.recoveryMessage}>
+            <div
+              style={
+                styles.recoveryMessage
+              }
+
+              role="alert"
+            >
               {message}
             </div>
           )}
 
           <button
             type="button"
-            disabled={restoring}
+
+            disabled={
+              restoring
+            }
+
             style={{
               ...styles.recoveryButton,
+
               opacity:
                 restoring
                   ? 0.65
                   : 1,
             }}
-            onClick={onRestore}
+
+            onClick={
+              onRestore
+            }
           >
             {restoring
               ? t.restoring
@@ -3587,37 +4911,67 @@ function GoodieBag({
 
   const remaining =
     Math.max(
-      required - visited,
+      required -
+        visited,
       0
     );
 
   const goodieProgress =
     Math.min(
-      visited / required,
+      visited /
+        required,
       1
     ) * 100;
 
   return (
-    <section style={styles.goodieCard}>
-      <div style={styles.goodieIcon}>
+    <section
+      style={
+        styles.goodieCard
+      }
+    >
+      <div
+        style={
+          styles.goodieIcon
+        }
+      >
         🎁
       </div>
 
-      <div style={styles.goodieTitle}>
+      <div
+        style={
+          styles.goodieTitle
+        }
+      >
         {t.goodieBag}
       </div>
 
       {collected ? (
-        <div style={styles.goodieCollected}>
-          {t.goodieCollected}
+        <div
+          style={
+            styles.goodieCollected
+          }
+        >
+          {
+            t.goodieCollected
+          }
         </div>
       ) : eligible ? (
         <>
-          <div style={styles.goodieUnlocked}>
-            {t.goodieReady}
+          <div
+            style={
+              styles.goodieUnlocked
+            }
+          >
+            {
+              t.goodieReady
+            }
           </div>
 
-          <div style={styles.goodieText}>
+          <div
+            style={
+              styles.goodieText
+            }
+          >
             {TEST_MODE
               ? t.testGoodieReady
               : t.goodieLiveReady(
@@ -3628,7 +4982,11 @@ function GoodieBag({
         </>
       ) : (
         <>
-          <div style={styles.goodieText}>
+          <div
+            style={
+              styles.goodieText
+            }
+          >
             {TEST_MODE
               ? t.testGoodieInstruction
               : t.liveGoodieInstruction(
@@ -3637,7 +4995,11 @@ function GoodieBag({
                 )}
           </div>
 
-          <div style={styles.goodieCount}>
+          <div
+            style={
+              styles.goodieCount
+            }
+          >
             {visited} / {required}
           </div>
 
@@ -3649,14 +5011,20 @@ function GoodieBag({
             <div
               style={{
                 ...styles.goodieProgressBar,
+
                 width:
                   `${goodieProgress}%`,
               }}
             />
           </div>
 
-          <div style={styles.goodieRemaining}>
-            {remaining === 1
+          <div
+            style={
+              styles.goodieRemaining
+            }
+          >
+            {remaining ===
+            1
               ? t.remainingOne
               : t.remainingMany(
                   remaining
@@ -3668,8 +5036,15 @@ function GoodieBag({
       {!collected && (
         <button
           type="button"
-          disabled={!eligible}
-          onClick={onCollect}
+
+          disabled={
+            !eligible
+          }
+
+          onClick={
+            onCollect
+          }
+
           style={{
             ...styles.goodieButton,
 
@@ -3678,7 +5053,9 @@ function GoodieBag({
               : styles.goodieButtonDisabled),
           }}
         >
-          {t.collectGoodie}
+          {
+            t.collectGoodie
+          }
         </button>
       )}
     </section>
@@ -3693,44 +5070,85 @@ function Scanner({
   t,
 }) {
   const label =
-    scanTarget.type === "goodie"
+    scanTarget.type ===
+    "goodie"
       ? t.goodieBag
-      : scanTarget.booth.name;
+      : scanTarget
+          .booth
+          .name;
 
   return (
     <div
-      ref={scannerSectionRef}
-      style={styles.scannerCard}
+      ref={
+        scannerSectionRef
+      }
+
+      style={
+        styles.scannerCard
+      }
     >
-      <div style={styles.scannerHeader}>
+      <div
+        style={
+          styles.scannerHeader
+        }
+      >
         <div>
-          <div style={styles.scannerTitle}>
+          <div
+            style={
+              styles.scannerTitle
+            }
+          >
             {t.scanQr}
           </div>
 
-          <div style={styles.scannerSubtitle}>
+          <div
+            style={
+              styles.scannerSubtitle
+            }
+          >
             {label}
           </div>
         </div>
 
-        <div style={styles.scannerBadge}>
+        <div
+          style={
+            styles.scannerBadge
+          }
+        >
           QR
         </div>
       </div>
 
-      <div style={styles.scannerStatus}>
+      <div
+        style={
+          styles.scannerStatus
+        }
+
+        role="status"
+
+        aria-live="polite"
+      >
         {status}
       </div>
 
       <div
         id="qr-reader-region"
-        style={styles.scannerRegion}
+
+        style={
+          styles.scannerRegion
+        }
       />
 
       <button
         type="button"
-        style={styles.secondaryButton}
-        onClick={onClose}
+
+        style={
+          styles.secondaryButton
+        }
+
+        onClick={
+          onClose
+        }
       >
         {t.close}
       </button>
@@ -3748,25 +5166,60 @@ function GoodieApprovedScreen({
   t,
 }) {
   return (
-    <div style={styles.goodieApprovedScreen}>
-      <div style={styles.goodieApprovedContent}>
-        <div style={styles.goodieApprovedCheck}>
+    <div
+      style={
+        styles.goodieApprovedScreen
+      }
+    >
+      <div
+        style={
+          styles.goodieApprovedContent
+        }
+      >
+        <div
+          style={
+            styles.goodieApprovedCheck
+          }
+        >
           ✓
         </div>
 
-        <div style={styles.goodieApprovedEyebrow}>
-          {t.goodieApprovedEyebrow}
+        <div
+          style={
+            styles.goodieApprovedEyebrow
+          }
+        >
+          {
+            t.goodieApprovedEyebrow
+          }
         </div>
 
-        <h1 style={styles.goodieApprovedTitle}>
+        <h1
+          style={
+            styles.goodieApprovedTitle
+          }
+        >
           {t.approved}
         </h1>
 
-        <div style={styles.goodieApprovedName}>
-          {user.firstname} {user.lastname}
+        <div
+          style={
+            styles.goodieApprovedName
+          }
+        >
+          {
+            user.firstname
+          }{" "}
+          {
+            user.lastname
+          }
         </div>
 
-        <div style={styles.goodieApprovedProgress}>
+        <div
+          style={
+            styles.goodieApprovedProgress
+          }
+        >
           {TEST_MODE
             ? t.testApproval
             : t.boothsVisitedApproval(
@@ -3775,27 +5228,47 @@ function GoodieApprovedScreen({
               )}
         </div>
 
-        <div style={styles.goodieApprovedInstruction}>
-          {t.mayHandOver}
+        <div
+          style={
+            styles.goodieApprovedInstruction
+          }
+        >
+          {
+            t.mayHandOver
+          }
         </div>
 
         {error && (
-          <div style={styles.goodieApprovalError}>
+          <div
+            style={
+              styles.goodieApprovalError
+            }
+
+            role="alert"
+          >
             {error}
           </div>
         )}
 
         <button
           type="button"
-          disabled={working}
+
+          disabled={
+            working
+          }
+
           style={{
             ...styles.goodieReceivedButton,
+
             opacity:
               working
                 ? 0.7
                 : 1,
           }}
-          onClick={onReceived}
+
+          onClick={
+            onReceived
+          }
         >
           {working
             ? t.confirmingGoodie
@@ -3811,7 +5284,11 @@ function GoodieSuccessScreen({
   t,
 }) {
   return (
-    <div style={styles.goodieSuccessScreen}>
+    <div
+      style={
+        styles.goodieSuccessScreen
+      }
+    >
       <style>
         {`
           @keyframes goodiePan {
@@ -3833,28 +5310,59 @@ function GoodieSuccessScreen({
         `}
       </style>
 
-      <div style={styles.goodieSuccessContent}>
+      <div
+        style={
+          styles.goodieSuccessContent
+        }
+      >
         <img
           src="/impo_logo.png"
-          alt={t.logoAlt}
-          style={styles.goodieFinalLogo}
+
+          alt={
+            t.logoAlt
+          }
+
+          style={
+            styles.goodieFinalLogo
+          }
+
+          draggable={
+            false
+          }
         />
 
-        <h1 style={styles.goodieThankYou}>
+        <h1
+          style={
+            styles.goodieThankYou
+          }
+        >
           {t.thankYou}
         </h1>
 
         <div
           className="goodie-panorama"
-          style={styles.goodiePanorama}
+
+          style={
+            styles.goodiePanorama
+          }
+
           role="img"
-          aria-label={t.panoramaAlt}
+
+          aria-label={
+            t.panoramaAlt
+          }
         />
 
         <button
           type="button"
-          style={styles.goodieDoneButton}
-          onClick={onDone}
+
+          style={
+            styles.goodieDoneButton
+          }
+
+          onClick={
+            onDone
+          }
         >
           {t.done}
         </button>
@@ -3869,78 +5377,159 @@ function GoodieSuccessScreen({
 
 const styles = {
   page: {
-    minHeight: "100vh",
-    background: LIGHT,
-    color: BLACK,
+    minHeight:
+      "100vh",
+
+    background:
+      LIGHT,
+
+    color:
+      BLACK,
+
     fontFamily:
       '"Helvetica Neue", Helvetica, Arial, sans-serif',
   },
 
   app: {
-    maxWidth: 430,
-    minHeight: "100vh",
-    margin: "0 auto",
-    background: "#FFFFFF",
+    maxWidth:
+      430,
+
+    minHeight:
+      "100vh",
+
+    margin:
+      "0 auto",
+
+    background:
+      "#FFFFFF",
   },
 
   header: {
-    height: 70,
-    display: "flex",
-    alignItems: "center",
-    padding: "0 20px",
+    height:
+      70,
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    padding:
+      "0 20px",
+
     borderBottom:
       `1px solid ${BORDER}`,
   },
 
   logo: {
-    width: 82,
-    display: "block",
+    width:
+      82,
+
+    display:
+      "block",
   },
 
   splash: {
-    position: "fixed",
-    inset: 0,
-    zIndex: 9999,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "#FFFFFF",
+    position:
+      "fixed",
+
+    inset:
+      0,
+
+    zIndex:
+      9999,
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    background:
+      "#FFFFFF",
   },
 
   splashLogo: {
-    width: "72%",
-    maxWidth: 350,
-    objectFit: "contain",
+    width:
+      "72%",
+
+    maxWidth:
+      350,
+
+    objectFit:
+      "contain",
   },
 
   languageSection: {
-    marginBottom: 26,
-    textAlign: "center",
+    marginBottom:
+      26,
+
+    textAlign:
+      "center",
   },
 
   languageLabel: {
-    marginBottom: 9,
-    color: "#888888",
-    fontSize: 11,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: "1px",
+    marginBottom:
+      9,
+
+    color:
+      "#888888",
+
+    fontSize:
+      11,
+
+    fontWeight:
+      700,
+
+    textTransform:
+      "uppercase",
+
+    letterSpacing:
+      "1px",
   },
 
   languageButtons: {
-    display: "flex",
-    justifyContent: "center",
-    gap: 7,
+    display:
+      "flex",
+
+    justifyContent:
+      "center",
+
+    gap:
+      7,
   },
 
   languageButton: {
-    minWidth: 52,
-    height: 38,
-    padding: "0 12px",
-    borderRadius: 8,
-    fontSize: 12,
-    fontWeight: 800,
-    cursor: "pointer",
+    minWidth:
+      52,
+
+    height:
+      38,
+
+    padding:
+      "0 12px",
+
+    borderRadius:
+      8,
+
+    fontSize:
+      12,
+
+    fontWeight:
+      800,
+
+    cursor:
+      "pointer",
+
+    touchAction:
+      "manipulation",
+
+    WebkitTapHighlightColor:
+      "transparent",
+
     transition:
       "all 0.15s ease",
   },
@@ -3948,707 +5537,1413 @@ const styles = {
   languageButtonActive: {
     border:
       `1px solid ${RED}`,
-    background: RED,
-    color: "#FFFFFF",
+
+    background:
+      RED,
+
+    color:
+      "#FFFFFF",
   },
 
   languageButtonInactive: {
     border:
       `1px solid ${BORDER}`,
-    background: "#FFFFFF",
-    color: "#555555",
+
+    background:
+      "#FFFFFF",
+
+    color:
+      "#555555",
   },
 
   registrationContent: {
     padding:
-      "26px 20px 50px",
+      "26px 20px calc(50px + env(safe-area-inset-bottom))",
   },
 
   jubiLogoWrapper: {
-    display: "flex",
-    justifyContent: "center",
+    display:
+      "flex",
+
+    justifyContent:
+      "center",
+
     margin:
       "4px 0 30px",
   },
 
   jubiLogo: {
-    width: "70%",
-    maxWidth: 280,
-    objectFit: "contain",
+    width:
+      "70%",
+
+    maxWidth:
+      280,
+
+    objectFit:
+      "contain",
   },
 
   registrationTitle: {
-    margin: 0,
-    fontSize: 36,
-    lineHeight: 1.05,
-    fontWeight: 800,
-    letterSpacing: "-1px",
+    margin:
+      0,
+
+    fontSize:
+      36,
+
+    lineHeight:
+      1.05,
+
+    fontWeight:
+      800,
+
+    letterSpacing:
+      "-1px",
   },
 
   registrationIntro: {
     margin:
       "12px 0 30px",
-    color: "#666666",
-    fontSize: 16,
-    lineHeight: 1.5,
+
+    color:
+      "#666666",
+
+    fontSize:
+      16,
+
+    lineHeight:
+      1.5,
   },
 
   label: {
-    display: "block",
-    marginBottom: 7,
-    fontSize: 13,
-    fontWeight: 700,
+    display:
+      "block",
+
+    marginBottom:
+      7,
+
+    fontSize:
+      13,
+
+    fontWeight:
+      700,
   },
 
   input: {
-    width: "100%",
+    width:
+      "100%",
+
     boxSizing:
       "border-box",
-    padding: 15,
-    marginBottom: 18,
+
+    padding:
+      15,
+
+    marginBottom:
+      18,
+
     border:
       `1px solid ${BORDER}`,
-    borderRadius: 8,
-    background: "#FFFFFF",
-    fontSize: 16,
-    outline: "none",
+
+    borderRadius:
+      8,
+
+    background:
+      "#FFFFFF",
+
+    fontSize:
+      16,
+
+    outline:
+      "none",
   },
 
   primaryButton: {
-    width: "100%",
-    padding: 16,
-    marginTop: 5,
-    border: 0,
-    borderRadius: 8,
-    background: RED,
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: 800,
-    letterSpacing: "0.7px",
-    cursor: "pointer",
+    width:
+      "100%",
+
+    minHeight:
+      48,
+
+    padding:
+      16,
+
+    marginTop:
+      5,
+
+    border:
+      0,
+
+    borderRadius:
+      8,
+
+    background:
+      RED,
+
+    color:
+      "#FFFFFF",
+
+    fontSize:
+      14,
+
+    fontWeight:
+      800,
+
+    letterSpacing:
+      "0.7px",
+
+    cursor:
+      "pointer",
+
+    touchAction:
+      "manipulation",
   },
 
   errorBox: {
-    marginTop: 14,
-    padding: 13,
+    marginTop:
+      14,
+
+    padding:
+      13,
+
     border:
       "1px solid rgba(207,45,54,0.25)",
-    borderRadius: 9,
+
+    borderRadius:
+      9,
+
     background:
       "rgba(207,45,54,0.06)",
-    color: RED,
-    fontSize: 12,
-    lineHeight: 1.45,
+
+    color:
+      RED,
+
+    fontSize:
+      12,
+
+    lineHeight:
+      1.45,
   },
 
   content: {
     padding:
-      "28px 20px 60px",
+      "28px 20px calc(60px + env(safe-area-inset-bottom))",
   },
 
   eyebrow: {
-    margin: 0,
-    color: RED,
-    fontSize: 11,
-    fontWeight: 800,
-    letterSpacing: "1.2px",
+    margin:
+      0,
+
+    color:
+      RED,
+
+    fontSize:
+      11,
+
+    fontWeight:
+      800,
+
+    letterSpacing:
+      "1.2px",
   },
 
   passTitle: {
     margin:
       "6px 0 8px",
-    fontSize: 34,
-    lineHeight: 1.05,
-    fontWeight: 800,
-    letterSpacing: "-1px",
+
+    fontSize:
+      34,
+
+    lineHeight:
+      1.05,
+
+    fontWeight:
+      800,
+
+    letterSpacing:
+      "-1px",
   },
 
   intro: {
     margin:
       "12px 0 26px",
-    color: "#666666",
-    fontSize: 16,
-    lineHeight: 1.5,
+
+    color:
+      "#666666",
+
+    fontSize:
+      16,
+
+    lineHeight:
+      1.5,
   },
 
   progressCard: {
-    padding: 20,
+    padding:
+      20,
+
     margin:
       "26px 0 28px",
-    borderRadius: 14,
-    background: RED,
-    color: "#FFFFFF",
+
+    borderRadius:
+      14,
+
+    background:
+      RED,
+
+    color:
+      "#FFFFFF",
   },
 
   progressTop: {
-    display: "flex",
-    alignItems: "center",
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
     justifyContent:
       "space-between",
   },
 
   progressNumber: {
-    fontSize: 30,
-    fontWeight: 800,
+    fontSize:
+      30,
+
+    fontWeight:
+      800,
   },
 
   progressLabel: {
-    marginTop: 2,
-    fontSize: 13,
-    opacity: 0.9,
+    marginTop:
+      2,
+
+    fontSize:
+      13,
+
+    opacity:
+      0.9,
   },
 
   percent: {
-    fontSize: 22,
-    fontWeight: 800,
+    fontSize:
+      22,
+
+    fontWeight:
+      800,
   },
 
   progressBackground: {
-    height: 7,
-    marginTop: 18,
-    overflow: "hidden",
-    borderRadius: 999,
+    height:
+      7,
+
+    marginTop:
+      18,
+
+    overflow:
+      "hidden",
+
+    borderRadius:
+      999,
+
     background:
       "rgba(255,255,255,0.30)",
   },
 
   progressBar: {
-    height: "100%",
-    borderRadius: 999,
-    background: "#FFFFFF",
+    height:
+      "100%",
+
+    borderRadius:
+      999,
+
+    background:
+      "#FFFFFF",
+
     transition:
       "width 0.4s ease",
   },
 
   mapSection: {
-    scrollMarginTop: 16,
+    scrollMarginTop:
+      16,
   },
 
   sectionTitle: {
-    margin: 0,
-    fontSize: 22,
-    fontWeight: 800,
+    margin:
+      0,
+
+    fontSize:
+      22,
+
+    fontWeight:
+      800,
   },
 
   mapIntro: {
     margin:
       "6px 0 14px",
-    color: "#777777",
-    fontSize: 13,
-    lineHeight: 1.4,
+
+    color:
+      "#777777",
+
+    fontSize:
+      13,
+
+    lineHeight:
+      1.4,
   },
 
   mapCard: {
-    padding: 6,
-    overflow: "hidden",
+    padding:
+      6,
+
+    overflow:
+      "hidden",
+
     border:
       `1px solid ${BORDER}`,
-    borderRadius: 14,
-    background: "#FFFFFF",
+
+    borderRadius:
+      14,
+
+    background:
+      "#FFFFFF",
   },
 
   mapWrapper: {
-    position: "relative",
-    width: "100%",
-    lineHeight: 0,
+    position:
+      "relative",
+
+    width:
+      "100%",
+
+    lineHeight:
+      0,
   },
 
   mapImage: {
-    width: "100%",
-    height: "auto",
-    display: "block",
-    userSelect: "none",
-    WebkitUserDrag: "none",
+    width:
+      "100%",
+
+    height:
+      "auto",
+
+    display:
+      "block",
+
+    userSelect:
+      "none",
+
+    WebkitUserDrag:
+      "none",
+
+    pointerEvents:
+      "none",
   },
 
   boothOverlay: {
-    position: "absolute",
-    zIndex: 5,
+    position:
+      "absolute",
+
+    zIndex:
+      5,
+
     boxSizing:
       "border-box",
-    padding: 0,
-    margin: 0,
-    outline: "none",
-    appearance: "none",
-    WebkitAppearance: "none",
-    cursor: "pointer",
+
+    padding:
+      0,
+
+    margin:
+      0,
+
+    outline:
+      "none",
+
+    appearance:
+      "none",
+
+    WebkitAppearance:
+      "none",
+
+    cursor:
+      "pointer",
+
+    touchAction:
+      "manipulation",
+
     WebkitTapHighlightColor:
       "transparent",
+
     transition:
       "background 0.18s ease, border-color 0.18s ease, border-width 0.18s ease",
+
+    overflow:
+      "hidden",
   },
 
   mapError: {
-    padding: 30,
-    background: "#FAFAFA",
-    color: "#555555",
-    fontSize: 14,
-    lineHeight: 1.5,
-    textAlign: "center",
+    padding:
+      30,
+
+    background:
+      "#FAFAFA",
+
+    color:
+      "#555555",
+
+    fontSize:
+      14,
+
+    lineHeight:
+      1.5,
+
+    textAlign:
+      "center",
   },
 
   code: {
     display:
       "inline-block",
+
     padding:
       "6px 10px",
-    marginTop: 12,
-    borderRadius: 6,
-    background: "#EEEEEE",
+
+    marginTop:
+      12,
+
+    borderRadius:
+      6,
+
+    background:
+      "#EEEEEE",
   },
 
   legend: {
-    display: "flex",
-    gap: 22,
-    marginTop: 13,
-    color: "#666666",
-    fontSize: 12,
+    display:
+      "flex",
+
+    gap:
+      22,
+
+    marginTop:
+      13,
+
+    color:
+      "#666666",
+
+    fontSize:
+      12,
   },
 
   legendItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: 7,
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    gap:
+      7,
   },
 
   legendBox: {
-    width: 16,
-    height: 16,
+    width:
+      16,
+
+    height:
+      16,
+
     boxSizing:
       "border-box",
-    borderRadius: 3,
+
+    borderRadius:
+      3,
   },
 
   message: {
-    padding: 13,
-    marginTop: 16,
+    padding:
+      13,
+
+    marginTop:
+      16,
+
     border:
       `1px solid ${BORDER}`,
-    borderRadius: 10,
-    background: "#F7F7F7",
-    fontSize: 13,
-    lineHeight: 1.4,
+
+    borderRadius:
+      10,
+
+    background:
+      "#F7F7F7",
+
+    fontSize:
+      13,
+
+    lineHeight:
+      1.4,
   },
 
   recoveryPanel: {
-    marginTop: 38,
-    paddingTop: 22,
+    marginTop:
+      38,
+
+    paddingTop:
+      22,
+
     borderTop:
       `1px solid ${BORDER}`,
-    textAlign: "center",
+
+    textAlign:
+      "center",
   },
 
   recoveryToggle: {
-    padding: 8,
-    border: 0,
+    padding:
+      8,
+
+    border:
+      0,
+
     background:
       "transparent",
-    color: "#999999",
-    fontSize: 12,
+
+    color:
+      "#999999",
+
+    fontSize:
+      12,
+
     textDecoration:
       "underline",
-    cursor: "pointer",
+
+    cursor:
+      "pointer",
+
+    touchAction:
+      "manipulation",
   },
 
   recoveryBody: {
-    marginTop: 14,
-    padding: 16,
-    borderRadius: 12,
-    background: "#F7F7F7",
-    textAlign: "left",
+    marginTop:
+      14,
+
+    padding:
+      16,
+
+    borderRadius:
+      12,
+
+    background:
+      "#F7F7F7",
+
+    textAlign:
+      "left",
   },
 
   recoveryTitle: {
-    fontSize: 17,
-    fontWeight: 800,
+    fontSize:
+      17,
+
+    fontWeight:
+      800,
   },
 
   recoveryText: {
     margin:
       "6px 0 12px",
-    color: "#777777",
-    fontSize: 13,
-    lineHeight: 1.4,
+
+    color:
+      "#777777",
+
+    fontSize:
+      13,
+
+    lineHeight:
+      1.4,
   },
 
   recoveryInput: {
-    width: "100%",
+    width:
+      "100%",
+
     boxSizing:
       "border-box",
-    padding: 14,
+
+    padding:
+      14,
+
     border:
       `1px solid ${BORDER}`,
-    borderRadius: 8,
-    background: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: 700,
-    letterSpacing: "2px",
-    textAlign: "center",
+
+    borderRadius:
+      8,
+
+    background:
+      "#FFFFFF",
+
+    fontSize:
+      18,
+
+    fontWeight:
+      700,
+
+    letterSpacing:
+      "2px",
+
+    textAlign:
+      "center",
+
     textTransform:
       "uppercase",
-    outline: "none",
+
+    outline:
+      "none",
   },
 
   recoveryButton: {
-    width: "100%",
-    padding: 14,
-    marginTop: 12,
-    border: 0,
-    borderRadius: 8,
-    background: BLACK,
-    color: "#FFFFFF",
-    fontSize: 13,
-    fontWeight: 800,
-    cursor: "pointer",
+    width:
+      "100%",
+
+    minHeight:
+      48,
+
+    padding:
+      14,
+
+    marginTop:
+      12,
+
+    border:
+      0,
+
+    borderRadius:
+      8,
+
+    background:
+      BLACK,
+
+    color:
+      "#FFFFFF",
+
+    fontSize:
+      13,
+
+    fontWeight:
+      800,
+
+    cursor:
+      "pointer",
+
+    touchAction:
+      "manipulation",
   },
 
   recoveryMessage: {
-    marginTop: 10,
-    color: RED,
-    fontSize: 12,
-    lineHeight: 1.4,
+    marginTop:
+      10,
+
+    color:
+      RED,
+
+    fontSize:
+      12,
+
+    lineHeight:
+      1.4,
   },
 
   recoveryInfo: {
-    marginTop: 34,
-    paddingTop: 22,
+    marginTop:
+      34,
+
+    paddingTop:
+      22,
+
     borderTop:
       `1px solid ${BORDER}`,
-    textAlign: "center",
+
+    textAlign:
+      "center",
   },
 
   recoveryInfoLabel: {
-    color: "#999999",
-    fontSize: 11,
+    color:
+      "#999999",
+
+    fontSize:
+      11,
+
     textTransform:
       "uppercase",
-    letterSpacing: "0.8px",
+
+    letterSpacing:
+      "0.8px",
   },
 
   recoveryCode: {
-    marginTop: 7,
-    color: BLACK,
-    fontSize: 18,
-    fontWeight: 800,
-    letterSpacing: "2px",
+    marginTop:
+      7,
+
+    color:
+      BLACK,
+
+    fontSize:
+      18,
+
+    fontWeight:
+      800,
+
+    letterSpacing:
+      "2px",
   },
 
   recoveryInfoText: {
-    maxWidth: 280,
+    maxWidth:
+      280,
+
     margin:
       "7px auto 0",
-    color: "#AAAAAA",
-    fontSize: 10,
-    lineHeight: 1.4,
+
+    color:
+      "#AAAAAA",
+
+    fontSize:
+      10,
+
+    lineHeight:
+      1.4,
   },
 
   goodieCard: {
-    marginTop: 30,
-    padding: 18,
+    marginTop:
+      30,
+
+    padding:
+      18,
+
     border:
       `1px solid ${BORDER}`,
-    borderRadius: 16,
-    background: "#FFFFFF",
+
+    borderRadius:
+      16,
+
+    background:
+      "#FFFFFF",
   },
 
   goodieIcon: {
-    marginBottom: 10,
-    fontSize: 26,
+    marginBottom:
+      10,
+
+    fontSize:
+      26,
   },
 
   goodieTitle: {
-    fontSize: 22,
-    fontWeight: 800,
+    fontSize:
+      22,
+
+    fontWeight:
+      800,
   },
 
   goodieText: {
-    marginTop: 8,
-    color: "#666666",
-    fontSize: 14,
-    lineHeight: 1.45,
+    marginTop:
+      8,
+
+    color:
+      "#666666",
+
+    fontSize:
+      14,
+
+    lineHeight:
+      1.45,
   },
 
   goodieCount: {
-    marginTop: 18,
-    fontSize: 24,
-    fontWeight: 800,
+    marginTop:
+      18,
+
+    fontSize:
+      24,
+
+    fontWeight:
+      800,
   },
 
   goodieProgressBackground: {
-    height: 7,
-    marginTop: 8,
-    overflow: "hidden",
-    borderRadius: 999,
-    background: "#EEEEEE",
+    height:
+      7,
+
+    marginTop:
+      8,
+
+    overflow:
+      "hidden",
+
+    borderRadius:
+      999,
+
+    background:
+      "#EEEEEE",
   },
 
   goodieProgressBar: {
-    height: "100%",
-    borderRadius: 999,
-    background: RED,
+    height:
+      "100%",
+
+    borderRadius:
+      999,
+
+    background:
+      RED,
+
     transition:
       "width 0.3s ease",
   },
 
   goodieRemaining: {
-    marginTop: 8,
-    color: "#888888",
-    fontSize: 12,
+    marginTop:
+      8,
+
+    color:
+      "#888888",
+
+    fontSize:
+      12,
   },
 
   goodieUnlocked: {
-    marginTop: 8,
-    color: GREEN,
-    fontSize: 17,
-    fontWeight: 800,
+    marginTop:
+      8,
+
+    color:
+      GREEN,
+
+    fontSize:
+      17,
+
+    fontWeight:
+      800,
   },
 
   goodieCollected: {
-    marginTop: 8,
-    color: GREEN,
-    fontSize: 15,
-    fontWeight: 800,
+    marginTop:
+      8,
+
+    color:
+      GREEN,
+
+    fontSize:
+      15,
+
+    fontWeight:
+      800,
   },
 
   goodieButton: {
-    width: "100%",
-    padding: 15,
-    marginTop: 18,
-    border: 0,
-    borderRadius: 8,
-    fontSize: 13,
-    fontWeight: 800,
-    letterSpacing: "0.5px",
+    width:
+      "100%",
+
+    minHeight:
+      48,
+
+    padding:
+      15,
+
+    marginTop:
+      18,
+
+    border:
+      0,
+
+    borderRadius:
+      8,
+
+    fontSize:
+      13,
+
+    fontWeight:
+      800,
+
+    letterSpacing:
+      "0.5px",
+
+    touchAction:
+      "manipulation",
   },
 
   goodieButtonActive: {
-    background: RED,
-    color: "#FFFFFF",
-    cursor: "pointer",
+    background:
+      RED,
+
+    color:
+      "#FFFFFF",
+
+    cursor:
+      "pointer",
   },
 
   goodieButtonDisabled: {
-    background: "#E8E8E8",
-    color: "#999999",
-    cursor: "default",
+    background:
+      "#E8E8E8",
+
+    color:
+      "#999999",
+
+    cursor:
+      "default",
   },
 
   scannerCard: {
-    padding: 16,
-    marginTop: 20,
+    padding:
+      16,
+
+    marginTop:
+      20,
+
     border:
       `1px solid ${BORDER}`,
-    borderRadius: 14,
-    background: "#FFFFFF",
+
+    borderRadius:
+      14,
+
+    background:
+      "#FFFFFF",
+
     boxShadow:
       "0 8px 30px rgba(0,0,0,0.08)",
-    scrollMarginTop: 16,
+
+    scrollMarginTop:
+      16,
   },
 
   scannerHeader: {
-    display: "flex",
-    alignItems: "center",
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
     justifyContent:
       "space-between",
-    gap: 12,
+
+    gap:
+      12,
   },
 
   scannerTitle: {
-    fontSize: 20,
-    fontWeight: 800,
+    fontSize:
+      20,
+
+    fontWeight:
+      800,
   },
 
   scannerSubtitle: {
-    marginTop: 4,
-    color: "#666666",
-    fontSize: 14,
+    marginTop:
+      4,
+
+    color:
+      "#666666",
+
+    fontSize:
+      14,
   },
 
   scannerBadge: {
-    minWidth: 38,
-    height: 38,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    minWidth:
+      38,
+
+    height:
+      38,
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
     padding:
       "0 8px",
-    borderRadius: 8,
-    background: RED,
-    color: "#FFFFFF",
-    fontSize: 11,
-    fontWeight: 800,
+
+    borderRadius:
+      8,
+
+    background:
+      RED,
+
+    color:
+      "#FFFFFF",
+
+    fontSize:
+      11,
+
+    fontWeight:
+      800,
   },
 
   scannerStatus: {
     margin:
       "10px 0 14px",
-    color: "#777777",
-    fontSize: 12,
-    lineHeight: 1.4,
+
+    color:
+      "#777777",
+
+    fontSize:
+      12,
+
+    lineHeight:
+      1.4,
   },
 
   scannerRegion: {
-    width: "100%",
-    minHeight: 300,
-    overflow: "hidden",
-    borderRadius: 10,
-    background: "#111111",
+    width:
+      "100%",
+
+    minHeight:
+      300,
+
+    overflow:
+      "hidden",
+
+    borderRadius:
+      10,
+
+    background:
+      "#111111",
   },
 
   secondaryButton: {
-    width: "100%",
-    padding: 14,
-    marginTop: 14,
+    width:
+      "100%",
+
+    minHeight:
+      48,
+
+    padding:
+      14,
+
+    marginTop:
+      14,
+
     border:
       `1px solid ${BLACK}`,
-    borderRadius: 8,
-    background: "#FFFFFF",
-    color: BLACK,
-    fontSize: 13,
-    fontWeight: 800,
-    cursor: "pointer",
+
+    borderRadius:
+      8,
+
+    background:
+      "#FFFFFF",
+
+    color:
+      BLACK,
+
+    fontSize:
+      13,
+
+    fontWeight:
+      800,
+
+    cursor:
+      "pointer",
+
+    touchAction:
+      "manipulation",
   },
 
   goodieApprovedScreen: {
-    position: "fixed",
-    inset: 0,
-    zIndex: 10000,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-    background: GREEN,
+    position:
+      "fixed",
+
+    inset:
+      0,
+
+    zIndex:
+      10000,
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
+    padding:
+      "calc(24px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom))",
+
+    background:
+      GREEN,
   },
 
   goodieApprovedContent: {
-    width: "100%",
-    maxWidth: 390,
-    color: "#FFFFFF",
-    textAlign: "center",
+    width:
+      "100%",
+
+    maxWidth:
+      390,
+
+    color:
+      "#FFFFFF",
+
+    textAlign:
+      "center",
   },
 
   goodieApprovedCheck: {
-    width: 82,
-    height: 82,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    width:
+      82,
+
+    height:
+      82,
+
+    display:
+      "flex",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
     margin:
       "0 auto 26px",
+
     border:
       "3px solid rgba(255,255,255,0.9)",
-    borderRadius: "50%",
-    fontSize: 46,
-    fontWeight: 900,
+
+    borderRadius:
+      "50%",
+
+    fontSize:
+      46,
+
+    fontWeight:
+      900,
   },
 
   goodieApprovedEyebrow: {
-    fontSize: 13,
-    fontWeight: 800,
-    letterSpacing: "2px",
+    fontSize:
+      13,
+
+    fontWeight:
+      800,
+
+    letterSpacing:
+      "2px",
   },
 
   goodieApprovedTitle: {
     margin:
       "6px 0 30px",
-    fontSize: 44,
-    lineHeight: 1,
-    fontWeight: 900,
-    letterSpacing: "-1px",
+
+    fontSize:
+      44,
+
+    lineHeight:
+      1,
+
+    fontWeight:
+      900,
+
+    letterSpacing:
+      "-1px",
   },
 
   goodieApprovedName: {
-    fontSize: 25,
-    fontWeight: 800,
+    fontSize:
+      25,
+
+    fontWeight:
+      800,
   },
 
   goodieApprovedProgress: {
-    marginTop: 7,
-    fontSize: 16,
-    opacity: 0.9,
+    marginTop:
+      7,
+
+    fontSize:
+      16,
+
+    opacity:
+      0.9,
   },
 
   goodieApprovedInstruction: {
     margin:
       "34px 0 28px",
-    fontSize: 19,
-    lineHeight: 1.4,
-    fontWeight: 700,
+
+    fontSize:
+      19,
+
+    lineHeight:
+      1.4,
+
+    fontWeight:
+      700,
   },
 
   goodieApprovalError: {
-    padding: 12,
-    marginBottom: 15,
-    borderRadius: 9,
+    padding:
+      12,
+
+    marginBottom:
+      15,
+
+    borderRadius:
+      9,
+
     background:
       "rgba(255,255,255,0.16)",
-    fontSize: 12,
-    lineHeight: 1.4,
+
+    fontSize:
+      12,
+
+    lineHeight:
+      1.4,
   },
 
   goodieReceivedButton: {
-    width: "100%",
-    padding: 18,
-    border: 0,
-    borderRadius: 10,
-    background: "#FFFFFF",
-    color: GREEN,
-    fontSize: 14,
-    fontWeight: 900,
-    letterSpacing: "0.4px",
-    cursor: "pointer",
+    width:
+      "100%",
+
+    minHeight:
+      52,
+
+    padding:
+      18,
+
+    border:
+      0,
+
+    borderRadius:
+      10,
+
+    background:
+      "#FFFFFF",
+
+    color:
+      GREEN,
+
+    fontSize:
+      14,
+
+    fontWeight:
+      900,
+
+    letterSpacing:
+      "0.4px",
+
+    cursor:
+      "pointer",
+
+    touchAction:
+      "manipulation",
   },
 
   goodieSuccessScreen: {
-    position: "fixed",
-    inset: 0,
-    zIndex: 10001,
-    overflowY: "auto",
-    background: "#FFFFFF",
+    position:
+      "fixed",
+
+    inset:
+      0,
+
+    zIndex:
+      10001,
+
+    overflowY:
+      "auto",
+
+    background:
+      "#FFFFFF",
   },
 
   goodieSuccessContent: {
-    minHeight: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    boxSizing: "border-box",
+    minHeight:
+      "100%",
+
+    display:
+      "flex",
+
+    flexDirection:
+      "column",
+
+    justifyContent:
+      "center",
+
+    boxSizing:
+      "border-box",
+
     padding:
-      "34px 0",
-    textAlign: "center",
+      "calc(34px + env(safe-area-inset-top)) 0 calc(34px + env(safe-area-inset-bottom))",
+
+    textAlign:
+      "center",
   },
 
   goodieFinalLogo: {
-    width: 90,
-    display: "block",
+    width:
+      90,
+
+    display:
+      "block",
+
     margin:
       "0 auto 30px",
   },
 
   goodieThankYou: {
-    maxWidth: 360,
+    maxWidth:
+      360,
+
     margin:
       "0 auto 36px",
+
     padding:
       "0 24px",
-    color: BLACK,
-    fontSize: 27,
-    lineHeight: 1.2,
-    fontWeight: 800,
-    letterSpacing: "-0.5px",
+
+    color:
+      BLACK,
+
+    fontSize:
+      27,
+
+    lineHeight:
+      1.2,
+
+    fontWeight:
+      800,
+
+    letterSpacing:
+      "-0.5px",
   },
 
   goodiePanorama: {
-    width: "100%",
-    height: 245,
+    width:
+      "100%",
+
+    height:
+      245,
+
     backgroundImage:
       'url("/goodie-bag-success.png")',
+
     backgroundRepeat:
       "no-repeat",
+
     backgroundSize:
       "auto 100%",
+
     backgroundPosition:
       "left center",
+
     animation:
       "goodiePan 14s linear infinite alternate",
   },
@@ -4656,16 +6951,41 @@ const styles = {
   goodieDoneButton: {
     width:
       "calc(100% - 40px)",
-    maxWidth: 390,
-    padding: 16,
+
+    maxWidth:
+      390,
+
+    minHeight:
+      48,
+
+    padding:
+      16,
+
     margin:
       "34px auto 0",
-    border: 0,
-    borderRadius: 8,
-    background: RED,
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: 800,
-    cursor: "pointer",
+
+    border:
+      0,
+
+    borderRadius:
+      8,
+
+    background:
+      RED,
+
+    color:
+      "#FFFFFF",
+
+    fontSize:
+      14,
+
+    fontWeight:
+      800,
+
+    cursor:
+      "pointer",
+
+    touchAction:
+      "manipulation",
   },
 };
