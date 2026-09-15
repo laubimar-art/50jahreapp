@@ -24,7 +24,7 @@ const TEST_MODE = true;
 const TEST_QR_VALUE = "GISADA";
 
 const TEST_UNLOCK_AT = 2;
-const GOODIE_UNLOCK_AT = 18;
+const GOODIE_UNLOCK_AT = 17;
 
 // ==================================================
 // DESIGN
@@ -635,13 +635,13 @@ const translations = {
 // BOOTHS
 // ==================================================
 //
-// Aktive Stände: 19
+// 19 aktive Stände.
 //
 // Historische IDs:
 // 9  = Clarins
 // 10 = Bvlgari
 //
-// Diese beiden IDs werden nicht mehr verwendet.
+// IDs 9 und 10 werden nicht mehr verwendet.
 // Import Parfumerie Game = ID 21.
 // ==================================================
 
@@ -4039,19 +4039,6 @@ export default function App() {
     <Page>
       <style>
         {`
-          /*
-           * SHIMMER
-           *
-           * Real DOM element instead of ::after.
-           * This is more reliable for:
-           * - circular L'Oréal area
-           * - rotated booth areas
-           * - Safari / iOS
-           * - Chrome / Android
-           *
-           * transform instead of left = less layout work.
-           */
-
           @keyframes boothShimmerSweep {
             0% {
               transform:
