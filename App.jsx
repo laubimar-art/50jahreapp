@@ -20,7 +20,7 @@ const SUPABASE_PUBLISHABLE_KEY =
 // TEST / LIVE MODE
 // ==================================================
 
-const TEST_MODE = true;
+const TEST_MODE = false;
 const TEST_QR_VALUE = "GISADA";
 
 const TEST_UNLOCK_AT = 2;
