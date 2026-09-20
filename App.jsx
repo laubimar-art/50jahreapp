@@ -125,7 +125,7 @@ const translations = {
     cameraCouldNotStart:
       "Camera could not be started.",
     cameraPermission:
-      "Please allow camera access and try again.",
+      "Check in the settings whether your browser is allowed to access the camera. If it still does not work, your device may not support scanning QR codes.",
     unsupportedBrowser:
       "Camera scanning is not supported in this browser. Please open the page in Safari, Chrome, Firefox or Edge.",
     close: "CLOSE",
@@ -260,7 +260,7 @@ const translations = {
     cameraCouldNotStart:
       "Die Kamera konnte nicht gestartet werden.",
     cameraPermission:
-      "Bitte erlaube den Kamerazugriff und versuche es erneut.",
+      "Prüfe in den Einstellungen, ob dein Browser auf die Kamera zugreifen darf. Funktioniert es trotzdem nicht? Dann unterstützt dein Gerät das Scannen von QR-Codes möglicherweise nicht.",
     unsupportedBrowser:
       "Der Kamera-Scanner wird in diesem Browser nicht unterstützt. Bitte öffne die Seite in Safari, Chrome, Firefox oder Edge.",
     close: "SCHLIESSEN",
@@ -408,7 +408,7 @@ const translations = {
     cameraCouldNotStart:
       "La caméra n'a pas pu démarrer.",
     cameraPermission:
-      "Veuillez autoriser l'accès à la caméra et réessayer.",
+      "Vérifiez dans les réglages si votre navigateur est autorisé à accéder à la caméra. Si cela ne fonctionne toujours pas, votre appareil ne prend peut-être pas en charge la lecture des codes QR.",
     unsupportedBrowser:
       "Le scanner de caméra n'est pas pris en charge dans ce navigateur. Ouvrez la page dans Safari, Chrome, Firefox ou Edge.",
     close: "FERMER",
@@ -562,7 +562,7 @@ const translations = {
     cameraCouldNotStart:
       "Impossibile avviare la fotocamera.",
     cameraPermission:
-      "Consenti l'accesso alla fotocamera e riprova.",
+      "Controlla nelle impostazioni se il browser può accedere alla fotocamera. Se continua a non funzionare, il tuo dispositivo potrebbe non supportare la scansione dei codici QR.",
     unsupportedBrowser:
       "Lo scanner della fotocamera non è supportato in questo browser. Apri la pagina in Safari, Chrome, Firefox o Edge.",
     close: "CHIUDI",
