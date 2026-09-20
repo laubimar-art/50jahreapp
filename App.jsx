@@ -17,7 +17,7 @@ const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_sIG13bMei4VT4qZRQavkVg_REQiokMT";
 
 // ==================================================
-// TEST / LIVE MODE
+// LIVE MODE
 // ==================================================
 
 const TEST_MODE = false;
@@ -635,13 +635,13 @@ const translations = {
 // BOOTHS
 // ==================================================
 //
-// 19 aktive Stände.
+// 18 aktive Stände.
 //
-// Historische IDs:
+// Historische / inaktive IDs:
 // 9  = Clarins
 // 10 = Bvlgari
+// 15 = Puig
 //
-// IDs 9 und 10 werden nicht mehr verwendet.
 // Import Parfumerie Game = ID 21.
 // ==================================================
 
@@ -776,17 +776,6 @@ const booths = [
       top: 88.49,
       width: 26.29,
       height: 7.35,
-    },
-  },
-
-  {
-    id: 15,
-    name: "Puig",
-    area: {
-      left: 26.56,
-      top: 15.66,
-      width: 6.77,
-      height: 22.18,
     },
   },
 
